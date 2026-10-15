@@ -3,17 +3,21 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Bức tranh chuyển đổi số ngành logistics — Base</title>
+<title>Bức tranh chuyển đổi số ngành logistics</title>
 <!--
   Deck "Bức tranh chuyển đổi số ngành logistics" · tổng hợp case study · cập nhật 15/10/2026
   Dựng từ asset.base-2-0.html-deck-starter v1.1.0 (giữ nguyên engine và CSS gốc; bố cục riêng ở CSS mục 11).
   Ba phần: (1) vì sao logistics phải quan tâm công nghệ · (2A) nghiệp vụ đặc thù — dòng hàng · (2B) vận hành nội bộ — dòng việc, case khách hàng Base · (3) Base và Base 2.0.
   Mọi số liệu có dòng nguồn ở chân slide và mục Nguồn tham khảo cuối deck. Giao diện/mảnh dựng lại có nhãn "Minh hoạ".
-  Phím: → tiếp · ← lùi · N ghi chú người nói · G tổng quan · F toàn màn hình · P chế độ in/PDF (rồi Ctrl/Cmd+P) · ? trợ giúp.
+  Bản gửi khách: không chứa ghi chú người nói (ghi chú nằm trong src/slides.html). Điện thoại cầm dọc tự mở bản mobile.
+  Phím: → tiếp · ← lùi · G mục lục · F toàn màn hình · P xem toàn bộ slide · ? trợ giúp.
 -->
+<script>/* điện thoại cầm dọc: mở bản đọc dọc tối ưu cho mobile */
+(function(){try{if(innerWidth<760&&innerHeight>innerWidth&&location.hash!=='#deck')location.replace('logistics-chuyen-doi-so-base-mobile.html')}catch(e){}})();</script>
 <style>
 /* ============ 1. TOKENS — đổi màu thương hiệu ở đây, giữ nguyên nghĩa màu trạng thái ============ */
 :root{
+  color-scheme:dark;
   --bg:#070B1D; --bg-2:#101741;
   --glow-1:rgba(99,102,241,.30); --glow-2:rgba(37,99,235,.24);
   --ink:#F4F6FF; --ink-2:#B3BBDA; --ink-3:#7680A6;
@@ -614,7 +618,6 @@ p,li,small,span,b,em,div,blockquote{text-wrap:pretty}
   <h1 class="rv" style="--i:1">Bức tranh chuyển đổi số<br>ngành <span class="hl">logistics</span></h1>
   <p class="sub rv" style="--i:2">Vì sao phải làm, công nghệ giúp được gì, và phạm vi đáp ứng của Base</p>
   <p class="small rv" style="--i:3">Base.vn · Tài liệu tham khảo cho doanh nghiệp logistics&nbsp;·&nbsp;10/2026</p>
-  <aside class="notes">Chào anh chị. Container của mình giờ đang ở đâu — mở phần mềm là biết.<br><i>[dừng 2 giây]</i><br>Nhưng bộ chứng từ của lô hàng đó đang nằm ở ai, tạm ứng phí nâng hạ cho tài xế đã ai duyệt chưa — câu này thường phải gọi vài cuộc mới trả lời được.<br>Tài liệu hôm nay đi quanh đúng khoảng cách đó: vì sao phải làm, công nghệ giúp được gì, và Base đáp ứng tới đâu. <i>[bấm]</i></aside>
 </section>
 
 <!-- ================= 02 · BẢN ĐỒ BA CÂU HỎI ================= -->
@@ -625,7 +628,6 @@ p,li,small,span,b,em,div,blockquote{text-wrap:pretty}
     <div class="card" data-step="2"><div class="no">02 · BÀI TOÁN</div><h3>Công nghệ giúp được gì?</h3><p>Tách hai nhóm: nghiệp vụ đặc thù của ngành và vận hành nội bộ. Mỗi nhóm một loại công cụ, một nhóm case thật.</p></div>
     <div class="card" data-step="3"><div class="no">03 · BASE</div><h3>Base khác ở đâu?</h3><p>Base 2.0 trong kỷ nguyên AI: kiến trúc Service → Output → Knowledge → Agent, và phạm vi Base nhận làm.</p></div>
   </div>
-  <aside class="notes">Em đi theo ba câu hỏi. <i>[bấm]</i> Vì sao doanh nghiệp logistics phải quan tâm công nghệ. <i>[bấm]</i> Công nghệ giúp được gì — em tách rõ phần nghiệp vụ riêng của ngành và phần vận hành nội bộ, vì hai phần này cần hai loại công cụ khác nhau. <i>[bấm]</i> Cuối cùng là Base: tầm nhìn Base 2.0 và ranh giới Base làm tới đâu.</aside>
 </section>
 
 <!-- ================= 03 · CHƯƠNG 1 ================= -->
@@ -633,7 +635,6 @@ p,li,small,span,b,em,div,blockquote{text-wrap:pretty}
   <div class="ghost">01</div>
   <p class="eyebrow rv" style="--i:0">Phần 1 · Bối cảnh</p>
   <h1 class="rv" style="--i:1">Vì sao logistics không thể<br>đứng ngoài công nghệ</h1>
-  <aside class="notes">Phần một: bối cảnh. Em đi qua chi phí, mức độ số hoá của ngành, lợi ích, cơ hội và rủi ro.</aside>
 </section>
 
 <!-- ================= 04 · CHI PHÍ ================= -->
@@ -647,7 +648,6 @@ p,li,small,span,b,em,div,blockquote{text-wrap:pretty}
   </div>
   <p class="lede" data-step="2">Phần chênh lệch nằm ở những chỗ quen thuộc: <b>xe chạy rỗng, xe chờ ở cảng, chứng từ làm lại</b>.</p>
   <p class="srcline"><b>Nguồn:</b> VLA, dẫn qua Trung tâm WTO – VCCI; Quyết định 2229/QĐ-TTg (Báo Chính phủ, Tạp chí Công Thương, 10/2025).</p>
-  <aside class="notes">Con số đầu tiên: chi phí logistics của Việt Nam khoảng 16,8% GDP, theo VLA tính cho năm 2021. Thế giới khoảng 10,6%.<br><i>[bấm]</i> Chiến lược quốc gia vừa ban hành tháng 10/2025 đặt mục tiêu kéo về 12–15% trong giai đoạn 2025–2035.<br><i>[bấm]</i> Phần chênh lệch nằm ở những chỗ rất quen: xe chạy rỗng, xe chờ ở cảng, chứng từ làm lại.<br><i>(Số 16,8% là ước tính của VLA; một số nguồn diễn đạt theo "giá trị hàng hoá" thay vì GDP — nếu khách hỏi, nói đúng là ước tính của hiệp hội.)</i></aside>
 </section>
 
 <!-- ================= 05 · MỨC ĐỘ SỐ HOÁ ================= -->
@@ -665,7 +665,6 @@ p,li,small,span,b,em,div,blockquote{text-wrap:pretty}
   </div>
   <p class="lede" data-step="2">Phần lớn mới đưa giấy tờ lên máy, rất ít nơi dùng dữ liệu để dự báo.<br><b>Vạch xuất phát còn đông — ai đi trước một bước là có lợi thế.</b></p>
   <p class="srcline"><b>Nguồn:</b> Báo cáo Logistics Việt Nam 2023 (Bộ Công Thương), dẫn qua Tạp chí Công Thương và Tạp chí Quản lý Nhà nước 05/2024; Thủ tướng Chính phủ, dẫn qua Tiền Phong; Doanh nghiệp Hội nhập 2025.</p>
-  <aside class="notes">Ngành có hơn 34.000 doanh nghiệp, trên 90% là nhỏ và vừa. Trong khảo sát của Báo cáo Logistics Việt Nam 2023, 90,5% doanh nghiệp vẫn đang ở giai đoạn số hoá.<br><i>[bấm]</i> Phần lớn — 73,5% — dừng ở cấp 2: đã kết nối. Chỉ 1,9% dự báo được bằng dữ liệu, 0,4% đạt cấp cao nhất.<br><i>[bấm]</i> Em nhìn đây là cơ hội: vạch xuất phát còn rất đông người.</aside>
 </section>
 
 <!-- ================= 06 · LỢI ÍCH ================= -->
@@ -679,7 +678,6 @@ p,li,small,span,b,em,div,blockquote{text-wrap:pretty}
   </div>
   <p class="lede" data-step="1">Ở Việt Nam, cảng, kho và bưu cục cũng đã có con số tương tự — xem <b>phần 2</b>.</p>
   <p class="srcline"><b>Nguồn:</b> McKinsey &amp; Company, "Succeeding in the AI supply-chain revolution" (2021), dẫn qua Supply Chain Management Review.</p>
-  <aside class="notes">Lợi ích không còn là lý thuyết. McKinsey so sánh nhóm đi đầu ứng dụng AI vào chuỗi cung ứng với nhóm chậm chân: chi phí logistics thấp hơn 15%, tồn kho thấp hơn 35%, mức độ phục vụ cao hơn 65%.<br><i>[bấm]</i> Phần sau em đưa con số của chính doanh nghiệp Việt Nam.<br><i>(Số McKinsey là so sánh tương đối giữa hai nhóm doanh nghiệp, không phải cam kết cho một doanh nghiệp cụ thể.)</i></aside>
 </section>
 
 <!-- ================= 07 · CƠ HỘI ================= -->
@@ -693,7 +691,6 @@ p,li,small,span,b,em,div,blockquote{text-wrap:pretty}
   </div>
   <p class="lede" data-step="4">Chính sách cũng đẩy cùng chiều: mục tiêu đưa logistics Việt Nam từ <b>hạng 43</b> lên <b>nhóm 40 nước dẫn đầu</b> thế giới (xếp hạng LPI của Ngân hàng Thế giới).</p>
   <p class="srcline"><b>Nguồn:</b> Quyết định 2229/QĐ-TTg ngày 09/10/2025 (Bộ Công Thương, Báo Chính phủ); World Bank LPI 2023, dẫn qua VnEconomy.</p>
-  <aside class="notes">Ba cơ hội. <i>[bấm]</i> Ngành được đặt mục tiêu tăng 12–15% mỗi năm. <i>[bấm]</i> 70–80% doanh nghiệp sẽ thuê ngoài logistics — họ chọn đơn vị nào trả lời được "hàng của tôi đang ở đâu". <i>[bấm]</i> Chứng từ điện tử thành chuẩn: cảng và hãng tàu đã đi trước. <i>[bấm]</i> Và chính sách cũng đẩy cùng chiều: Nhà nước muốn logistics Việt Nam từ hạng 43 lên top 40 thế giới.</aside>
 </section>
 
 <!-- ================= 08 · RỦI RO ================= -->
@@ -711,7 +708,6 @@ p,li,small,span,b,em,div,blockquote{text-wrap:pretty}
       <li><i style="color:var(--warn)">!</i><span>Số hoá mà quên an toàn: sau NotPetya (2017), Maersk thiệt hại <b>250–300 triệu USD</b>, cài lại 45.000 máy tính và 4.000 máy chủ trong 10 ngày.</span></li></ul></div>
   </div>
   <p class="srcline"><b>Nguồn:</b> Viện Chiến lược GTVT, Hiệp hội Vận tải hàng hoá TP.HCM, VLA (qua VietnamPlus, VILAS); VOV 24/09/2024; ZDNet, SC Magazine, Hackread (Maersk, 01/2018).</p>
-  <aside class="notes">Vậy doanh nghiệp logistics nên ứng dụng công nghệ thế nào? Trước hết là tránh hai cách sai. Bên trái: đứng ngoài. Tuỳ nguồn, 35% đến 70% chuyến xe chạy rỗng chiều về. Chủ hàng chọn đơn vị minh bạch. Cảng đã số hoá thì mình thành khâu chậm.<br><i>[bấm]</i> Bên phải: làm vội. Mua phần mềm rời rạc thì dữ liệu vẫn không nối. Đổi quy trình tốn thời gian và tiền đào tạo. Và an toàn dữ liệu: Maersk — hãng tàu lớn bậc nhất thế giới — mất 250–300 triệu USD sau một cuộc tấn công năm 2017.<br>Bài học: làm có thứ tự, không làm ồ ạt.</aside>
 </section>
 
 <!-- ================= 09 · GIỌNG LÃNH ĐẠO ================= -->
@@ -725,14 +721,12 @@ p,li,small,span,b,em,div,blockquote{text-wrap:pretty}
     <div class="quote" data-step="4"><p>Thay đổi quy trình “…sẽ ảnh hưởng rất nhiều đến câu chuyện vận hành về thời gian, chi phí về đào&nbsp;tạo nhân&nbsp;sự.”</p><div class="who"><span class="av" style="background:#22C58B">MT</span>Ông Mai Trần Thuật · Tổng Giám đốc DPL tại thời điểm phát biểu · VOV, 24/09/2024</div></div>
   </div>
   <p class="srcline"><b>Nguồn:</b> VJST; tin chính thức Vinafco 11/03/2026; Tạp chí Doanh nghiệp Việt Nam 10/10/2022; VOV 24/09/2024.</p>
-  <aside class="notes">Lãnh đạo trong ngành nói gì. <i>[bấm]</i> Tổng Giám đốc Ratraco: bắt đầu từ tư duy và thói quen của lãnh đạo. <i>[bấm]</i> Tổng Giám đốc Vinafco năm 2026: mục tiêu là điểm nghẽn và chi phí ẩn — không phải phần mềm. <i>[bấm]</i> Người tiền nhiệm của ông năm 2022: ba yếu tố — ý chí lãnh đạo, quy trình, người dùng. <i>[bấm]</i> Và Tổng Giám đốc DPL nhắc cái giá: thời gian và chi phí đào tạo.<br>Bốn câu, một ý: công nghệ là phương tiện, cách làm mới là thứ quyết định.</aside>
 </section>
 
 <!-- ================= 10 · CHỐT PHẦN 1 ================= -->
 <section class="slide" data-title="Chốt phần 1" data-time="25">
   <h1 class="rv" style="--i:0">Câu hỏi không còn là <span class="hl">có làm không</span>?</h1>
   <h2 class="grad" data-step="1">Mà là làm phần nào trước, bằng công cụ nào.</h2>
-  <aside class="notes">Vậy câu hỏi không còn là có chuyển đổi số hay không. <i>[bấm]</i> <i>[dừng 2 giây]</i> Mà là làm phần nào trước, bằng công cụ nào. Phần 2 trả lời đúng câu này.</aside>
 </section>
 
 <!-- ================= 11 · CHƯƠNG 2 ================= -->
@@ -740,7 +734,6 @@ p,li,small,span,b,em,div,blockquote{text-wrap:pretty}
   <div class="ghost">02</div>
   <p class="eyebrow rv" style="--i:0">Phần 2 · Bài toán và lời giải</p>
   <h1 class="rv" style="--i:1">Công nghệ — và Base — giúp được gì</h1>
-  <aside class="notes">Phần hai. Em tách bài toán làm hai nhóm trước khi nói tới bất kỳ phần mềm nào.</aside>
 </section>
 
 <!-- ================= 12 · HAI DÒNG CHẢY ================= -->
@@ -760,7 +753,6 @@ p,li,small,span,b,em,div,blockquote{text-wrap:pretty}
     </div>
   </div>
   <p class="lede" data-step="2">Mỗi dòng cần một loại công cụ khác nhau. Phần tiếp theo xem <b>dòng hàng trước, dòng việc sau</b>.</p>
-  <aside class="notes">Mỗi lô hàng chạy trên hai dòng. Dòng hàng: nhận hàng, kho, vận tải, cảng, giao. Đây là nghiệp vụ riêng của ngành, có phần mềm chuyên ngành lo.<br><i>[bấm]</i> Dòng việc: báo giá, booking, chứng từ, tạm ứng, công nợ. Doanh nghiệp nào cũng có, và thường vẫn chạy bằng Zalo, Excel, giấy.<br><i>[bấm]</i> Hai dòng cần hai loại công cụ. Em đi dòng hàng trước — phần này chưa có Base.</aside>
 </section>
 
 <!-- ================= 13 · 2A MA TRẬN ================= -->
@@ -776,7 +768,6 @@ p,li,small,span,b,em,div,blockquote{text-wrap:pretty}
     <div class="r" data-step="5"><div class="p"><i>✕</i>Hàng lạnh, hàng giá trị cần giám sát liên tục</div><div class="t">IoT, GPS, thiết bị ghi nhiệt độ</div><div class="e"><b>ABA Cooltrans:</b> gần 300 xe lạnh gắn GPS và thiết bị ghi nhiệt, theo dõi theo thời gian thực trong lúc giao nhận.</div></div>
   </div>
   <p class="srcline"><b>Nguồn:</b> Tạp chí Kinh tế Tài chính 25/05/2026; Báo Hải quân Việt Nam; Tin nhanh Chứng khoán; Smartlog; VnEconomy; ABA Cooltrans, VietQ.</p>
-  <aside class="notes">Năm bài toán chỉ ngành logistics có. <i>[bấm]</i> Xe chạy rỗng: Logistics Đông Á dùng ghép chuyến, nhưng nghiên cứu năm 2026 cho thấy tỷ lệ chỉ nhích từ 56,87% lên 57,54% — vướng ở dữ liệu và nguồn hàng hai chiều. Công nghệ không tự giải nếu dữ liệu không nối.<br><i>[bấm]</i> Cổng cảng: Tân Cảng Sài Gòn đưa giao nhận từ 13 phút xuống dưới 2 phút. <i>[bấm]</i> Kho: Vinafco dùng WMS và đèn chỉ thùng. <i>[bấm]</i> Chia chọn: Viettel Post tiết kiệm 91% nhân lực. <i>[bấm]</i> Hàng lạnh: ABA gắn thiết bị ghi nhiệt trên gần 300 xe.<br>Phần này là việc của phần mềm chuyên ngành. Base không làm thay.</aside>
 </section>
 
 <!-- ================= 14 · HỆ CHUYÊN NGÀNH ĐỨNG CẠNH BASE ================= -->
@@ -793,7 +784,6 @@ p,li,small,span,b,em,div,blockquote{text-wrap:pretty}
   </div>
   <p class="lede" data-step="1">Hệ chuyên ngành lo <span style="color:var(--goods);font-weight:700">dòng hàng</span>. Base lo <span class="hl" style="font-weight:700">dòng việc</span> quanh lô hàng — và là nơi lãnh đạo nhìn toàn bộ.</p>
   <p class="srcline"><b>Nguồn:</b> Base Customers (ICD Sóng Thần, ADDED-VALUE); TCL — ĐHĐCĐ 2022, BCTN 2024; VOSCO — BCTN 2021–2023; BES, VALOMA 08/2024 (DPL); danh mục khách hàng Base.</p>
-  <aside class="notes">Đây là điểm em muốn anh chị nhớ. Nhìn vào chính khách hàng logistics của Base: ICD Sóng Thần có phần mềm kho, vận tải, kho ngoại quan, an ninh — và dùng Base để quản trị, phê duyệt. Tân Cảng Logistics có hệ điều hành container, EDI, ePort — và dùng Base từ 2021. VOSCO có FAST, SMMS, e-learning — và dùng Base làm văn phòng điện tử.<br><i>[bấm]</i> Hệ chuyên ngành lo dòng hàng. Base lo dòng việc quanh lô hàng.<br><i>(DPL: phạm vi văn phòng điện tử, giao việc theo thông tin nội bộ Base, chưa có nguồn công khai — không nói thêm chi tiết.)</i></aside>
 </section>
 
 <!-- ================= 15 · 2B MỚ HỖN ĐỘN ================= -->
@@ -845,7 +835,6 @@ p,li,small,span,b,em,div,blockquote{text-wrap:pretty}
     <span class="flag" style="--x:69%;--y:84%;--r:2deg">Chưa có chữ ký · 2 ngày</span>
   </div>
   <p class="srcline"><b>Hình minh hoạ</b> tình huống thường gặp.</p>
-  <aside class="notes">Sang dòng việc. Hàng thì chạy trên phần mềm. Còn việc quanh lô hàng? <i>[bấm]</i> Một tin Zalo hỏi bộ chứng từ, ba giờ chưa ai trả lời. File Excel booking có cut-off 16h hôm nay mà cột chứng từ còn dấu hỏi. Rate card bản sửa 3 trong email. Phiếu tạm ứng của tài xế chờ chữ ký.<br>Anh chị thấy cảnh này quen không ạ? <i>[chờ phản hồi]</i><br><i>(Các mảnh là dựng lại minh hoạ. Khi gặp khách cụ thể, thay bằng đúng những nơi khách đang cất việc.)</i></aside>
 </section>
 
 <!-- ================= 16 · SÁU VẤN ĐỀ VẬN HÀNH ================= -->
@@ -861,7 +850,6 @@ p,li,small,span,b,em,div,blockquote{text-wrap:pretty}
     <div class="op rv" style="--i:7"><div class="no">06</div><h3>Lớn lên thì khó giữ chất lượng</h3><p>Thêm khách, thêm người, lãnh đạo không thể sát từng lô. Chất lượng dịch vụ phụ thuộc từng cá nhân.</p><p class="at">Gặp ở: <b>THT Cargo</b></p></div>
   </div>
   <p class="srcline"><b>Nguồn:</b> Base Customers, Base Resources, VnExpress, Báo Đầu tư, VJST.</p>
-  <aside class="notes">Gom lại, có sáu vấn đề lặp lại. Em không tự nghĩ ra — mỗi ô đều có doanh nghiệp đã nêu đúng vấn đề đó.<br>Trình ký chờ người. Đơn hàng không rõ đang ở bước nào. Mạng lưới phân tán. Dữ liệu xe, khách rải rác. Tạm ứng, chi phí bằng giấy. Và lớn lên thì khó giữ chất lượng.<br>Bên mình đang vướng nhất ở ô nào ạ? <i>[chờ khách chọn — ghi lại]</i></aside>
 </section>
 
 <!-- ================= 17 · NGUYÊN LÝ: MỖI BƯỚC CÓ NGƯỜI GIỮ ================= -->
@@ -884,7 +872,6 @@ p,li,small,span,b,em,div,blockquote{text-wrap:pretty}
     <div class="rule" data-step="3"><b>Mọi lần chuyển tay đều có vết</b>Ai được giao, lúc nào, vì sao — lãnh đạo xem được toàn bộ đơn đang chạy.</div>
   </div>
   <p class="srcline"><b>Nguồn:</b> Quy trình mẫu trong bộ giải pháp Base cho Logistics.</p>
-  <aside class="notes">Nguyên lý trước, tên phần mềm sau. Lấy một luồng ai cũng có: yêu cầu báo giá tới booking. Sáu bước, ba bộ phận, cam kết 32 giờ. Mỗi bước có người giữ, có hạn, có đầu ra.<br><i>[bấm]</i> Quá hạn là có người biết. <i>[bấm]</i> Thiếu đầu ra thì chưa qua bước. <i>[bấm]</i> Mọi lần chuyển tay đều có vết.<br><i>(Mức xác minh 2 — đã thấy trên giao diện Base 2.0 BPM ngày 22/09/2026: hạn xử lý chỉ đánh dấu quá hạn, trường bắt buộc theo bước, nhật ký giao việc. Số giờ là SLA mẫu, không phải số của khách.)</i></aside>
 </section>
 
 <!-- ================= 18 · CASE 247EXPRESS ================= -->
@@ -901,7 +888,6 @@ p,li,small,span,b,em,div,blockquote{text-wrap:pretty}
     </div>
   </div>
   <p class="srcline"><b>Nguồn:</b> VnExpress Kinh doanh, “247Express số hoá toàn diện hơn 200 bưu cục cùng Base.vn”; Base Customers.</p>
-  <aside class="notes">Case đầu: 247Express. Hơn 1.700 người, 200 bưu cục, 63 tỉnh thành. Vấn đề là mạng lưới phân tán và giấy tờ toàn quốc. Họ đưa Base lên toàn bộ 200 bưu cục trong 3 tháng, dựng hàng trăm quy trình.<br><i>[bấm]</i> Kết quả họ nói: dữ liệu, giấy tờ số hoá hết; lãnh đạo phản hồi kịp thời. Giám đốc tài chính nhắc đúng E-Office.<br><i>(Không có con số tiết kiệm cụ thể trong nguồn — không tự thêm.)</i></aside>
 </section>
 
 <!-- ================= 19 · CASE ICD SÓNG THẦN ================= -->
@@ -918,7 +904,6 @@ p,li,small,span,b,em,div,blockquote{text-wrap:pretty}
     </div>
   </div>
   <p class="srcline"><b>Nguồn:</b> Báo Đầu tư; Base Customers.</p>
-  <aside class="notes">Case hai: ICD Tân Cảng Sóng Thần — đơn vị quốc phòng làm kinh tế, quy định nội bộ rất riêng. Trước đây giấy tờ nhiều, trình ký lâu. Họ chọn Base vì đáp ứng được yêu cầu đặc thù, lãnh đạo duyệt trên điện thoại khi đi vắng.<br><i>[bấm]</i> Báo Đầu tư ghi nhận tốc độ vận hành tăng 50% — đây là kết quả cả chương trình số hoá, có cả phần mềm kho, vận tải. Riêng phần Base: ban nhân sự ước tính tiết kiệm 80% thời gian, in ấn giảm 30–50%.</aside>
 </section>
 
 <!-- ================= 20 · CASE CTX ================= -->
@@ -934,7 +919,6 @@ p,li,small,span,b,em,div,blockquote{text-wrap:pretty}
     </div>
   </div>
   <p class="srcline"><b>Nguồn:</b> Base Resources, “Case study: Thiết lập hệ thống theo dõi tiến độ đơn hàng logistics với Base Workflow”; VTV Money (hồ sơ CTX Logistics).</p>
-  <aside class="notes">Case ba: CTX Logistics, làm dịch vụ cho doanh nghiệp xuất nhập khẩu. Bài toán đúng là ô số 2: đơn hàng không rõ đang ở bước nào.<br>Họ dựng quy trình trên Base Workflow: xong bước trước là đơn tự sang bộ phận sau.<br><i>[bấm]</i> Kết quả rõ nhất: quy trình từ 12 bước còn 5. Điều thú vị là khi đưa lên phần mềm, chính họ thấy 7 bước là thừa.</aside>
 </section>
 
 <!-- ================= 21 · VOSCO + TCL ================= -->
@@ -951,7 +935,6 @@ p,li,small,span,b,em,div,blockquote{text-wrap:pretty}
       <blockquote data-step="2">“giảm thiểu chi phí hành chánh và nâng cao hiệu&nbsp;quả làm việc trực tuyến cho CB-CNV”<small>Tờ trình kết quả năm 2021 · Tài liệu ĐHĐCĐ 2022</small></blockquote></div>
   </div>
   <p class="srcline"><b>Nguồn:</b> VOSCO — BCTN 2021 (tr.14), 2022 (tr.27), 2025 (tr.24); tin VOSCO 16/07/2022. TCL — tài liệu ĐHĐCĐ thường niên 2022 (tr.7, tr.11).</p>
-  <aside class="notes">Hai case này là ghi nhận của chính khách hàng, trong báo cáo gửi cổ đông.<br><i>[bấm]</i> VOSCO, báo cáo thường niên 2022: hầu hết nội dung đã được phân công và giao việc trên Base — với 501 người làm việc trên tàu.<br><i>[bấm]</i> Tân Cảng Logistics, tài liệu đại hội cổ đông 2022: giảm chi phí hành chính, nâng hiệu quả làm việc trực tuyến.<br><i>(Nếu khách hỏi: chưa có KPI trước/sau riêng của Base trong hai nguồn này; nhận định của TCL là cho cả nhóm biện pháp số hoá.)</i></aside>
 </section>
 
 <!-- ================= 22 · HÀNH TRÌNH ĐANG CHẠY ================= -->
@@ -966,7 +949,6 @@ p,li,small,span,b,em,div,blockquote{text-wrap:pretty}
   </div>
   <div class="also" data-step="1">Xây dựng văn phòng làm việc điện tử: <span class="chp plain">Logistics Đông Á</span><span class="chp plain">Logistics Dược phẩm Đông Á (DPL)</span><span class="chp plain">Global Pacific (PCT)</span><span class="chp plain">Container Thái Bình Dương (PCL)</span></div>
   <p class="srcline"><b>Nguồn:</b> Base Customers (ADDED-VALUE, THT Cargo, Ratraco, Nhật Việt); VJST (Ratraco); Base Resources (THT); danh mục khách hàng Base.</p>
-  <aside class="notes">Doanh nghiệp logistics dùng Base để làm gì? Bốn ví dụ. ADDED-VALUE dùng CRM làm trung tâm và cảnh báo hạn giấy phép, đăng kiểm xe. THT giữ chất lượng cho khách Nhật bằng theo dõi tiến độ lô hàng. Ratraco bắt đầu từ tờ trình, thanh toán và hướng tới AI Agent. Nhật Việt số hoá 700 đầu việc để gắn tàu với bờ.<br><i>[bấm]</i> Và nhiều doanh nghiệp logistics khác dùng Base để xây văn phòng làm việc điện tử.<br><i>(Bốn hành trình trên là mô tả định tính, chưa có con số cuối. Phạm vi của bốn doanh nghiệp ở dòng dưới theo thông tin nội bộ Base, chưa có bài công bố riêng.)</i></aside>
 </section>
 
 <!-- ================= 23 · PHẠM VI HAI LỚP ================= -->
@@ -989,7 +971,6 @@ p,li,small,span,b,em,div,blockquote{text-wrap:pretty}
   </div>
   <p class="band" data-step="1"><span>Dòng hàng</span> ⇄ <em>dòng việc</em>: nối qua API, webhook, dữ liệu dùng chung — không bắt bỏ hệ đang chạy.</p>
   <p class="srcline"><b>Nguồn:</b> Tổng hợp từ các case khách hàng ở trên.</p>
-  <aside class="notes">Câu trả lời cho phần 2. Bên trái là việc của phần mềm chuyên ngành: bãi, kho, xe, nhiệt độ, sổ sách. Bên phải là việc Base nhận: quy trình đơn hàng, phê duyệt, khách hàng, giao việc, con người.<br><i>[bấm]</i> Và hai lớp phải nối. Base 2.0 có API, webhook để trao đổi dữ liệu.<br><i>(Nói đúng mức: kết nối sẵn tới từng hệ cụ thể như TOS, Fast, MISA chưa xác nhận — cần khảo sát hệ đang dùng của khách trước khi hứa.)</i></aside>
 </section>
 
 <!-- ================= 24 · CHƯƠNG 3 ================= -->
@@ -997,7 +978,6 @@ p,li,small,span,b,em,div,blockquote{text-wrap:pretty}
   <div class="ghost">03</div>
   <p class="eyebrow rv" style="--i:0">Phần 3 · Base trong kỷ nguyên AI</p>
   <h1 class="rv" style="--i:1">Tầm nhìn của Base khác ở đâu</h1>
-  <aside class="notes">Phần ba: Base là ai, và Base 2.0 khác các phần mềm khác ở kiến trúc nào.</aside>
 </section>
 
 <!-- ================= 25 · BASE TỔNG QUAN ================= -->
@@ -1011,7 +991,6 @@ p,li,small,span,b,em,div,blockquote{text-wrap:pretty}
   </div>
   <p class="lede" data-step="1"><b>17/09/2026:</b> ra mắt <b>Base 2.0</b> tại Enterprise AI Summit 2026 — nền tảng thiết kế để con người và AI cùng vận hành doanh nghiệp.</p>
   <p class="srcline"><b>Nguồn:</b> Wikipedia tiếng Việt “Base.vn”; CafeF 27/05/2021; số khách hàng do Base cung cấp 10/2026; Báo Đầu tư, Nhân Dân, CafeBiz 09/2026.</p>
-  <aside class="notes">Base thành lập năm 2016 ở Hà Nội. Hơn 12.000 doanh nghiệp đã chuyển đổi số cùng Base. FPT đầu tư chiến lược năm 2021.<br><i>[bấm]</i> Tháng 9 vừa rồi, Base ra mắt Base 2.0 — đây là phần em muốn anh chị chú ý.</aside>
 </section>
 
 <!-- ================= 26 · VẤN ĐỀ BASE 2.0 NHÌN THẤY ================= -->
@@ -1025,7 +1004,6 @@ p,li,small,span,b,em,div,blockquote{text-wrap:pretty}
   </div>
   <p class="qline" data-step="4" style="max-width:1200px;text-align:left;font-size:26px">“…điểm nghẽn lớn nhất không nằm ở năng lực của AI, mà nằm ở ‘Ngữ cảnh vận hành’ (Context).”<small>Ông Phạm Kim Hùng · Chủ tịch Base.vn · Enterprise AI Summit 2026</small></p>
   <p class="srcline"><b>Nguồn:</b> Bài viết chính thức của Base.vn về Base 2.0, 28/08/2026; CafeBiz 17/09/2026, Soha 18/09/2026.</p>
-  <aside class="notes">Base nhìn thấy ba khoảng trống khi các doanh nghiệp đưa AI vào theo từng app. <i>[bấm]</i> Dữ liệu rời. <i>[bấm]</i> Kinh nghiệm không ở lại — với logistics, đây là chuyện lô hàng trễ tháng trước, tháng này lại trễ y như vậy. <i>[bấm]</i> AI không phối hợp được với nhau.<br><i>[bấm]</i> Anh Hùng nói gọn: điểm nghẽn không phải AI, mà là ngữ cảnh vận hành.<br><i>(Đây là luận điểm Base công bố, không phải kết quả đo độc lập.)</i></aside>
 </section>
 
 <!-- ================= 27 · KIẾN TRÚC BỐN LỚP ================= -->
@@ -1040,7 +1018,6 @@ p,li,small,span,b,em,div,blockquote{text-wrap:pretty}
   </div>
   <p class="loop" data-step="1"><i>↻</i><span>Mỗi vòng vận hành để lại tri thức cho vòng sau. Base gọi đích đến là <span class="hl-2">Intelligent Organization</span>.</span></p>
   <p class="srcline"><b>Nguồn:</b> Bài viết chính thức của Base.vn, 28/08/2026.</p>
-  <aside class="notes">Đây là kiến trúc Base công bố. Lớp 1, Service: một đơn vị việc có mục tiêu, người giữ, dữ liệu, đầu ra — ví dụ booking hàng xuất. Lớp 2, Output: gom đầu ra thành kết quả doanh nghiệp — booking đúng cut-off theo tuyến. Lớp 3, Knowledge: quy tắc và bài học. Lớp 4, Agent: AI tham gia việc bằng chính ngữ cảnh đó.<br><i>[bấm]</i> Vòng này lặp lại: mỗi lô hàng để lại bài học cho lô sau.<br><i>(Mức xác minh 1 — phù hợp phương pháp luận. Ví dụ logistics là minh hoạ, không nói là đã có sẵn trên sản phẩm.)</i></aside>
 </section>
 
 <!-- ================= 28 · KHÁC BIỆT ================= -->
@@ -1060,7 +1037,6 @@ p,li,small,span,b,em,div,blockquote{text-wrap:pretty}
       <li><i>✓</i>Nối hệ đang có; tự tạo ứng dụng, AI Agent đặc thù</li></ul></div>
   </div>
   <p class="srcline"><b>Nguồn:</b> Bài viết chính thức của Base.vn 28/08/2026; Nhân Dân, Báo Đầu tư 09/2026.</p>
-  <aside class="notes">So với cách làm phần mềm theo từng app. <i>[bấm]</i> Base 2.0 bắt đầu từ việc cần xong. AI là một bước trong quy trình, có người duyệt — không phải AI tự quyết. Mỗi lần làm để lại quy tắc và bài học. Và nối vào hệ đang chạy thay vì bắt dời nhà — đúng với doanh nghiệp logistics đang có TOS, WMS, TMS.<br><i>(Không nêu tên đối thủ. Mục "tri thức tự tích luỹ" là định hướng kiến trúc — mức 1.)</i></aside>
 </section>
 
 <!-- ================= 29 · BẢN ĐỒ TRÊN BASE 2.0 ================= -->
@@ -1079,7 +1055,6 @@ p,li,small,span,b,em,div,blockquote{text-wrap:pretty}
     <div class="mrow ext" data-step="1"><div class="lb">Hệ của doanh&nbsp;nghiệp<small>dòng hàng — giữ nguyên</small></div><div class="bx"><div class="grp"><b>Phần mềm chuyên ngành đang chạy</b><span>TOS · ePort</span><span>WMS</span><span>TMS · GPS</span><span>IoT</span><span>Kế toán · ERP</span></div></div></div>
   </div>
   <p class="srcline"><b>Nguồn:</b> Giao diện Base 2.0, 09/2026 (danh sách rút gọn).</p>
-  <aside class="notes">Đặt lên bản đồ: tầng AI và Agent ở trên; tầng vận hành ở giữa — công việc, khách hàng, con người, tài chính, truyền thông; tầng kết nối.<br><i>[bấm]</i> Và dưới cùng là hệ chuyên ngành của chính doanh nghiệp — giữ nguyên, Base nối vào.<br><i>(Tên app lấy từ app switcher Base 2.0 ngày 22/09/2026. Chưa quét tính năng phần lớn app ngoài BPM và Project — chỉ giới thiệu nhóm, không demo tính năng chưa kiểm.)</i></aside>
 </section>
 
 <!-- ================= 30 · KẾT CỘNG DỒN ================= -->
@@ -1090,7 +1065,6 @@ p,li,small,span,b,em,div,blockquote{text-wrap:pretty}
     <p data-step="3">Mỗi lô hàng để lại bài học cho lô sau.</p>
     <p class="final grad" data-step="4">Biết container ở đâu. Biết hồ sơ đang ở ai.</p>
   </div>
-  <aside class="notes">Quay lại câu hỏi lúc đầu. <i>[bấm]</i> Lô hàng đã có phần mềm chuyên ngành theo dõi. <i>[bấm]</i> Việc quanh lô hàng cũng phải có người giữ, có hạn, có đầu ra. <i>[bấm]</i> Và mỗi lô hàng để lại bài học cho lô sau. <i>[bấm]</i> <i>[dừng 2 giây]</i> Biết container ở đâu. Và biết hồ sơ đang ở ai.</aside>
 </section>
 
 <!-- ================= 31 · NGUỒN ================= -->
@@ -1135,7 +1109,6 @@ p,li,small,span,b,em,div,blockquote{text-wrap:pretty}
     <li><em>32</em><b>Base.vn</b> · Bài viết chính thức về Base 2.0 và kiến trúc Service → Output → Knowledge → Agent, 28/08/2026</li>
     <li><em>33</em><b>Tài liệu nội bộ Base</b> · Bộ giải pháp Base cho Logistics (quy trình mẫu); giao diện Base 2.0 ghi nhận 22/09/2026</li>
   </ul>
-  <aside class="notes">Toàn bộ nguồn, có đường dẫn. Mục 32–33 là tài liệu của Base, không công khai đường dẫn trong file này.</aside>
 </section>
 
 <script>
@@ -1151,20 +1124,17 @@ p,li,small,span,b,em,div,blockquote{text-wrap:pretty}
 </div></div>
 
 <div id="bar"></div><div id="dots"></div><div id="counter"></div>
-<div id="hint">→ tiếp · ← lùi · N ghi chú · G tổng quan · ? trợ giúp</div>
+<div id="hint">Nhấp chuột hoặc bấm → để xem tiếp · ← lùi · G mục lục · F toàn màn hình</div>
 <div id="notes"></div>
 <div id="overview"></div>
 <div id="help"><dl>
   <dt>→ Space PgDn</dt><dd>Bước tiếp / slide tiếp</dd>
   <dt>← PgUp</dt><dd>Lùi một bước</dd>
   <dt>↑ ↓</dt><dd>Nhảy slide (bỏ qua bước)</dd>
-  <dt>N</dt><dd>Ghi chú người nói + đồng hồ</dd>
-  <dt>G</dt><dd>Tổng quan, bấm để nhảy</dd>
-  <dt>T · Shift+T</dt><dd>Chạy/dừng đồng hồ · đặt lại</dd>
+  <dt>G</dt><dd>Mục lục, bấm để nhảy tới slide</dd>
   <dt>R</dt><dd>Phát lại slide hiện tại</dd>
   <dt>F</dt><dd>Toàn màn hình</dd>
-  <dt>P</dt><dd>Chế độ in/PDF (rồi Ctrl/Cmd+P)</dd>
-  <dt>M</dt><dd>Đo toạ độ điểm nóng trên ảnh</dd>
+  <dt>P</dt><dd>Xem toàn bộ slide liền mạch</dd>
   <dt>Home · End</dt><dd>Về đầu · tới cuối</dd>
 </dl></div>
 <div id="mlabel"></div>
@@ -1345,7 +1315,7 @@ function hud(){
   if(cur>0||step>0)$('#hint').style.opacity=0;
 }
 var ovw=$('#overview');
-slides.forEach(function(s,n){var b=document.createElement('button');b.innerHTML='<em>'+String(n+1).padStart(2,'0')+'</em>'+esc(s.dataset.title||'')+'<small>'+mmss(times[n])+(STEPS[n]?' · '+STEPS[n]+' bước':'')+'</small>';
+slides.forEach(function(s,n){var b=document.createElement('button');b.innerHTML='<em>'+String(n+1).padStart(2,'0')+'</em>'+esc(s.dataset.title||'')+'';
   b.addEventListener('click',function(ev){ev.stopPropagation();document.body.classList.remove('ov-on');go(n,0,'jump')});ovw.appendChild(b)});
 
 /* ---------- co sân khấu ---------- */
@@ -1386,7 +1356,6 @@ document.addEventListener('keydown',function(e){
   else if(k==='ArrowUp'){e.preventDefault();go(cur-1,0,'jump')}
   else if(k==='Home'){go(0,0,'jump')}
   else if(k==='End'){go(slides.length-1,STEPS[slides.length-1],'jump')}
-  else if(k==='n'||k==='N'){b.classList.toggle('notes-on');fit()}
   else if(k==='g'||k==='G'||k==='o'||k==='O'){b.classList.toggle('ov-on')}
   else if(k==='?'||k==='/'){b.classList.toggle('help-on')}
   else if(k==='t'){running=!running;hud()}

@@ -22,7 +22,7 @@ html = f'''<!doctype html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#070B1D">
-<title>Bức tranh chuyển đổi số ngành logistics — Base</title>
+<title>Bức tranh chuyển đổi số ngành logistics</title>
 <!--
   Bản mobile của deck "Bức tranh chuyển đổi số ngành logistics" · cập nhật 15/10/2026
   Cùng nguồn nội dung với bản trình chiếu (slides.html); đọc dọc, hiệu ứng hiện dần khi cuộn.
@@ -30,6 +30,7 @@ html = f'''<!doctype html>
 -->
 <script>document.documentElement.classList.add('js')</script>
 <style>
+:root{{color-scheme:dark}}
 {css_core}
 {css_rm}
 {extra}
