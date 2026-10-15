@@ -1,0 +1,1244 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#070B1D">
+<title>Bức tranh chuyển đổi số ngành logistics — Base</title>
+<!--
+  Bản mobile của deck "Bức tranh chuyển đổi số ngành logistics" · cập nhật 15/10/2026
+  Cùng nguồn nội dung với bản trình chiếu (slides.html); đọc dọc, hiệu ứng hiện dần khi cuộn.
+  Bản này không chứa ghi chú người nói.
+-->
+<script>document.documentElement.classList.add('js')</script>
+<style>
+
+/* ============ 1. TOKENS — đổi màu thương hiệu ở đây, giữ nguyên nghĩa màu trạng thái ============ */
+:root{
+  --bg:#070B1D; --bg-2:#101741;
+  --glow-1:rgba(99,102,241,.30); --glow-2:rgba(37,99,235,.24);
+  --ink:#F4F6FF; --ink-2:#B3BBDA; --ink-3:#7680A6;
+  --line:rgba(255,255,255,.11); --card:rgba(255,255,255,.055); --card-2:rgba(255,255,255,.085);
+  --accent:#5B8CFF; --accent-2:#A78BFA;               /* màu thương hiệu: thay bằng màu Base / của khách */
+  --ok:#22C58B; --bad:#FF5D6C; --warn:#FBBF24;        /* trạng thái: xanh = đúng/xong · đỏ = lỗi/quá hạn · vàng = chờ */
+  --t-process:#2563EB; --t-project:#8B5CF6; --t-field:#14B8A6; --t-approval:#F59E0B; /* màu theo loại việc */
+  --ui-bg:#F4F6FB; --ui-card:#FFFFFF; --ui-line:#E2E6F0; --ui-ink:#131A33; --ui-mute:#687292; --ui-accent:#2563EB;
+  --f-display:"Be Vietnam Pro","Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --f-ui:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+  --ease:cubic-bezier(.22,.61,.36,1); --ease-2:cubic-bezier(.2,.7,.2,1); --ease-cur:cubic-bezier(.4,0,.2,1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--ink);font-family:var(--f-display);-webkit-font-smoothing:antialiased}
+
+/* ============ 2. SÂN KHẤU 1600×900, co theo màn hình ============ */
+#viewport{position:fixed;inset:0;overflow:hidden}
+#stage{position:absolute;left:50%;top:50%;width:1600px;height:900px;transform:translate(-50%,-50%);transform-origin:center center;overflow:hidden;
+  background:radial-gradient(1000px 700px at 82% 8%,var(--glow-1),transparent 62%),radial-gradient(900px 640px at 8% 92%,var(--glow-2),transparent 60%),linear-gradient(160deg,var(--bg-2) 0%,var(--bg) 58%)}
+#stage::after{content:"";position:absolute;inset:0;pointer-events:none;background-image:radial-gradient(rgba(255,255,255,.05) 1px,transparent 1px);background-size:4px 4px;opacity:.55;z-index:0}
+.slide{position:absolute;inset:0;padding:76px 104px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;gap:30px;z-index:1;
+  opacity:0;visibility:hidden;transform:scale(1.014);transition:opacity .5s var(--ease),transform .62s var(--ease),visibility 0s linear .62s}
+.slide.is-active{opacity:1;visibility:visible;transform:none;transition-delay:0s;z-index:2}
+.slide.left{align-items:flex-start;text-align:left}
+.slide.top{justify-content:flex-start;padding-top:56px;gap:22px}
+.notes{display:none}
+
+/* ============ 3. CHỮ — tiêu đề tiếng Việt: line-height ≥ 1.15, tracking ≥ -0.02em để không cắt dấu ============ */
+.eyebrow{font-size:15px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-3)}
+h1{font-size:74px;font-weight:800;line-height:1.16;letter-spacing:-.02em;max-width:1320px}
+h1.xl{font-size:96px;line-height:1.15}
+h2{font-size:56px;font-weight:800;line-height:1.18;letter-spacing:-.018em;max-width:1320px}
+h3{font-size:30px;font-weight:700;line-height:1.25}
+.sub{font-size:27px;line-height:1.45;color:var(--ink-2);font-weight:500;max-width:1120px}
+.small{font-size:18px;color:var(--ink-3);font-weight:500}
+.hl{color:var(--accent)} .hl-2{color:var(--accent-2)} .ok{color:var(--ok)} .bad{color:var(--bad)} .warn{color:var(--warn)}
+.grad{background:linear-gradient(96deg,#7DD3FC,var(--accent) 46%,var(--accent-2));-webkit-background-clip:text;background-clip:text;color:transparent;padding:.06em 0}
+.claim{align-self:stretch;display:flex;gap:18px;align-items:flex-start;text-align:left;font-size:30px;font-weight:700;line-height:1.28;letter-spacing:-.01em}
+.claim::before{content:"";flex:0 0 5px;align-self:stretch;border-radius:3px;background:linear-gradient(var(--accent),var(--accent-2))}
+.cap{min-height:34px;font-size:23px;font-weight:600;color:var(--ink-2)}
+.cap.swap{animation:capIn .45s var(--ease-2)}
+@keyframes capIn{from{opacity:0;transform:translateY(8px)}}
+
+/* ============ 4. HIỆN DẦN ============ */
+.rv{animation:rv .7s var(--ease-2) both;animation-delay:calc(var(--i,0) * 95ms + 90ms)}
+.slide:not(.is-active) .rv,.slide.static .rv{animation:none}
+@keyframes rv{from{opacity:0;transform:translateY(18px);filter:blur(6px)}}
+[data-step],[data-only],[data-until]{opacity:0;transform:translateY(16px);filter:blur(4px);transition:opacity .5s var(--ease-2),transform .6s var(--ease-2),filter .5s}
+[data-step].on,[data-only].on,[data-until].on{opacity:1;transform:none;filter:none}
+.pop[data-step]{transform:scale(.93)} .pop[data-step].on{transform:none}
+.no-anim,.no-anim *{transition:none!important}
+
+/* ============ 5. BỐ CỤC MẪU (archetypes) ============ */
+/* 5.1 Trục một con số: YES → DONE */
+.axis{display:flex;align-items:center;width:1080px;margin-top:8px}
+.axis .w{font-weight:800;font-size:52px;letter-spacing:-.02em;min-width:150px;white-space:nowrap;line-height:1.15}
+.axis .w.end{text-align:right;color:var(--ok)}
+.axis .track{flex:1;height:2px;margin:0 24px;position:relative;background:linear-gradient(90deg,rgba(255,255,255,.4),rgba(255,255,255,.12));transition:flex .9s var(--ease)}
+.axis.short .track{flex:.28}
+.axis .node{position:absolute;top:50%;width:16px;height:16px;margin:-8px 0 0 -8px;border-radius:5px;background:var(--bad);box-shadow:0 0 0 4px rgba(255,93,108,.18),0 0 18px rgba(255,93,108,.5);animation:blink 1.4s ease-in-out infinite}
+.axis.short .node{background:var(--ok);box-shadow:0 0 0 4px rgba(34,197,139,.18),0 0 18px rgba(34,197,139,.5);animation:none}
+@keyframes blink{50%{opacity:.35}}
+/* 5.2 Lịch lát cắt thời gian */
+.cal{display:grid;grid-template-columns:repeat(10,86px);gap:12px}
+.day{height:66px;border-radius:12px;background:var(--card);border:1px solid var(--line);display:grid;place-items:center;font-size:22px;font-weight:600;color:var(--ink-2);transition:background .5s,color .5s,border-color .5s}
+.cal.hot .day.late{background:rgba(255,93,108,.22);border-color:rgba(255,93,108,.6);color:#fff}
+/* 5.3 Tường câu nói */
+.quotes{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;width:100%;max-width:1360px}
+.quote{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:30px 28px;text-align:left;display:flex;flex-direction:column;gap:18px}
+.quote p{font-size:27px;font-weight:600;line-height:1.35}
+.who{display:flex;align-items:center;gap:12px;font-size:17px;color:var(--ink-3);font-weight:600}
+.av{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font-size:15px;font-weight:800;color:#0B1030;background:var(--accent-2)}
+/* 5.4 Ba cột / thẻ */
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:26px;width:100%;max-width:1360px}
+.card{background:linear-gradient(180deg,var(--card-2),var(--card));border:1px solid var(--line);border-radius:22px;padding:34px 30px;text-align:left}
+.card .no{font-size:15px;font-weight:800;letter-spacing:.14em;color:var(--accent)}
+.card h3{margin:12px 0 10px}
+.card p{font-size:21px;line-height:1.45;color:var(--ink-2)}
+/* 5.5 So sánh A/B có dòng ẩn */
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:28px;width:100%;max-width:1180px}
+.cmp{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:26px 30px;text-align:left}
+.cmp h3{font-size:28px;margin-bottom:10px}
+.row{display:flex;justify-content:space-between;align-items:baseline;padding:13px 0;border-top:1px solid var(--line);font-size:21px;color:var(--ink-2)}
+.row b{font-size:25px;color:#fff;font-variant-numeric:tabular-nums}
+.row.total b{font-size:32px}
+.row b.ok{color:var(--ok)} .row b.bad{color:var(--bad)}
+.tagline{font-size:14px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:5px 12px;border-radius:999px;border:1px solid var(--line);color:var(--ink-3)}
+/* 5.6 Họ vs Bạn */
+.versus{display:grid;grid-template-columns:1fr 1fr;gap:28px;width:100%;max-width:1320px}
+.vcol{border-radius:22px;padding:30px 34px;text-align:left;border:1px solid var(--line);background:var(--card)}
+.vcol.you{border-color:rgba(34,197,139,.45);background:linear-gradient(180deg,rgba(34,197,139,.10),rgba(34,197,139,.03))}
+.vcol h3{font-size:18px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3);margin-bottom:14px}
+.vcol li{list-style:none;font-size:25px;line-height:1.4;padding:10px 0;display:flex;gap:14px}
+.vcol li i{font-style:normal;font-weight:800}
+.vcol.them li i{color:var(--bad)} .vcol.you li i{color:var(--ok)}
+/* 5.7 Chân trời: nền (baseline) và lợi thế (edge) */
+.horizon{width:100%;max-width:1200px;display:flex;flex-direction:column;align-items:center;gap:22px}
+.horizon .edge{font-family:Georgia,"Times New Roman",serif;font-style:italic;font-size:92px;font-weight:600;line-height:1.1}
+.horizon .items{display:flex;gap:44px;font-size:23px;color:var(--ink-2);flex-wrap:wrap;justify-content:center}
+.horizon .line{width:100%;height:2px;background:linear-gradient(90deg,transparent,var(--warn),transparent);opacity:.8}
+.horizon .base{font-size:16px;font-weight:800;letter-spacing:.3em;color:var(--warn)}
+/* 5.8 Chia chương */
+.ghost{position:absolute;left:50%;top:50%;transform:translate(-50%,-54%);font-size:420px;font-weight:800;letter-spacing:-.05em;line-height:1;color:rgba(255,255,255,.035);z-index:-1;user-select:none}
+/* 5.9 Kết cộng dồn */
+.stack{display:flex;flex-direction:column;gap:14px;align-items:center}
+.stack p{font-size:44px;font-weight:800;line-height:1.2;letter-spacing:-.015em;transition:opacity .5s,color .5s}
+.stack p.on:not(.now){opacity:.4}
+.stack p.final{font-size:60px}
+/* 5.10 Danh sách bước tiếp theo */
+.nexts{display:flex;flex-direction:column;gap:16px;width:100%;max-width:980px}
+.nexts li{list-style:none;display:flex;gap:18px;align-items:center;text-align:left;font-size:28px;font-weight:600;padding:18px 24px;border-radius:16px;background:var(--card);border:1px solid var(--line)}
+.nexts li b{flex:0 0 44px;height:44px;border-radius:12px;display:grid;place-items:center;background:var(--accent);color:#08102E;font-size:20px}
+/* 5.11 Mớ hỗn độn: mảnh giao diện nghiêng + cờ "chưa ai trả lời" (nước đi B2). Vị trí: --x --y, độ nghiêng: --r */
+.mess{position:relative;width:1320px;height:470px}
+.mess>*{position:absolute;left:var(--x);top:var(--y);transform:rotate(var(--r,0deg))}
+.frag{width:300px;background:var(--ui-card);color:var(--ui-ink);border-radius:12px;padding:14px 16px 10px;text-align:left;font:500 14px/1.4 var(--f-ui);box-shadow:0 22px 46px -12px rgba(0,0,0,.7)}
+.frag.wide{width:330px}
+.frag .src{display:block;font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--ui-mute);margin-bottom:6px}
+.frag .msg{display:flex;justify-content:space-between;gap:12px;padding:7px 0;border-top:1px solid var(--ui-line)}
+.frag .msg small{color:var(--ui-mute);font-size:12.5px;white-space:nowrap}
+.frag .msg.un{font-weight:700}
+.frag .badge{position:absolute;right:-10px;top:-10px;min-width:30px;height:30px;padding:0 8px;border-radius:999px;background:#DC2626;color:#fff;display:grid;place-items:center;font:800 14px var(--f-ui)}
+.frag table{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:4px}
+.frag th,.frag td{border:1px solid var(--ui-line);padding:6px 8px;text-align:left}
+.frag th{background:var(--ui-bg);font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ui-mute)}
+.frag td.q{color:#DC2626;font-weight:800;text-align:center}
+.frag .ln{display:flex;justify-content:space-between;gap:12px;padding:6px 0;border-bottom:1px dashed var(--ui-line)}
+.frag .ln span{color:var(--ui-mute)}
+.frag .ln b.miss{color:#DC2626}
+.frag.note{width:220px;padding:16px 16px 14px;background:#FDE68A;color:#422006;border-radius:4px;font:700 18px/1.35 var(--f-display)}
+.frag.note small{display:block;margin-top:8px;font:500 13px var(--f-ui)}
+.flag{font:800 14px var(--f-ui);letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;padding:7px 12px;border-radius:8px;color:var(--bad);background:rgba(255,93,108,.14);border:1px solid rgba(255,93,108,.5);opacity:0;transition:opacity .45s var(--ease-2)}
+.flag.warn{color:var(--warn);background:rgba(251,191,36,.12);border-color:rgba(251,191,36,.5)}
+.mess.loud .flag{opacity:1}
+/* 5.12 Chấm đếm công sức: mỗi chấm một bước làm tay, sáng dần sau một lần bấm (nước đi B6).
+   data-cls="1:run 2:done" trên .effort · --n = số bước · --i = thứ tự (0…n-1) · chấm .w = chỗ việc nằm chờ */
+.effort{--n:11;position:relative;width:1240px;height:250px;text-align:center}
+.effort .rail{position:absolute;left:0;right:0;top:20px;height:2px;background:var(--line)}
+.effort .dots{position:absolute;left:-12px;right:-12px;top:9px;display:flex;justify-content:space-between}
+.effort .dot{width:24px;height:24px;border-radius:50%;background:var(--bg-2);border:2px solid rgba(255,255,255,.22);transition:background .4s,border-color .4s,box-shadow .4s}
+.effort.run .dot{background:var(--ink-2);border-color:var(--ink-2);box-shadow:0 0 16px rgba(179,187,218,.4);animation:dotOn .35s var(--ease-2) backwards;animation-delay:calc(var(--i) * 430ms)}
+@keyframes dotOn{from{background:var(--bg-2);border-color:rgba(255,255,255,.22);box-shadow:none;transform:scale(.6)}}
+.effort.done .dot.w{background:var(--warn);border-color:var(--warn);box-shadow:0 0 0 5px rgba(251,191,36,.18),0 0 18px rgba(251,191,36,.5)}
+.effort .ecap{position:absolute;left:0;right:0;top:60px;font-size:26px;font-weight:600;line-height:1.45;color:var(--ink-2);opacity:0}
+.effort .ecap b{color:var(--ink);font-weight:800}
+.effort.run .ecap{animation:ecap 430ms linear;animation-delay:calc(var(--i) * 430ms)}
+.effort.run .ecap.sum{opacity:1;animation:ecapIn .45s var(--ease-2) backwards;animation-delay:calc(var(--n) * 430ms);transition:opacity .4s}
+.effort.done .ecap.sum{opacity:0}
+.slide.static .effort *{animation:none!important}
+@keyframes ecap{0%,100%{opacity:1}}
+@keyframes ecapIn{from{opacity:0;transform:translateY(8px)}}
+.effort .co{position:absolute;top:120px;left:calc(var(--i) / (var(--n) - 1) * 100%);width:230px;margin-left:-115px;padding:12px 14px;border-radius:14px;background:var(--card);border:1px solid rgba(251,191,36,.45);font-size:19px;font-weight:600;line-height:1.35;color:var(--ink-2)}
+.effort .co b{display:block;color:var(--warn);font-weight:800;margin-bottom:2px}
+.effort .co::before{content:"";position:absolute;left:50%;top:-87px;height:87px;width:1px;background:rgba(251,191,36,.45)}
+/* 5.13 Thẻ màu theo loại việc: mỗi loại một cấu trúc, chung một đích (nước đi C6). Màu = màu tuyến --t-* */
+.kinds{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;width:100%;max-width:1360px}
+.kind{--k:var(--t-process);--kt:rgba(37,99,235,.18);display:flex;flex-direction:column;gap:12px;text-align:left;padding:22px 22px 24px;border-radius:22px;border:1px solid var(--line);border-top:5px solid var(--k);background:linear-gradient(180deg,var(--kt),rgba(255,255,255,0) 72%),var(--card)}
+.kind.project{--k:var(--t-project);--kt:rgba(139,92,246,.2)}
+.kind.field{--k:var(--t-field);--kt:rgba(20,184,166,.18)}
+.kind.approval{--k:var(--t-approval);--kt:rgba(245,158,11,.18)}
+.kind .lb{display:flex;align-items:center;gap:10px;font-size:14px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--ink)}
+.kind .lb i{width:12px;height:12px;border-radius:4px;background:var(--k)}
+.kind h3{font-size:24px;line-height:1.3}
+.kind .mini{margin-top:auto;display:flex;flex-direction:column;gap:6px;padding:10px;border-radius:12px;background:var(--ui-bg);font:600 13px/1.3 var(--f-ui);color:var(--ui-ink)}
+.kind .mini .r{display:flex;align-items:center;gap:8px;background:var(--ui-card);border:1px solid var(--ui-line);border-radius:8px;padding:7px 9px}
+.kind .mini .r i{flex:0 0 12px;height:12px;border-radius:50%;background:var(--k)}
+.kind .mini .r i.o{background:#CBD5E1}
+.kind .mini .r small{margin-left:auto;color:var(--ui-mute);font-size:12px;font-weight:500;white-space:nowrap}
+.kind .mini .r.done{background:#DCFCE7;border-color:#BBF7D0;color:#166534}
+.kind .mini .r.done i{background:#16A34A}
+.kind .mini .r.done small{color:#166534}
+.kind .mini .g{display:grid;grid-template-columns:78px 1fr;align-items:center;gap:8px;background:var(--ui-card);border:1px solid var(--ui-line);border-radius:8px;padding:7px 9px}
+.kind .mini .g span{position:relative;height:12px;border-radius:6px;background:var(--ui-bg)}
+.kind .mini .g span b{position:absolute;top:0;bottom:0;left:var(--a);width:var(--w);border-radius:6px;background:var(--k)}
+/* 5.14 Mạng lưới luồng: một hồ sơ nối nhiều quy trình, cạnh sáng theo thứ tự (Work §16).
+   data-cls="1:s1 2:s2 3:s3" trên .net · nút .n đặt bằng --x --y (tâm, px) · .lN sáng ở bước N · .d sáng trễ (toả nhánh) */
+.net{position:relative;width:1320px;height:440px}
+.net svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.net .e{fill:none;stroke:rgba(255,255,255,.16);stroke-width:2}
+.net .e.lit{stroke:var(--accent);stroke-width:3;stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset .8s var(--ease)}
+.net.s1 .e.l1,.net.s2 .e.l2,.net.s3 .e.l3{stroke-dashoffset:0}
+.net .n{position:absolute;left:var(--x);top:var(--y);width:190px;margin-left:-95px;transform:translateY(-50%);padding:10px 14px 12px;border-radius:16px;background:var(--bg-2);border:1px solid var(--line);text-align:left;display:flex;flex-direction:column;gap:6px;transition:border-color .45s .5s,background .45s .5s,box-shadow .45s .5s}
+.net .n b{font-size:19px;line-height:1.25}
+.net .n em{align-self:flex-start;font:800 11px var(--f-ui);font-style:normal;letter-spacing:.14em;text-transform:uppercase;padding:3px 8px;border-radius:999px;border:1px solid var(--line);color:var(--ink-2)}
+.net .n em.ai{color:#0B1030;background:var(--accent-2);border-color:var(--accent-2)}
+.net .n.l0,.net.s1 .n.l1,.net.s2 .n.l2,.net.s3 .n.l3{border-color:var(--accent);background:#17214F;box-shadow:0 0 0 4px rgba(91,140,255,.14)}
+.net .e.lit.d{transition-delay:.6s}
+.net .n.d{transition-delay:1.2s}
+/* 5.15 Vòng hệ sinh thái: app xếp quanh một lõi — chỉ dùng SAU khi đã kể xong vấn đề.
+   --n = số app · --i = vị trí (0 ở đỉnh, theo chiều kim đồng hồ) · .hot sáng khi .eco có class hl (data-cls="1:hl") */
+.split{display:flex;align-items:center;justify-content:space-between;gap:64px;width:100%}
+.split>div:first-child{flex:1;display:flex;flex-direction:column;gap:22px}
+.eco{--n:8;position:relative;flex:0 0 620px;width:620px;height:620px}
+.eco .orb{position:absolute;left:50%;top:50%;border-radius:50%;border:1px solid rgba(255,255,255,.08);transform:translate(-50%,-50%)}
+.eco .orb.o1{width:300px;height:300px}
+.eco .orb.o2{width:470px;height:470px}
+.eco .orb.o3{width:610px;height:610px;border-color:rgba(255,255,255,.05)}
+.eco .core{position:absolute;left:50%;top:50%;width:150px;height:150px;margin:-75px 0 0 -75px;border-radius:50%;display:grid;place-items:center;text-align:center;background:var(--accent);color:#08102E;font-size:24px;font-weight:800;line-height:1.15;box-shadow:0 0 0 10px rgba(91,140,255,.14),0 0 60px rgba(91,140,255,.4)}
+.eco .app{--a:calc(var(--i) * 360deg / var(--n) - 90deg);position:absolute;left:50%;top:50%;width:150px;height:50px;margin:-25px 0 0 -75px;border-radius:999px;display:grid;place-items:center;background:var(--bg-2);border:1px solid var(--line);font-size:19px;font-weight:700;color:var(--ink-2);transform:rotate(var(--a)) translate(235px) rotate(calc(var(--a) * -1));transition:border-color .45s,color .45s,background .45s}
+.eco.hl .app.hot{border-color:var(--accent);color:var(--ink);background:#17214F}
+
+
+/* ============ 10. GIẢM CHUYỂN ĐỘNG ============ */
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{transition-duration:.01ms!important;animation-duration:.01ms!important;animation-iteration-count:1!important}}
+
+
+/* ============ 11. BỐ CỤC RIÊNG — deck Logistics (chỉ dùng biến màu có sẵn; teal = dòng hàng, accent = dòng việc/Base) ============ */
+:root{--goods:#2DD4BF; --goods-bg:rgba(20,184,166,.10); --goods-line:rgba(45,212,191,.42)}
+.srcline{position:absolute;left:104px;right:104px;bottom:28px;font:500 14px/1.45 var(--f-ui);color:var(--ink-2);text-align:left;opacity:.9}
+.srcline b{color:var(--ink);font-weight:700}
+.slide .tagline{align-self:center}
+.lede{font-size:22px;line-height:1.5;color:var(--ink-2);font-weight:500;max-width:1240px}
+.lede b{color:var(--ink)}
+
+/* 11.1 Bộ số lớn */
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:26px;width:100%;max-width:1360px}
+.kpi{background:linear-gradient(180deg,var(--card-2),var(--card));border:1px solid var(--line);border-radius:22px;padding:28px 30px 26px;text-align:left;display:flex;flex-direction:column;gap:10px}
+.kpi b{font-size:76px;font-weight:800;line-height:1.15;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.kpi span{font-size:22px;line-height:1.4;color:var(--ink);font-weight:600}
+.kpi small{font-size:16px;line-height:1.45;color:var(--ink-2);font-weight:500}
+
+/* 11.2 Thang mức độ số hoá */
+.meter{width:100%;max-width:1280px;display:flex;flex-direction:column;gap:18px;text-align:left}
+.meter .cap0{font-size:20px;color:var(--ink-2);font-weight:500}
+.meter .cap0 b{color:var(--ink)}
+.meter .barx{display:flex;height:86px;border-radius:16px;overflow:hidden;border:1px solid var(--line)}
+.meter .seg{display:flex;align-items:center;font-size:24px;font-weight:700;white-space:nowrap}
+.meter .seg.a{flex:0 0 90.5%;padding:0 26px;background:linear-gradient(90deg,rgba(251,191,36,.34),rgba(251,191,36,.12));color:var(--ink)}
+.meter .seg.a em{font-style:normal;color:var(--warn);margin-right:12px;font-size:34px;font-weight:800}
+.meter .seg.b{flex:1;justify-content:center;background:rgba(91,140,255,.38);font-size:20px}
+.meter .n3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.meter .nt{padding:16px 22px;border-radius:16px;background:var(--card);border:1px solid var(--line);font-size:19px;line-height:1.4;color:var(--ink-2)}
+.meter .nt b{display:block;font-size:40px;color:var(--ink);font-weight:800;line-height:1.15;margin-bottom:2px}
+
+/* 11.3 Tường câu nói 2×2 */
+.quotes.q4{grid-template-columns:1fr 1fr;gap:20px;max-width:1380px}
+.quotes.q4 .quote{padding:24px 28px;gap:14px}
+.quotes.q4 .quote p{font-size:25px;line-height:1.38}
+.quotes.q4 .who{font-size:16px;line-height:1.35}
+
+/* 11.4 Hai làn: dòng hàng và dòng việc */
+.lanes{width:100%;max-width:1392px;display:flex;flex-direction:column;gap:20px}
+.lane{--k:var(--goods);display:grid;grid-template-columns:270px 1fr;gap:24px;align-items:center;text-align:left;padding:22px 26px;border-radius:20px;border:1px solid var(--line);border-left:6px solid var(--k);background:var(--card)}
+.lane.work{--k:var(--accent);background:linear-gradient(90deg,rgba(91,140,255,.12),rgba(91,140,255,.02))}
+.lane .lt{display:flex;flex-direction:column;gap:6px}
+.lane .lt em{font-style:normal;font-size:14px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--k)}
+.lane .lt b{font-size:30px;font-weight:800;line-height:1.2}
+.lane .lt small{font-size:16px;color:var(--ink-2);font-weight:500;line-height:1.4}
+.lane .steps{display:flex;align-items:center;gap:8px}
+.lane .st{flex:1;padding:16px 10px;border-radius:14px;background:var(--bg-2);border:1px solid var(--line);font-size:19px;font-weight:700;text-align:center;line-height:1.25}
+.lane .ar{color:var(--k);font-weight:800;font-size:22px}
+.lane .tool{grid-column:2;font-size:17px;color:var(--ink-2);font-weight:500;margin-top:-8px}
+.lane .tool b{color:var(--k)}
+
+/* 11.5 Ma trận bài toán → công nghệ → doanh nghiệp đã làm */
+.mx{width:100%;max-width:1392px;display:flex;flex-direction:column;gap:10px;text-align:left}
+.mx .hd,.mx .r{display:grid;grid-template-columns:330px 300px 1fr;gap:22px;align-items:start}
+.mx .hd{font-size:13px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3);padding:0 22px}
+.mx .r{padding:14px 22px;border-radius:16px;background:var(--card);border:1px solid var(--line)}
+.mx .p{font-size:20.5px;font-weight:700;line-height:1.32;display:flex;gap:10px}
+.mx .p i{font-style:normal;color:var(--bad);font-weight:800}
+.mx .t{font-size:17.5px;line-height:1.42;color:#99F6E4;font-weight:600}
+.mx .e{font-size:17.5px;line-height:1.45;color:var(--ink-2)}
+.mx .e b{color:var(--ink)}
+.mx .e .ok{font-weight:800}
+
+/* 11.6 Hệ chuyên ngành đứng cạnh Base */
+.stk{width:100%;max-width:1392px;display:flex;flex-direction:column;gap:12px;text-align:left}
+.stk .r{display:grid;grid-template-columns:270px 1fr 300px;gap:20px;align-items:center;padding:14px 22px;border-radius:16px;background:var(--card);border:1px solid var(--line)}
+.stk .hd{display:grid;grid-template-columns:270px 1fr 300px;gap:20px;padding:0 22px;font-size:13px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3)}
+.stk .co{font-size:21px;font-weight:800;line-height:1.25}
+.stk .co small{display:block;font-size:15px;font-weight:600;color:var(--ink-2);margin-top:3px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chp{font-size:16px;font-weight:600;padding:6px 12px;border-radius:999px;border:1px solid var(--goods-line);color:#CCFBF1;background:var(--goods-bg);white-space:nowrap}
+.chp.base{border-color:rgba(91,140,255,.65);color:#fff;background:rgba(91,140,255,.24)}
+.chp.plain{border-color:var(--line);color:var(--ink);background:var(--card-2)}
+
+/* 11.7 Sáu vấn đề vận hành */
+.ops{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;width:100%;max-width:1392px}
+.op{background:linear-gradient(180deg,var(--card-2),var(--card));border:1px solid var(--line);border-radius:20px;padding:22px 24px 20px;text-align:left;display:flex;flex-direction:column;gap:8px}
+.op .no{font-size:14px;font-weight:800;letter-spacing:.14em;color:var(--bad)}
+.op h3{font-size:25px;line-height:1.25}
+.op p{font-size:18.5px;line-height:1.45;color:var(--ink-2)}
+.op .at{margin-top:auto;padding-top:6px;font-size:15px;font-weight:700;color:var(--ink-2)}
+.op .at b{color:var(--accent)}
+
+/* 11.8 Chuỗi bước có người giữ, hạn, đầu ra */
+.chain{display:grid;grid-template-columns:repeat(6,1fr);gap:18px;width:100%;max-width:1392px}
+.cn{position:relative;background:var(--bg-2);border:1px solid var(--line);border-top:4px solid var(--accent);border-radius:16px;padding:16px 16px 14px;text-align:left;display:flex;flex-direction:column;gap:8px}
+.cn .k{font-size:13px;font-weight:800;letter-spacing:.14em;color:var(--accent)}
+.cn b{font-size:20px;line-height:1.25;min-height:50px}
+.cn .tm{font-size:15.5px;font-weight:600;color:var(--ink-2)}
+.cn .sla{align-self:flex-start;font:800 14px var(--f-ui);padding:4px 10px;border-radius:999px;color:var(--warn);background:rgba(251,191,36,.12);border:1px solid rgba(251,191,36,.45)}
+.cn .out{font-size:15px;line-height:1.35;color:var(--ok);font-weight:600}
+.cn:not(:last-child)::after{content:"→";position:absolute;right:-15px;top:46%;color:var(--ink-3);font-weight:800;font-size:18px}
+.chsum{font-size:24px;font-weight:700}
+.rules{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;width:100%;max-width:1392px}
+.rule{padding:16px 22px;border-radius:16px;background:var(--card);border:1px solid var(--line);font-size:19.5px;line-height:1.42;text-align:left;color:var(--ink-2)}
+.rule b{display:block;color:var(--ink);font-size:21px;margin-bottom:2px}
+
+/* 11.9 Một case: nhận diện bên trái, ba khối bên phải */
+.story{display:grid;grid-template-columns:400px 1fr;gap:34px;width:100%;max-width:1392px;text-align:left;align-items:stretch}
+.story .id{display:flex;flex-direction:column;gap:12px;padding:28px 28px;border-radius:24px;background:linear-gradient(180deg,rgba(91,140,255,.16),rgba(91,140,255,.03));border:1px solid rgba(91,140,255,.35)}
+.story .id .nm{font-size:38px;font-weight:800;line-height:1.18}
+.story .id .mt{font-size:17px;color:var(--ink-2);line-height:1.45;font-weight:500}
+.story .id .big{margin-top:auto;font-size:80px;font-weight:800;line-height:1.12;color:var(--ok);letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.story .id .bl{font-size:21px;font-weight:700;line-height:1.35}
+.story .bd{display:flex;flex-direction:column;gap:12px}
+.blk{display:grid;grid-template-columns:132px 1fr;gap:18px;padding:15px 20px;border-radius:16px;background:var(--card);border:1px solid var(--line)}
+.blk h4{font-size:14px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-2);padding-top:4px}
+.blk p{font-size:19px;line-height:1.45;color:var(--ink-2)}
+.blk p b{color:var(--ink)}
+.blk.res{border-color:rgba(34,197,139,.45);background:linear-gradient(180deg,rgba(34,197,139,.11),rgba(34,197,139,.03))}
+.blk.res h4{color:var(--ok)}
+.qline{font-size:20px;font-weight:600;line-height:1.42;color:var(--ink);padding:4px 0 4px 18px;border-left:4px solid var(--accent-2)}
+.qline small{display:block;font-size:15px;color:var(--ink-2);font-weight:600;margin-top:6px}
+
+/* 11.10 Hai doanh nghiệp niêm yết */
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:26px;width:100%;max-width:1392px;text-align:left}
+.dcol{border-radius:22px;padding:24px 28px;background:var(--card);border:1px solid var(--line);display:flex;flex-direction:column;gap:12px}
+.dcol .nm{font-size:30px;font-weight:800;line-height:1.2}
+.dcol .mt{font-size:17px;color:var(--ink-2);font-weight:500;line-height:1.4}
+.dcol p{font-size:19px;line-height:1.45;color:var(--ink-2)}
+.dcol p b{color:var(--ink)}
+.dcol blockquote{font-size:23px;font-weight:700;line-height:1.36;color:var(--ink);padding:14px 18px;border-radius:14px;background:rgba(34,197,139,.10);border-left:4px solid var(--ok)}
+.dcol blockquote small{display:block;font-size:15px;font-weight:600;color:var(--ink-2);margin-top:6px}
+
+/* 11.11 Bốn hành trình đang chạy */
+.jr{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;width:100%;max-width:1392px}
+.jc{border-radius:20px;padding:22px 22px;background:linear-gradient(180deg,var(--card-2),var(--card));border:1px solid var(--line);text-align:left;display:flex;flex-direction:column;gap:10px}
+.jc .tg{font-size:13px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
+.jc .nm{font-size:23px;font-weight:800;line-height:1.25}
+.jc p{font-size:17.5px;line-height:1.46;color:var(--ink-2)}
+.jc p b{color:var(--ink)}
+.also{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:center;width:100%;max-width:1392px;font-size:18px;color:var(--ink-2);font-weight:600}
+
+/* 11.12 Phạm vi hai lớp */
+.scope{display:grid;grid-template-columns:1fr 1fr;gap:26px;width:100%;max-width:1392px;text-align:left}
+.sc{--k:var(--goods);border-radius:22px;padding:22px 28px 14px;border:1px solid var(--line);border-top:5px solid var(--k);background:var(--card)}
+.sc.work{--k:var(--accent);background:linear-gradient(180deg,rgba(91,140,255,.13),rgba(91,140,255,.02))}
+.sc h3{font-size:14px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--k);margin-bottom:6px}
+.sc .ttl{font-size:28px;font-weight:800;line-height:1.25;margin-bottom:8px}
+.sc li{list-style:none;font-size:19px;line-height:1.42;padding:10px 0;border-top:1px solid var(--line);color:var(--ink-2)}
+.sc li b{color:var(--ink)}
+.band{width:100%;max-width:1392px;padding:16px 24px;border-radius:16px;border:1px dashed rgba(255,255,255,.32);font-size:22px;font-weight:700;text-align:center}
+.band span{color:var(--goods)} .band em{font-style:normal;color:var(--accent)}
+
+/* 11.13 Kiến trúc bốn lớp */
+.arch{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;width:100%;max-width:1392px}
+.ly{position:relative;border-radius:20px;padding:22px 22px 20px;background:var(--bg-2);border:1px solid var(--line);border-top:4px solid var(--accent-2);text-align:left;display:flex;flex-direction:column;gap:10px}
+.ly .lv{font-size:13px;font-weight:800;letter-spacing:.16em;color:var(--accent-2)}
+.ly h3{font-size:30px}
+.ly p{font-size:18px;line-height:1.45;color:var(--ink-2)}
+.ly .ex{margin-top:auto;padding:12px 14px;border-radius:12px;background:var(--goods-bg);border:1px dashed var(--goods-line);font-size:16.5px;line-height:1.42;color:#CCFBF1}
+.ly .ex em{display:block;font-style:normal;font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--goods);margin-bottom:4px}
+.ly:not(:last-child)::after{content:"→";position:absolute;right:-18px;top:30px;color:var(--accent-2);font-weight:800;font-size:20px}
+.loop{font-size:22px;font-weight:700;color:var(--ink);display:flex;gap:12px;align-items:center;justify-content:center}
+.loop i{font-style:normal;color:var(--accent-2);font-size:26px}
+
+/* 11.14 Bản đồ lớp trên Base 2.0 */
+.mp{width:100%;max-width:1392px;display:flex;flex-direction:column;gap:12px;text-align:left}
+.mrow{display:grid;grid-template-columns:210px 1fr;gap:18px;align-items:stretch}
+.mrow .lb{display:flex;flex-direction:column;justify-content:center;font-size:14px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-2);line-height:1.4}
+.mrow .lb small{font-size:13px;letter-spacing:0;text-transform:none;font-weight:600;color:var(--ink-3)}
+.mrow .bx{display:flex;gap:10px;padding:12px;border-radius:16px;background:var(--card);border:1px solid var(--line)}
+.grp{flex:1;padding:10px 12px;border-radius:12px;background:var(--bg-2);border:1px solid var(--line)}
+.grp b{display:block;font-size:16px;font-weight:800;margin-bottom:7px}
+.grp span{display:inline-block;font:600 14px/1.2 var(--f-ui);padding:5px 9px;margin:0 5px 6px 0;border-radius:999px;background:rgba(91,140,255,.18);color:#E3EAFF}
+.mrow.ai .grp span{background:rgba(167,139,250,.22);color:#EDE7FF}
+.mrow.ext .bx{border-style:dashed;border-color:var(--goods-line);background:transparent}
+.mrow.ext .grp{background:var(--goods-bg);border-color:var(--goods-line)}
+.mrow.ext .grp span{background:rgba(45,212,191,.16);color:#CCFBF1}
+.mrow.ext .lb{color:var(--goods)}
+
+/* 11.15 Nguồn tham khảo */
+.refs{columns:3;column-gap:30px;width:100%;max-width:1392px;text-align:left;font:500 13.5px/1.42 var(--f-ui);color:var(--ink-2)}
+.refs li{list-style:none;break-inside:avoid;margin-bottom:8px;padding-left:30px;position:relative}
+.refs li em{position:absolute;left:0;top:0;font-style:normal;font-weight:800;color:var(--accent)}
+.refs b{color:var(--ink);font-weight:700}
+.refs a{color:#A9C1FF;text-decoration:none}
+.refs a:hover{text-decoration:underline}
+.refh{font:800 13px var(--f-ui);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);margin:0 0 6px;break-after:avoid}
+.versus.dense .vcol{padding:24px 30px}
+.versus.dense .vcol li{font-size:21px;line-height:1.42;padding:9px 0}
+.versus.dense .vcol li b{color:var(--ink)}
+
+/* 11.16 Mảnh giao diện kiểu app quen thuộc (Zalo, Excel, email, phiếu giấy) cho slide mớ hỗn độn — dựng lại, không dùng logo */
+.mess.apps{height:500px}
+.mess .win{border-radius:12px;overflow:hidden;background:#fff;color:#1F2937;text-align:left;font:500 13px/1.38 var(--f-ui);box-shadow:0 22px 46px -12px rgba(0,0,0,.7)}
+.zl{width:320px;background:#EEF1F5!important}
+.zl .hd{display:flex;align-items:center;gap:10px;padding:9px 12px;background:#0068FF;color:#fff}
+.zl .hd i{flex:0 0 30px;height:30px;border-radius:50%;background:#7FB2FF;display:grid;place-items:center;font:800 11px var(--f-ui);font-style:normal;color:#fff}
+.zl .hd b{display:block;font-size:14px;line-height:1.25}
+.zl .hd small{display:block;font-size:11.5px;opacity:.85}
+.zl .hd .cnt{margin-left:auto;background:#FF3B30;border-radius:999px;padding:1px 8px;font:800 12px var(--f-ui)}
+.zl .bd{padding:10px 10px 4px;display:flex;flex-direction:column;gap:7px}
+.zl .m{max-width:86%;background:#fff;border-radius:10px;padding:6px 10px;box-shadow:0 1px 1px rgba(0,0,0,.06)}
+.zl .m em{display:block;font-style:normal;font-size:11px;color:#64748B;font-weight:700}
+.zl .m small{display:block;text-align:right;font-size:10.5px;color:#94A3B8}
+.zl .m.me{align-self:flex-end;background:#D7E9FF}
+.zl .in{margin:6px 10px 10px;background:#fff;border-radius:8px;padding:6px 10px;color:#94A3B8;font-size:12px}
+.xl{width:380px}
+.xl .tb{background:#217346;color:#fff;padding:7px 12px;font:600 12.5px var(--f-ui)}
+.xl .rb{display:flex;gap:14px;padding:5px 12px;border-bottom:1px solid #E5E7EB;font-size:11.5px;color:#374151}
+.xl .rb span:first-child{color:#217346;font-weight:700;border-bottom:2px solid #217346}
+.xl .fx{display:flex;border-bottom:1px solid #E5E7EB;font-size:12px;color:#374151}
+.xl .fx span{padding:3px 8px;border-right:1px solid #E5E7EB}
+.xl .fx span:first-child{width:46px}
+.xl .fx span:nth-child(2){font-style:italic;color:#6B7280}
+.xl table{width:100%;border-collapse:collapse;font-size:12.5px}
+.xl th,.xl td{border:1px solid #E2E8F0;padding:4px 7px;text-align:left;white-space:nowrap}
+.xl th{background:#F3F4F6;color:#6B7280;font-weight:600;text-align:center;font-size:11px}
+.xl td.rh{background:#F3F4F6;color:#6B7280;text-align:center;width:26px;font-size:11px}
+.xl td.h{font-weight:700;background:#E8F3EC}
+.xl td.q{color:#DC2626;font-weight:800;text-align:center}
+.xl td.sel{outline:2px solid #217346;outline-offset:-2px}
+.xl .tabs{display:flex;gap:2px;background:#F3F4F6;padding:3px 8px;font-size:11px;color:#6B7280}
+.xl .tabs span{padding:2px 10px}
+.xl .tabs span.on{background:#fff;color:#217346;font-weight:700;border-bottom:2px solid #217346}
+.ml{width:330px}
+.ml .tb{display:flex;align-items:center;gap:8px;background:#0F6CBD;color:#fff;padding:8px 12px;font:600 12.5px var(--f-ui)}
+.ml .tb span{margin-left:auto;background:rgba(255,255,255,.2);border-radius:6px;padding:2px 10px;font-weight:500;font-size:11.5px}
+.ml .fl{display:flex;gap:12px;padding:5px 12px;border-bottom:1px solid #E5E7EB;font-size:11.5px;color:#6B7280}
+.ml .fl b{color:#0F6CBD;border-bottom:2px solid #0F6CBD}
+.ml .it{display:grid;grid-template-columns:1fr auto;gap:1px 8px;padding:7px 12px 7px 14px;border-bottom:1px solid #F1F5F9;position:relative}
+.ml .it.un::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:#0F6CBD}
+.ml .it b{font-size:13px;font-weight:600}
+.ml .it.un b,.ml .it.un .s{font-weight:800}
+.ml .it small{color:#64748B;font-size:11px}
+.ml .it .s{grid-column:1/-1;font-size:12.5px;color:#334155}
+.pp{width:350px;background:#FFFEF7!important;color:#111!important;padding:13px 18px 12px;font:13px/1.4 "Times New Roman",Georgia,serif!important;border-radius:3px!important}
+.pp .co{font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:#374151}
+.pp h5{font:700 15px/1.3 "Times New Roman",Georgia,serif;text-align:center;margin:5px 0 7px;letter-spacing:.02em}
+.pp .ln{display:flex;gap:6px;padding:3px 0;border-bottom:1px dotted #9CA3AF}
+.pp .ln span{color:#4B5563}
+.pp .ln b{margin-left:auto}
+.pp .sg{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:9px;text-align:center;font-size:11.5px;font-weight:700}
+.pp .sg div{min-height:48px;display:flex;flex-direction:column;justify-content:space-between;align-items:center}
+.pp .sg em{font:italic 17px "Segoe Script","Brush Script MT",cursive;color:#1D4ED8;font-weight:400}
+.pp .sg .miss{color:#DC2626;font-weight:400;font-style:italic;font-size:11.5px}
+
+/* 11.17 Không để dòng nào chỉ có một chữ: tiêu đề cân dòng, đoạn văn tránh chữ mồ côi */
+h1,h2,h3,.sub,.lede,.qline,.claim{text-wrap:balance}
+p,li,small,span,b,em,div,blockquote{text-wrap:pretty}
+.zl .m{width:max-content}
+.xl .tabs{margin:0}
+.xl .tabs span{border:0;border-radius:0;background:transparent;font-size:11px;font-weight:500;color:#6B7280;padding:2px 10px}
+.xl .tabs span.on{background:#fff;color:#217346;font-weight:700;border-bottom:2px solid #217346}
+
+
+/* ============ 12. BẢN MOBILE — đọc dọc, cùng nội dung và hiệu ứng với deck ============ */
+html,body{height:auto;overflow-x:hidden;overflow-y:auto}
+html{scroll-padding-top:60px;-webkit-text-size-adjust:100%}
+body{background:var(--bg);min-height:100%}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(520px 420px at 92% 0%,var(--glow-1),transparent 66%),radial-gradient(480px 420px at 0% 100%,var(--glow-2),transparent 62%),linear-gradient(170deg,var(--bg-2) 0%,var(--bg) 55%)}
+#stage{position:relative;left:auto;top:auto;width:auto;height:auto;transform:none!important;overflow:visible;background:none;z-index:1;max-width:680px;margin:0 auto;padding:52px 0 24px}
+#stage::after{display:none}
+.slide{position:relative;inset:auto;opacity:1;visibility:visible;transform:none;transition:none;z-index:auto;
+  padding:42px 20px 30px;gap:16px;justify-content:flex-start;align-items:stretch;text-align:left;border-top:1px solid var(--line);overflow:hidden}
+.slide.top{padding-top:42px;gap:16px}
+.slide:first-child{border-top:0;min-height:calc(100svh - 52px);justify-content:center;align-items:center;text-align:center}
+.slide:has(> .ghost),.slide:has(> h2.grad),.slide:has(.stack){min-height:58svh;justify-content:center;align-items:center;text-align:center}
+
+/* chữ */
+.eyebrow{font-size:11.5px;letter-spacing:.16em;line-height:1.5}
+h1{font-size:33px;line-height:1.2;letter-spacing:-.015em}
+.slide:first-child h1{font-size:38px}
+h2{font-size:26px;line-height:1.25;letter-spacing:-.01em}
+h3{font-size:19px;line-height:1.3}
+.sub{font-size:17px;line-height:1.5}
+.small{font-size:13px}
+.lede{font-size:16px;line-height:1.55}
+.srcline{position:static;left:auto;right:auto;bottom:auto;font-size:12px;line-height:1.5;margin-top:2px;opacity:.8}
+.tagline{font-size:11px}
+.ghost{font-size:210px}
+.mcue{margin-top:28px;font:600 13px var(--f-ui);color:var(--ink-2);letter-spacing:.06em;animation:cue 1.8s var(--ease-2) infinite}
+@keyframes cue{50%{transform:translateY(6px);opacity:.6}}
+
+/* hiện dần khi cuộn tới (cùng thông số với deck: trồi 18px + bỏ mờ, so le) */
+html.js .slide:not(.is-active) .rv{opacity:0}
+html:not(.js) [data-step]{opacity:1;transform:none;filter:none}
+
+/* lưới nhiều cột → một cột */
+.cards,.kpis,.ops,.jr,.duo,.scope,.arch,.rules,.versus,.quotes,.quotes.q4{grid-template-columns:1fr;gap:12px;max-width:none}
+.card{padding:20px}
+.card .no{font-size:12px}
+.card h3{margin:8px 0 6px}
+.card p{font-size:15.5px}
+.kpi{padding:18px 20px;gap:6px}
+.kpi b{font-size:46px}
+.kpi span{font-size:17px}
+.kpi small{font-size:13.5px}
+
+/* mức độ số hoá */
+.meter{gap:12px}
+.meter .cap0{font-size:15px}
+.meter .barx{height:58px}
+.meter .seg.a{padding:0 14px;font-size:14.5px}
+.meter .seg.a em{font-size:22px;margin-right:8px}
+.meter .seg.b{font-size:12.5px}
+.meter .n3{grid-template-columns:1fr;gap:10px}
+.meter .nt{font-size:15px;padding:12px 16px}
+.meter .nt b{font-size:28px}
+
+/* câu nói */
+.quote,.quotes.q4 .quote{padding:18px;gap:10px}
+.quote p,.quotes.q4 .quote p{font-size:19px;line-height:1.4}
+.who,.quotes.q4 .who{font-size:13px;align-items:flex-start}
+.av{flex:0 0 34px;width:34px;height:34px;font-size:13px}
+
+/* hai cột ✕ / ✓ */
+.vcol,.versus.dense .vcol{padding:18px}
+.vcol h3{font-size:12.5px;margin-bottom:8px}
+.vcol li,.versus.dense .vcol li{font-size:16px;line-height:1.45;padding:7px 0;gap:10px}
+
+/* hai dòng chảy */
+.lane{grid-template-columns:1fr;gap:12px;padding:16px}
+.lane .lt b{font-size:22px}
+.lane .lt small{font-size:14px}
+.lane .steps{flex-wrap:wrap;gap:6px}
+.lane .st{flex:0 0 auto;padding:8px 11px;font-size:14px}
+.lane .ar{display:none}
+.lane .st:not(:last-child)::after{content:"→";margin-left:8px;color:var(--k);font-weight:800}
+.lane .tool{grid-column:auto;margin:0;font-size:14px}
+
+/* ma trận bài toán */
+.mx .hd{display:none}
+.mx .r{grid-template-columns:1fr;gap:8px;padding:14px 16px}
+.mx .p{font-size:17px}
+.mx .t,.mx .e{font-size:14.5px}
+.mx .t::before{content:"Công nghệ: ";color:var(--ink-2);font-weight:700}
+
+/* hệ chuyên ngành song song Base */
+.stk .hd{display:none}
+.stk .r{grid-template-columns:1fr;gap:10px;padding:14px 16px}
+.stk .co{font-size:18px}
+.stk .r>.chips:nth-child(2)::before,.stk .r>.chips:nth-child(3)::before{flex:0 0 100%;font:800 11px var(--f-ui);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-2)}
+.stk .r>.chips:nth-child(2)::before{content:"Phần mềm chuyên ngành"}
+.stk .r>.chips:nth-child(3)::before{content:"Base đảm nhận"}
+.chp{font-size:13.5px;padding:5px 10px;white-space:normal}
+
+/* mớ hỗn độn: các mảnh xếp dọc, cờ đứng ngay dưới mảnh tương ứng */
+.mess,.mess.apps{position:relative;width:100%;height:auto;display:flex;flex-direction:column;align-items:center;gap:12px;padding:4px 0}
+.mess>*{position:relative!important;left:auto!important;top:auto!important}
+.mess .win,.mess .frag{width:100%!important;max-width:380px}
+.mess .frag.note{max-width:250px}
+.mess>.zl{order:1;transform:rotate(-1.2deg)}
+.mess>.flag:nth-child(6){order:2}
+.mess>.xl{order:3;transform:rotate(1deg)}
+.mess>.flag:nth-child(7){order:4}
+.mess>.ml{order:5;transform:rotate(-1deg)}
+.mess>.flag:nth-child(8){order:6}
+.mess>.pp{order:7;transform:rotate(1.2deg)}
+.mess>.flag:nth-child(9){order:8}
+.mess>.note{order:9;transform:rotate(-2deg)}
+.mess .flag{transform:none;font-size:12px;padding:6px 10px}
+.xl th,.xl td{padding:4px 5px}
+
+/* sáu vấn đề */
+.op{padding:18px}
+.op h3{font-size:19px}
+.op p{font-size:15px}
+.op .at{font-size:13px}
+
+/* chuỗi bước */
+.chain{grid-template-columns:1fr 1fr;gap:10px}
+.cn{padding:12px 12px 10px;gap:6px}
+.cn::after{display:none}
+.cn b{font-size:16px;min-height:0}
+.cn .tm{font-size:13px}
+.cn .sla{font-size:12px}
+.cn .out{font-size:12.5px}
+.chsum{font-size:17px;line-height:1.4}
+.rule{font-size:15px;padding:14px 16px}
+.rule b{font-size:17px}
+
+/* case */
+.story{grid-template-columns:1fr;gap:12px}
+.story .id{padding:20px;gap:8px}
+.story .id .nm{font-size:27px}
+.story .id .mt{font-size:14.5px}
+.story .id .big{font-size:56px;margin-top:6px}
+.story .id .bl{font-size:17px}
+.blk{grid-template-columns:1fr;gap:6px;padding:14px 16px}
+.blk h4{font-size:12px;padding-top:0}
+.blk p{font-size:15.5px}
+.qline,.slide .qline[style]{font-size:17px!important}
+.qline small{font-size:13px}
+.dcol{padding:18px}
+.dcol .nm{font-size:23px}
+.dcol .mt{font-size:14px}
+.dcol p{font-size:15.5px}
+.dcol blockquote{font-size:18px}
+.dcol blockquote small{font-size:12.5px}
+.jc{padding:18px}
+.jc .nm{font-size:20px}
+.jc p{font-size:15px}
+.also{justify-content:flex-start;font-size:15px;gap:8px}
+
+/* phạm vi hai lớp */
+.sc{padding:18px 18px 8px}
+.sc .ttl{font-size:21px}
+.sc li{font-size:15.5px}
+.band{font-size:16px;padding:14px 16px}
+
+/* kiến trúc bốn lớp */
+.arch{gap:26px}
+.ly{padding:18px}
+.ly h3{font-size:23px}
+.ly p{font-size:15px}
+.ly .ex{font-size:14.5px}
+.ly:not(:last-child)::after{content:"↓";right:auto;left:50%;top:auto;bottom:-24px;transform:translateX(-50%)}
+.loop{font-size:16px;align-items:flex-start;text-align:left}
+
+/* bản đồ Base 2.0 */
+.mrow{grid-template-columns:1fr;gap:6px}
+.mrow .lb{font-size:12px;flex-direction:row;gap:8px;align-items:baseline}
+.mrow .bx{flex-wrap:wrap;padding:10px;gap:8px}
+.grp{flex:1 1 100%}
+.grp b{font-size:14.5px}
+.grp span{font-size:12.5px}
+
+/* đóng vòng, nguồn */
+.stack{gap:12px}
+.stack p{font-size:22px;line-height:1.3}
+.stack p.final{font-size:28px}
+.refs{columns:1;font-size:13px}
+
+/* thanh trên cùng + mục lục */
+#mtop{position:fixed;top:0;left:0;right:0;height:52px;z-index:50;display:flex;align-items:center;gap:12px;padding:0 14px;padding-top:env(safe-area-inset-top);
+  background:rgba(7,11,29,.84);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);font-family:var(--f-ui)}
+#mtoc{all:unset;cursor:pointer;flex:0 0 36px;height:36px;border-radius:10px;display:grid;place-items:center;background:var(--card-2);color:var(--ink);font-size:17px}
+#mtop .mt{flex:1;min-width:0;display:flex;align-items:center;gap:10px}
+#mttl{flex:1;min-width:0;font-size:14px;font-weight:700;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#mcnt{font-size:12px;font-weight:600;color:var(--ink-2);font-variant-numeric:tabular-nums}
+#mbar{position:absolute;left:0;bottom:-1px;height:2px;width:0;background:linear-gradient(90deg,var(--accent),var(--accent-2))}
+#mlist{position:fixed;left:0;right:0;top:52px;bottom:0;z-index:49;background:rgba(5,8,22,.97);overflow:auto;padding:8px 16px 40px;font-family:var(--f-ui)}
+#mlist[hidden]{display:none}
+#mlist a{display:flex;gap:12px;padding:12px 4px;border-bottom:1px solid var(--line);color:var(--ink);text-decoration:none;font-size:15px;line-height:1.4}
+#mlist a em{font-style:normal;color:var(--accent);font-weight:800;min-width:26px}
+#mlist a.cur{color:var(--accent)}
+.mfoot{position:relative;z-index:1;text-align:center;padding:20px 20px 36px;font:500 12px var(--f-ui);color:var(--ink-3)}
+
+</style>
+</head>
+<body>
+<header id="mtop"><button id="mtoc" type="button" aria-label="Mục lục" aria-expanded="false" aria-controls="mlist">☰</button><div class="mt"><span id="mttl">Bức tranh chuyển đổi số ngành logistics</span><span id="mcnt"></span></div><i id="mbar"></i></header>
+<nav id="mlist" hidden></nav>
+<main id="stage">
+
+<!-- ================= 01 · MỞ ================= -->
+<section class="slide" data-title="Mở đầu" data-time="30">
+  <p class="eyebrow rv" style="--i:0">Logistics · Tổng hợp case study chuyển đổi số</p>
+  <h1 class="rv" style="--i:1">Bức tranh chuyển đổi số ngành <span class="hl">logistics</span></h1>
+  <p class="sub rv" style="--i:2">Vì sao phải làm, công nghệ giúp được gì, và phạm vi đáp ứng của Base</p>
+  <p class="small rv" style="--i:3">Base.vn · Tài liệu tham khảo cho doanh nghiệp logistics&nbsp;·&nbsp;10/2026</p>
+  <p class="mcue">Kéo xuống để xem ↓</p>
+</section>
+
+<!-- ================= 02 · BẢN ĐỒ BA CÂU HỎI ================= -->
+<section class="slide" data-title="Ba câu hỏi" data-time="30">
+  <h2 class="rv" style="--i:0">Tài liệu giúp trả lời <span class="hl">3 câu hỏi</span></h2>
+  <div class="cards">
+    <div class="card" data-step="1"><div class="no">01 · BỐI CẢNH</div><h3>Vì sao chủ doanh nghiệp logistics phải quan tâm?</h3><p>Chi phí, áp lực từ cảng, hãng tàu, chủ hàng — và những gì doanh nghiệp đi trước đã đo được.</p></div>
+    <div class="card" data-step="2"><div class="no">02 · BÀI TOÁN</div><h3>Công nghệ giúp được gì?</h3><p>Tách hai nhóm: nghiệp vụ đặc thù của ngành và vận hành nội bộ. Mỗi nhóm một loại công cụ, một nhóm case thật.</p></div>
+    <div class="card" data-step="3"><div class="no">03 · BASE</div><h3>Base khác ở đâu?</h3><p>Base 2.0 trong kỷ nguyên AI: kiến trúc Service → Output → Knowledge → Agent, và phạm vi Base nhận làm.</p></div>
+  </div>
+</section>
+
+<!-- ================= 03 · CHƯƠNG 1 ================= -->
+<section class="slide" data-title="Chương 1: Bối cảnh" data-time="15">
+  <div class="ghost">01</div>
+  <p class="eyebrow rv" style="--i:0">Phần 1 · Bối cảnh</p>
+  <h1 class="rv" style="--i:1">Vì sao logistics không thể đứng ngoài công nghệ</h1>
+</section>
+
+<!-- ================= 04 · CHI PHÍ ================= -->
+<section class="slide" data-title="Chi phí logistics" data-time="45">
+  <p class="eyebrow rv" style="--i:0">Chi phí</p>
+  <h2 class="rv" style="--i:1">Logistics Việt Nam vẫn <span class="bad">đắt hơn</span> mặt bằng thế giới</h2>
+  <div class="kpis">
+    <div class="kpi rv" style="--i:2"><b class="bad">16,8%</b><span>Chi phí logistics so với GDP của Việt Nam</span><small>VLA ước tính cho năm 2021</small></div>
+    <div class="kpi rv" style="--i:3"><b>10,6%</b><span>Mức bình quân thế giới cùng thời điểm</span><small>Theo cùng nguồn</small></div>
+    <div class="kpi" data-step="1"><b class="ok">12–15%</b><span>Mục tiêu giai đoạn 2025–2035</span><small>Chiến lược phát triển dịch vụ logistics, QĐ 2229/QĐ-TTg ngày 09/10/2025</small></div>
+  </div>
+  <p class="lede" data-step="2">Phần chênh lệch nằm ở những chỗ quen thuộc: <b>xe chạy rỗng, xe chờ ở cảng, chứng từ làm lại</b>.</p>
+  <p class="srcline"><b>Nguồn:</b> VLA, dẫn qua Trung tâm WTO – VCCI; Quyết định 2229/QĐ-TTg (Báo Chính phủ, Tạp chí Công Thương, 10/2025).</p>
+</section>
+
+<!-- ================= 05 · MỨC ĐỘ SỐ HOÁ ================= -->
+<section class="slide" data-title="Mức độ chuyển đổi số" data-time="45">
+  <p class="eyebrow rv" style="--i:0">Mức độ chuyển đổi số</p>
+  <h2 class="rv" style="--i:1"><span class="warn">90,5%</span> doanh nghiệp vẫn đang ở bước số hoá</h2>
+  <div class="meter rv" style="--i:2">
+    <p class="cap0">Hơn <b>34.000</b> doanh nghiệp logistics, trên <b>90%</b> là doanh nghiệp nhỏ và vừa. Khảo sát doanh nghiệp dịch vụ logistics:</p>
+    <div class="barx"><div class="seg a"><em>90,5%</em>còn ở giai đoạn số hoá</div><div class="seg b">9,5%</div></div>
+    <div class="n3" data-step="1">
+      <div class="nt"><b>73,5%</b>dừng ở cấp 2 — đã kết nối, chưa dùng dữ liệu để quyết định</div>
+      <div class="nt"><b>1,9%</b>tới cấp 5 — dự báo được bằng dữ liệu</div>
+      <div class="nt"><b>0,4%</b>tới cấp cao nhất — hệ thống tự thích ứng</div>
+    </div>
+  </div>
+  <p class="lede" data-step="2">Phần lớn mới đưa giấy tờ lên máy, rất ít nơi dùng dữ liệu để dự báo.<br><b>Vạch xuất phát còn đông — ai đi trước một bước là có lợi thế.</b></p>
+  <p class="srcline"><b>Nguồn:</b> Báo cáo Logistics Việt Nam 2023 (Bộ Công Thương), dẫn qua Tạp chí Công Thương và Tạp chí Quản lý Nhà nước 05/2024; Thủ tướng Chính phủ, dẫn qua Tiền Phong; Doanh nghiệp Hội nhập 2025.</p>
+</section>
+
+<!-- ================= 06 · LỢI ÍCH ================= -->
+<section class="slide" data-title="Lợi ích đã đo được" data-time="40">
+  <p class="eyebrow rv" style="--i:0">Lợi ích</p>
+  <h2 class="rv" style="--i:1">Kết quả của những quyết định <span class="ok">dựa trên dữ liệu</span></h2>
+  <div class="kpis">
+    <div class="kpi rv" style="--i:2"><b class="ok">−15%</b><span>Chi phí logistics</span><small>Doanh nghiệp đi đầu ứng dụng AI vào quản lý chuỗi cung ứng, so với đối thủ chậm chân</small></div>
+    <div class="kpi rv" style="--i:3"><b class="ok">−35%</b><span>Mức tồn kho</span><small>Cùng nhóm doanh nghiệp, cùng phép so sánh</small></div>
+    <div class="kpi rv" style="--i:4"><b class="ok">+65%</b><span>Mức độ phục vụ khách hàng</span><small>Cùng nhóm doanh nghiệp, cùng phép so sánh</small></div>
+  </div>
+  <p class="lede" data-step="1">Ở Việt Nam, cảng, kho và bưu cục cũng đã có con số tương tự — xem <b>phần 2</b>.</p>
+  <p class="srcline"><b>Nguồn:</b> McKinsey &amp; Company, "Succeeding in the AI supply-chain revolution" (2021), dẫn qua Supply Chain Management Review.</p>
+</section>
+
+<!-- ================= 07 · CƠ HỘI ================= -->
+<section class="slide" data-title="Cơ hội" data-time="45">
+  <p class="eyebrow rv" style="--i:0">Cơ hội</p>
+  <h2 class="rv" style="--i:1">Thị trường mở cho ai <span class="hl">vận hành bài bản</span></h2>
+  <div class="cards">
+    <div class="card" data-step="1"><div class="no">TĂNG TRƯỞNG</div><h3>12–15% mỗi năm</h3><p>Mục tiêu tốc độ tăng trưởng của ngành giai đoạn 2025–2035. Thị trường lớn nhanh hơn nền kinh tế.</p></div>
+    <div class="card" data-step="2"><div class="no">THUÊ NGOÀI</div><h3>70–80% chủ hàng</h3><p>Mục tiêu tỷ lệ doanh nghiệp thuê ngoài dịch vụ logistics. Chủ hàng sẽ chọn đơn vị minh bạch, báo được lô hàng đang ở đâu.</p></div>
+    <div class="card" data-step="3"><div class="no">CHUẨN MỚI</div><h3>Chứng từ điện tử</h3><p>Chiến lược đẩy mạnh chứng từ điện tử, thủ tục số. Cảng, hãng tàu đã chạy eDO, ePort — ai chậm sẽ thành khâu chậm nhất trong chuỗi.</p></div>
+  </div>
+  <p class="lede" data-step="4">Chính sách cũng đẩy cùng chiều: mục tiêu đưa logistics Việt Nam từ <b>hạng 43</b> lên <b>nhóm 40 nước dẫn đầu</b> thế giới (xếp hạng LPI của Ngân hàng Thế giới).</p>
+  <p class="srcline"><b>Nguồn:</b> Quyết định 2229/QĐ-TTg ngày 09/10/2025 (Bộ Công Thương, Báo Chính phủ); World Bank LPI 2023, dẫn qua VnEconomy.</p>
+</section>
+
+<!-- ================= 08 · RỦI RO ================= -->
+<section class="slide" data-title="Rủi ro hai phía" data-time="60">
+  <p class="eyebrow rv" style="--i:0">Vậy thì</p>
+  <h2 class="rv" style="--i:1">Doanh nghiệp logistics nên ứng dụng công nghệ <span class="hl">như thế nào?</span></h2>
+  <div class="versus dense">
+    <div class="vcol them rv" style="--i:2"><h3>Nếu đứng ngoài</h3><ul>
+      <li><i>✕</i><span><b>35–70% chuyến xe</b> chạy rỗng chiều về, tuỳ tuyến và nguồn khảo sát — tiền dầu, tiền tài xế trả cho chiều không hàng.</span></li>
+      <li><i>✕</i><span>Chủ hàng thuê ngoài sẽ chọn đơn vị minh bạch. Không báo được tình trạng lô hàng là khó giữ khách.</span></li>
+      <li><i>✕</i><span>Cảng, hãng tàu đã số hoá. Quy trình nội bộ chậm trở&nbsp;thành khâu nghẽn của cả chuỗi.</span></li></ul></div>
+    <div class="vcol" data-step="1" style="border-color:rgba(251,191,36,.45)"><h3 style="color:var(--warn)">Nếu làm vội</h3><ul>
+      <li><i style="color:var(--warn)">!</i><span>Mua phần mềm rời rạc, mỗi bộ phận một hệ — dữ liệu vẫn không nối, người vẫn nhập hai lần.</span></li>
+      <li><i style="color:var(--warn)">!</i><span>Đổi quy trình kéo theo <b>thời gian và chi phí đào tạo</b> — lãnh đạo DPL đã nói thẳng điều này.</span></li>
+      <li><i style="color:var(--warn)">!</i><span>Số hoá mà quên an toàn: sau NotPetya (2017), Maersk thiệt hại <b>250–300 triệu USD</b>, cài lại 45.000 máy tính và 4.000 máy chủ trong 10 ngày.</span></li></ul></div>
+  </div>
+  <p class="srcline"><b>Nguồn:</b> Viện Chiến lược GTVT, Hiệp hội Vận tải hàng hoá TP.HCM, VLA (qua VietnamPlus, VILAS); VOV 24/09/2024; ZDNet, SC Magazine, Hackread (Maersk, 01/2018).</p>
+</section>
+
+<!-- ================= 09 · GIỌNG LÃNH ĐẠO ================= -->
+<section class="slide" data-title="Lãnh đạo ngành nói gì" data-time="60">
+  <p class="eyebrow rv" style="--i:0">Người trong cuộc</p>
+  <h2 class="rv" style="--i:1">Lãnh đạo doanh nghiệp logistics nói gì</h2>
+  <div class="quotes q4">
+    <div class="quote" data-step="1"><p>“Chuyển đổi số phải bắt đầu từ chuyển đổi tư duy và thói quen của lãnh đạo.”</p><div class="who"><span class="av">TH</span>Ông Trần Thế Hùng · Tổng Giám đốc Ratraco · VJST, 2026</div></div>
+    <div class="quote" data-step="2"><p>“…nhận diện dứt điểm các điểm nghẽn và triệt tiêu các chi phí ẩn trong vận hành.”</p><div class="who"><span class="av" style="background:#7DD3FC">BH</span>Ông Bùi Minh Hưng · Tổng Giám đốc Vinafco · khởi động chương trình số hoá, 05/03/2026</div></div>
+    <div class="quote" data-step="3"><p>Chuyển đổi số cần “3 yếu tố: ý chí lãnh đạo, quy&nbsp;trình và người&nbsp;dùng”.</p><div class="who"><span class="av" style="background:#FBBF24">LH</span>Bà Phạm Thị Lan Hương · Tổng Giám đốc Vinafco thời điểm 10/2022</div></div>
+    <div class="quote" data-step="4"><p>Thay đổi quy trình “…sẽ ảnh hưởng rất nhiều đến câu chuyện vận hành về thời gian, chi phí về đào&nbsp;tạo nhân&nbsp;sự.”</p><div class="who"><span class="av" style="background:#22C58B">MT</span>Ông Mai Trần Thuật · Tổng Giám đốc DPL tại thời điểm phát biểu · VOV, 24/09/2024</div></div>
+  </div>
+  <p class="srcline"><b>Nguồn:</b> VJST; tin chính thức Vinafco 11/03/2026; Tạp chí Doanh nghiệp Việt Nam 10/10/2022; VOV 24/09/2024.</p>
+</section>
+
+<!-- ================= 10 · CHỐT PHẦN 1 ================= -->
+<section class="slide" data-title="Chốt phần 1" data-time="25">
+  <h1 class="rv" style="--i:0">Câu hỏi không còn là <span class="hl">có làm không</span>?</h1>
+  <h2 class="grad" data-step="1">Mà là làm phần nào trước, bằng công cụ nào.</h2>
+</section>
+
+<!-- ================= 11 · CHƯƠNG 2 ================= -->
+<section class="slide" data-title="Chương 2: Bài toán và lời giải" data-time="15">
+  <div class="ghost">02</div>
+  <p class="eyebrow rv" style="--i:0">Phần 2 · Bài toán và lời giải</p>
+  <h1 class="rv" style="--i:1">Công nghệ — và Base — giúp được gì</h1>
+</section>
+
+<!-- ================= 12 · HAI DÒNG CHẢY ================= -->
+<section class="slide" data-title="Hai dòng chảy" data-time="60">
+  <p class="eyebrow rv" style="--i:0">Hai dòng chảy</p>
+  <h2 class="rv" style="--i:1">Một lô hàng chạy trên <span style="color:var(--goods)">hai dòng</span> cùng lúc</h2>
+  <div class="lanes">
+    <div class="lane rv" style="--i:2">
+      <div class="lt"><em>2A · Nghiệp vụ đặc thù</em><b>Dòng hàng</b><small>Container, xe, kho, tàu — thứ chỉ ngành logistics có</small></div>
+      <div class="steps"><span class="st">Nhận hàng</span><span class="ar">→</span><span class="st">Kho</span><span class="ar">→</span><span class="st">Vận tải</span><span class="ar">→</span><span class="st">Cảng · hải quan</span><span class="ar">→</span><span class="st">Giao hàng</span></div>
+      <p class="tool">Công cụ: <b>phần mềm chuyên ngành</b> — TOS, ePort, WMS, TMS, GPS, IoT</p>
+    </div>
+    <div class="lane work" data-step="1">
+      <div class="lt"><em>2B · Vận hành nội bộ</em><b>Dòng việc</b><small>Giấy tờ, phê duyệt, giao việc — doanh nghiệp nào cũng có</small></div>
+      <div class="steps"><span class="st">Báo giá</span><span class="ar">→</span><span class="st">Booking</span><span class="ar">→</span><span class="st">Chứng từ</span><span class="ar">→</span><span class="st">Tạm ứng · chi phí</span><span class="ar">→</span><span class="st">Công nợ</span></div>
+      <p class="tool">Công cụ: <b>nền tảng quản trị vận hành</b> — phần Base đảm nhận</p>
+    </div>
+  </div>
+  <p class="lede" data-step="2">Mỗi dòng cần một loại công cụ khác nhau. Phần tiếp theo xem <b>dòng hàng trước, dòng việc sau</b>.</p>
+</section>
+
+<!-- ================= 13 · 2A MA TRẬN ================= -->
+<section class="slide top" data-title="2A · Năm bài toán đặc thù" data-time="100">
+  <p class="eyebrow rv" style="--i:0">2A · Nghiệp vụ đặc thù — dòng hàng</p>
+  <h2 class="rv" style="--i:1">Năm bài toán chỉ ngành logistics mới có</h2>
+  <div class="mx">
+    <div class="hd rv" style="--i:2"><span>Bài toán</span><span>Công nghệ thường dùng</span><span>Doanh nghiệp đã làm</span></div>
+    <div class="r" data-step="1"><div class="p"><i>✕</i>Xe, container chạy rỗng chiều về</div><div class="t">TMS, sàn vận tải số, ghép hàng hai chiều</div><div class="e"><b>Logistics Đông Á:</b> tỷ lệ ghép container chiều về <span class="ok">56,87% → 57,54%</span> (2023 → 2024). Vẫn vướng ở nguồn hàng hai chiều và kết nối dữ liệu.</div></div>
+    <div class="r" data-step="2"><div class="p"><i>✕</i>Xe chờ ở cổng cảng, lệnh giao hàng giấy</div><div class="t">ePort, lệnh giao hàng điện tử (eDO), cổng tự động, TOS</div><div class="e"><b>Tân Cảng Sài Gòn:</b> giao nhận container <span class="ok">13 phút → dưới 2 phút</span>; eDO xử lý hơn 15.000 lệnh/ngày. <b>Gemadept:</b> thời gian xe chờ <span class="ok">giảm 30%</span>.</div></div>
+    <div class="r" data-step="3"><div class="p"><i>✕</i>Kho nhiều mã hàng, soạn sai, khó quản hạn dùng</div><div class="t">WMS, mã vạch, nhặt hàng theo tín hiệu đèn</div><div class="e"><b>Vinafco Biên Hoà</b> (12/2017): phần mềm kho SWM của Smartlog, quét mã từng sản phẩm, đèn chỉ đúng thùng theo cửa hàng.</div></div>
+    <div class="r" data-step="4"><div class="p"><i>✕</i>Chia chọn bưu kiện khối lượng lớn</div><div class="t">Băng chuyền, robot chia chọn tự động</div><div class="e"><b>Viettel Post</b> (trung tâm miền Nam): sai sót chia chọn <span class="ok">gần như bằng 0</span>, <span class="ok">tiết kiệm 91% nhân lực</span>, rút ngắn thời gian toàn trình tới 6 giờ.</div></div>
+    <div class="r" data-step="5"><div class="p"><i>✕</i>Hàng lạnh, hàng giá trị cần giám sát liên tục</div><div class="t">IoT, GPS, thiết bị ghi nhiệt độ</div><div class="e"><b>ABA Cooltrans:</b> gần 300 xe lạnh gắn GPS và thiết bị ghi nhiệt, theo dõi theo thời gian thực trong lúc giao nhận.</div></div>
+  </div>
+  <p class="srcline"><b>Nguồn:</b> Tạp chí Kinh tế Tài chính 25/05/2026; Báo Hải quân Việt Nam; Tin nhanh Chứng khoán; Smartlog; VnEconomy; ABA Cooltrans, VietQ.</p>
+</section>
+
+<!-- ================= 14 · HỆ CHUYÊN NGÀNH ĐỨNG CẠNH BASE ================= -->
+<section class="slide top" data-title="Phần mềm chuyên ngành đi cùng Base" data-time="70">
+  <p class="eyebrow rv" style="--i:0">Từ các case khách hàng của Base</p>
+  <h2 class="rv" style="--i:1">Base <span class="hl">chạy song song</span>, không thay phần mềm chuyên ngành</h2>
+  <div class="stk">
+    <div class="hd rv" style="--i:2"><span>Doanh nghiệp</span><span>Phần mềm chuyên ngành đang dùng</span><span>Base đảm nhận</span></div>
+    <div class="r rv" style="--i:3"><div class="co">ICD Tân Cảng Sóng Thần<small>Cảng cạn, kho, vận tải</small></div><div class="chips"><span class="chp">Quản lý kho</span><span class="chp">Quản lý vận tải</span><span class="chp">Kho ngoại quan</span><span class="chp">Hợp đồng điện tử</span><span class="chp">Quản lý an ninh</span></div><div class="chips"><span class="chp base">Quản trị · phê duyệt</span></div></div>
+    <div class="r rv" style="--i:4"><div class="co">Tân Cảng Logistics (TCL)<small>Cảng, ICD, depot container</small></div><div class="chips"><span class="chp">TTOS – điều hành container</span><span class="chp">CMS depot</span><span class="chp">EDI với hãng tàu</span><span class="chp">ePort · eDO</span></div><div class="chips"><span class="chp base">Quản lý doanh nghiệp · từ 2021</span></div></div>
+    <div class="r rv" style="--i:5"><div class="co">VOSCO<small>Vận tải biển</small></div><div class="chips"><span class="chp">FAST – kế toán lõi</span><span class="chp">SMMS – kỹ thuật, vật tư tàu</span><span class="chp">E-learning thuyền viên</span></div><div class="chips"><span class="chp base">Văn phòng điện tử · giao việc</span></div></div>
+    <div class="r rv" style="--i:6"><div class="co">ADDED-VALUE<small>Logistics · ContainerGo</small></div><div class="chips"><span class="chp">ContainerGo – sàn vận tải số</span></div><div class="chips"><span class="chp base">CRM · dữ liệu xe, đối tác</span></div></div>
+    <div class="r rv" style="--i:7"><div class="co">Logistics Dược phẩm Đông Á<small>Kho, giao vận dược phẩm</small></div><div class="chips"><span class="chp">ERP (Odoo)</span><span class="chp">WMS</span><span class="chp">TMS</span><span class="chp">CRM</span></div><div class="chips"><span class="chp base">Văn phòng điện tử · giao việc</span></div></div>
+  </div>
+  <p class="lede" data-step="1">Hệ chuyên ngành lo <span style="color:var(--goods);font-weight:700">dòng hàng</span>. Base lo <span class="hl" style="font-weight:700">dòng việc</span> quanh lô hàng — và là nơi lãnh đạo nhìn toàn bộ.</p>
+  <p class="srcline"><b>Nguồn:</b> Base Customers (ICD Sóng Thần, ADDED-VALUE); TCL — ĐHĐCĐ 2022, BCTN 2024; VOSCO — BCTN 2021–2023; BES, VALOMA 08/2024 (DPL); danh mục khách hàng Base.</p>
+</section>
+
+<!-- ================= 15 · 2B MỚ HỖN ĐỘN ================= -->
+<section class="slide" data-title="2B · Việc chạy trên Zalo, Excel, giấy" data-time="50">
+  <p class="eyebrow rv" style="--i:0">2B · Vận hành nội bộ — dòng việc</p>
+  <h2 class="rv" style="--i:1">Hàng chạy trên phần mềm.<br><span class="bad">Việc chạy trên Zalo, Excel và giấy.</span></h2>
+  <div class="mess apps" data-cls="1:loud">
+    <div class="win zl rv" style="--x:0%;--y:0%;--r:-3deg;--i:2">
+      <div class="hd"><i>HP</i><div><b>Hiện trường Hải Phòng</b><small>27 thành viên</small></div><span class="cnt">27</span></div>
+      <div class="bd">
+        <div class="m"><em>Minh · CS</em>Chứng từ lô HPH-2410 ai đang cầm ạ?<small>14:02</small></div>
+        <div class="m"><em>Tài xế Hùng</em>Em xin tạm ứng phí nâng hạ 3,5 triệu ạ<small>Hôm qua</small></div>
+        <div class="m me">Chị gửi mail cho chị Lan rồi nhé<small>Hôm qua</small></div>
+      </div>
+      <div class="in">Nhập tin nhắn tới Hiện trường Hải Phòng</div>
+    </div>
+    <div class="win xl rv" style="--x:29%;--y:-2%;--r:2deg;--i:3">
+      <div class="tb">Theo dõi booking T10.xlsx — Excel</div>
+      <div class="rb"><span>Home</span><span>Insert</span><span>Formulas</span><span>Data</span><span>Review</span></div>
+      <div class="fx"><span>D3</span><span>fx</span><span>?</span></div>
+      <table>
+        <tr><th></th><th>A</th><th>B</th><th>C</th></tr>
+        <tr><td class="rh">1</td><td class="h">Booking</td><td class="h">Cut-off SI</td><td class="h">Chứng từ</td></tr>
+        <tr><td class="rh">2</td><td>BK-1182</td><td>16:00 hôm nay</td><td class="q sel">?</td></tr>
+        <tr><td class="rh">3</td><td>BK-5531</td><td>Thứ Năm</td><td>Đủ</td></tr>
+        <tr><td class="rh">4</td><td>BK-0927</td><td class="q">?</td><td class="q">?</td></tr>
+      </table>
+      <div class="tabs"><span class="on">T10</span><span>T9</span><span>Tổng hợp</span></div>
+    </div>
+    <div class="win ml rv" style="--x:68%;--y:1%;--r:3deg;--i:4">
+      <div class="tb">Hộp thư đến · pricing<span>Tìm kiếm</span></div>
+      <div class="fl"><b>Ưu tiên</b><span>Khác</span><span>Chưa đọc (14)</span></div>
+      <div class="it un"><b>Hãng tàu</b><small>09:12</small><span class="s">Re: Re: Fwd: Rate card Q4 (bản sửa 3)</span></div>
+      <div class="it un"><b>Đại lý Busan</b><small>Hôm qua</small><span class="s">Báo giá tuyến HPH – Busan</span></div>
+      <div class="it"><b>Khách hàng ABC</b><small>2 ngày</small><span class="s">Booking request – hàng FCL</span></div>
+    </div>
+    <div class="frag note rv" style="--x:4%;--y:70%;--r:5deg;--i:5">Nhắc pháp lý gửi SI trước cut-off 16h!<small>— Team CS</small></div>
+    <div class="win pp rv" style="--x:39%;--y:56%;--r:-2.5deg;--i:6">
+      <div class="co">Công ty logistics · Phòng Kế toán</div>
+      <h5>PHIẾU ĐỀ NGHỊ TẠM ỨNG</h5>
+      <div class="ln"><span>Người đề nghị:</span><b>Tài xế tuyến Hải Phòng</b></div>
+      <div class="ln"><span>Số tiền:</span><b>3.500.000 đ</b></div>
+      <div class="ln"><span>Lý do:</span><b>Phí nâng hạ lô HPH-2410</b></div>
+      <div class="sg"><div>Người đề nghị<em>Hùng</em></div><div>Kế toán trưởng<span class="miss">chưa ký</span></div><div>Giám đốc<span class="miss">chưa ký</span></div></div>
+    </div>
+    <span class="flag" style="--x:2%;--y:58%;--r:-2deg">Chưa ai trả lời · 3 giờ</span>
+    <span class="flag warn" style="--x:31%;--y:50%;--r:1.5deg">Ai đang giữ chứng từ?</span>
+    <span class="flag warn" style="--x:69%;--y:52%;--r:-1.5deg">Bản rate card nào là bản cuối?</span>
+    <span class="flag" style="--x:69%;--y:84%;--r:2deg">Chưa có chữ ký · 2 ngày</span>
+  </div>
+  <p class="srcline"><b>Hình minh hoạ</b> tình huống thường gặp.</p>
+</section>
+
+<!-- ================= 16 · SÁU VẤN ĐỀ VẬN HÀNH ================= -->
+<section class="slide top" data-title="2B · Sáu vấn đề vận hành chung" data-time="75">
+  <p class="eyebrow rv" style="--i:0">2B · Vận hành nội bộ</p>
+  <h2 class="rv" style="--i:1">Sáu vấn đề vận hành lặp lại <span class="bad">khắp ngành</span></h2>
+  <div class="ops">
+    <div class="op rv" style="--i:2"><div class="no">01</div><h3>Trình ký chờ người</h3><p>Tờ trình, đề nghị thanh toán đi bằng giấy. Lãnh đạo đi vắng là hồ sơ đứng.</p><p class="at">Gặp ở: <b>ICD Sóng Thần · Ratraco</b></p></div>
+    <div class="op rv" style="--i:3"><div class="no">02</div><h3>Đơn hàng không rõ ở bước nào</h3><p>Một đơn qua kinh doanh, CS, hiện trường, chứng từ, kế toán. Mỗi lần chuyển tay là một lần hỏi lại.</p><p class="at">Gặp ở: <b>CTX Logistics · THT Cargo</b></p></div>
+    <div class="op rv" style="--i:4"><div class="no">03</div><h3>Mạng lưới phân tán</h3><p>Chi nhánh, bưu cục, đội xe, tàu ngoài biển. Giao việc và nắm tình hình chủ yếu qua điện thoại.</p><p class="at">Gặp ở: <b>247Express · Nhật Việt · VOSCO</b></p></div>
+    <div class="op rv" style="--i:5"><div class="no">04</div><h3>Dữ liệu xe, khách rải rác</h3><p>Giấy phép, đăng kiểm hết hạn mới biết. Thông tin khách, đối tác nằm trong máy từng người.</p><p class="at">Gặp ở: <b>ADDED-VALUE</b></p></div>
+    <div class="op rv" style="--i:6"><div class="no">05</div><h3>Tạm ứng, chi phí bằng giấy</h3><p>In ấn, lưu trữ, chuyển hồ sơ giữa các tỉnh tốn tiền và tốn ngày. Khó kiểm soát chi phí theo lô.</p><p class="at">Gặp ở: <b>247Express · Ratraco</b></p></div>
+    <div class="op rv" style="--i:7"><div class="no">06</div><h3>Lớn lên thì khó giữ chất lượng</h3><p>Thêm khách, thêm người, lãnh đạo không thể sát từng lô. Chất lượng dịch vụ phụ thuộc từng cá nhân.</p><p class="at">Gặp ở: <b>THT Cargo</b></p></div>
+  </div>
+  <p class="srcline"><b>Nguồn:</b> Base Customers, Base Resources, VnExpress, Báo Đầu tư, VJST.</p>
+</section>
+
+<!-- ================= 17 · NGUYÊN LÝ: MỖI BƯỚC CÓ NGƯỜI GIỮ ================= -->
+<section class="slide" data-title="Nguyên lý: người giữ, hạn, đầu ra" data-time="70">
+  <p class="eyebrow rv" style="--i:0">Nguyên lý giải</p>
+  <h2 class="rv" style="--i:1">Mỗi bước có <span class="hl">người giữ</span>, có <span class="warn">hạn</span>, có <span class="ok">đầu ra</span></h2>
+  <p class="lede rv" style="--i:2">Ví dụ: một yêu cầu báo giá đi tới booking gửi khách.</p>
+  <div class="chain">
+    <div class="cn rv" style="--i:3"><span class="k">BƯỚC 1</span><b>Gửi yêu cầu báo giá</b><span class="tm">Kinh doanh</span><span class="sla">1 giờ</span><span class="out">✓ Phiếu yêu cầu báo giá</span></div>
+    <div class="cn rv" style="--i:4"><span class="k">BƯỚC 2</span><b>Liên hệ nhà cung cấp</b><span class="tm">Vận chuyển</span><span class="sla">24 giờ</span><span class="out">✓ Giá từ hãng tàu, nhà xe</span></div>
+    <div class="cn rv" style="--i:5"><span class="k">BƯỚC 3</span><b>Gửi rate card</b><span class="tm">Kinh doanh</span><span class="sla">2 giờ</span><span class="out">✓ Rate card</span></div>
+    <div class="cn rv" style="--i:6"><span class="k">BƯỚC 4</span><b>Soạn booking</b><span class="tm">Kinh doanh</span><span class="sla">2 giờ</span><span class="out">✓ Bản booking</span></div>
+    <div class="cn rv" style="--i:7"><span class="k">BƯỚC 5</span><b>Rà soát booking</b><span class="tm">Pháp lý</span><span class="sla">2 giờ</span><span class="out">✓ Hợp đồng dịch vụ</span></div>
+    <div class="cn rv" style="--i:8"><span class="k">BƯỚC 6</span><b>Gửi booking cho&nbsp;khách</b><span class="tm">Kinh doanh</span><span class="sla">1 giờ</span><span class="out">✓ Booking đã gửi</span></div>
+  </div>
+  <p class="chsum rv" style="--i:9">6 bước · 3 bộ phận · <span class="warn">32 giờ</span> cam kết từ yêu cầu tới booking</p>
+  <div class="rules">
+    <div class="rule" data-step="1"><b>Quá hạn là có người biết</b>Bước nào trễ được đánh dấu ngay, không đợi khách gọi hỏi.</div>
+    <div class="rule" data-step="2"><b>Thiếu đầu ra thì chưa qua bước</b>Trường bắt buộc theo từng bước: chưa có rate card thì chưa soạn booking.</div>
+    <div class="rule" data-step="3"><b>Mọi lần chuyển tay đều có vết</b>Ai được giao, lúc nào, vì sao — lãnh đạo xem được toàn bộ đơn đang chạy.</div>
+  </div>
+  <p class="srcline"><b>Nguồn:</b> Quy trình mẫu trong bộ giải pháp Base cho Logistics.</p>
+</section>
+
+<!-- ================= 18 · CASE 247EXPRESS ================= -->
+<section class="slide" data-title="Case 1 · 247Express" data-time="60">
+  <p class="eyebrow rv" style="--i:0">Case 1 · Chuyển phát nhanh · mạng lưới phân tán</p>
+  <h2 class="rv" style="--i:1">Hơn 200 bưu cục, một nơi để vận hành</h2>
+  <div class="story">
+    <div class="id rv" style="--i:2"><div class="nm">247Express</div><div class="mt">Hơn 1.700 nhân sự · 200 bưu cục · 63 tỉnh, thành</div><div class="big">3 tháng</div><div class="bl">để đưa Base lên toàn bộ hơn 200 bưu cục, từ Nam ra Bắc</div></div>
+    <div class="bd">
+      <div class="blk rv" style="--i:3"><h4>Bài toán</h4><p>Cạnh tranh chuyển phát ngày càng gắt, vận hành nội bộ phải nhanh theo. Giấy tờ khắp các tỉnh khiến chi phí <b>in ấn, lưu trữ rất cao</b>.</p></div>
+      <div class="blk rv" style="--i:4"><h4>Cách làm</h4><p>Dựng <b>hàng trăm quy trình</b> trên Base. Giao việc theo vùng, khu vực, phòng ban cho hàng nghìn nhân sự. Duyệt chi phí, hợp đồng qua Request; văn bản qua E-Office.</p></div>
+      <div class="blk res" data-step="1"><h4>Kết quả</h4><p>Toàn bộ dữ liệu, giấy tờ được số hoá. Ban lãnh đạo <b>theo dõi, đánh giá, phản hồi kịp thời</b>; tiết kiệm thời gian và chi phí.</p></div>
+      <p class="qline" data-step="1">“Các ứng dụng của Base.vn như E-Office giúp giải bài toán của 247Express.”<small>Ông Nguyễn Mạnh Hải · Giám đốc Tài chính 247Express</small></p>
+    </div>
+  </div>
+  <p class="srcline"><b>Nguồn:</b> VnExpress Kinh doanh, “247Express số hoá toàn diện hơn 200 bưu cục cùng Base.vn”; Base Customers.</p>
+</section>
+
+<!-- ================= 19 · CASE ICD SÓNG THẦN ================= -->
+<section class="slide" data-title="Case 2 · ICD Tân Cảng Sóng Thần" data-time="60">
+  <p class="eyebrow rv" style="--i:0">Case 2 · Cảng cạn · trình ký và phê duyệt</p>
+  <h2 class="rv" style="--i:1">Duyệt được cả khi lãnh đạo không có mặt</h2>
+  <div class="story">
+    <div class="id rv" style="--i:2"><div class="nm">ICD Tân Cảng Sóng Thần</div><div class="mt">Đơn vị quốc phòng làm kinh tế · Bình Dương · cảng cạn, kho, vận tải</div><div class="big">+50%</div><div class="bl">tốc độ vận hành sau chương trình số hoá</div></div>
+    <div class="bd">
+      <div class="blk rv" style="--i:3"><h4>Bài toán</h4><p>Nhiều giấy tờ; trình ký, phê duyệt nội bộ mất thời gian. Là đơn vị quốc phòng làm kinh tế nên cần nền tảng đáp ứng <b>quy định nội bộ riêng</b>.</p></div>
+      <div class="blk rv" style="--i:4"><h4>Cách làm</h4><p>Chọn Base vì đáp ứng nhiều yêu cầu đặc thù. Lãnh đạo <b>duyệt trên máy tính, điện thoại, máy tính bảng</b> kể cả khi đi vắng. Chạy song song phần mềm kho, vận tải, kho ngoại quan, hợp đồng điện tử, an ninh.</p></div>
+      <div class="blk res" data-step="1"><h4>Kết quả</h4><p>Ban nhân sự ước tính <b>tiết kiệm 80% thời gian</b> nhờ việc rõ người, rõ hạn và nhắc việc tự động; <b>in ấn giảm 30–50%</b>. Mục tiêu: số hoá 100% nghiệp vụ khách hàng vào 2030.</p></div>
+      <p class="qline" data-step="1">“Base.vn được lựa chọn do đáp ứng được nhiều các yêu cầu đặc thù ở các khía cạnh khác nhau.”<small>Anh Nguyễn Duy Hiệp · phụ trách dự án chuyển đổi số</small></p>
+    </div>
+  </div>
+  <p class="srcline"><b>Nguồn:</b> Báo Đầu tư; Base Customers.</p>
+</section>
+
+<!-- ================= 20 · CASE CTX ================= -->
+<section class="slide" data-title="Case 3 · CTX Logistics" data-time="50">
+  <p class="eyebrow rv" style="--i:0">Case 3 · Giao nhận xuất nhập khẩu · đơn hàng qua nhiều bộ phận</p>
+  <h2 class="rv" style="--i:1">Bộ phận trước xong, việc <span class="hl">tự sang</span> bộ phận sau</h2>
+  <div class="story">
+    <div class="id rv" style="--i:2"><div class="nm">CTX Logistics</div><div class="mt">Dịch vụ logistics cho doanh nghiệp xuất nhập khẩu · Hà Nội, chi nhánh Hải Phòng, TP.HCM, Đà Nẵng</div><div class="big">12 → 5</div><div class="bl">bước trong quy trình theo dõi đơn hàng</div></div>
+    <div class="bd">
+      <div class="blk rv" style="--i:3"><h4>Bài toán</h4><p>Sau khi chốt báo giá, một đơn hàng đi qua nhiều bộ phận. Mỗi lần bàn giao lại phải báo, phải hỏi; lãnh đạo khó thấy tổng thể.</p></div>
+      <div class="blk rv" style="--i:4"><h4>Cách làm</h4><p>Dựng quy trình theo dõi đơn hàng trên Base Workflow. Xong bước trước, đơn <b>tự chuyển</b> sang bộ phận sau kèm thông báo. Ai cũng thấy đơn ở bước nào, ai phụ trách, chứng từ nào đi kèm.</p></div>
+      <div class="blk res" data-step="1"><h4>Kết quả</h4><p>Rút từ <b>12 bước còn 5</b> — bỏ các bước rườm rà khi đưa lên phần mềm. Không còn “thời gian chết” giữa các khâu; lãnh đạo xem tiến độ mọi đơn trên một màn hình.</p></div>
+    </div>
+  </div>
+  <p class="srcline"><b>Nguồn:</b> Base Resources, “Case study: Thiết lập hệ thống theo dõi tiến độ đơn hàng logistics với Base Workflow”; VTV Money (hồ sơ CTX Logistics).</p>
+</section>
+
+<!-- ================= 21 · VOSCO + TCL ================= -->
+<section class="slide" data-title="Case 4 · VOSCO và Tân Cảng Logistics" data-time="60">
+  <p class="eyebrow rv" style="--i:0">Case 4 · Doanh nghiệp niêm yết · vận tải biển, cảng – depot</p>
+  <h2 class="rv" style="--i:1">Ghi nhận từ <span class="hl">khách hàng</span></h2>
+  <p class="lede rv" style="--i:2">VOSCO và Tân Cảng Logistics là công ty niêm yết. Việc dùng Base được ghi trong <b>báo cáo thường&nbsp;niên</b> và <b>tài liệu đại hội cổ đông</b>.</p>
+  <div class="duo">
+    <div class="dcol rv" style="--i:3"><div class="nm">VOSCO</div><div class="mt">Vận tải biển · 636 lao động, trong đó 501 sĩ quan, thuyền viên (31/12/2025)</div>
+      <p>Từ 2021, dùng Base làm <b>văn phòng điện tử</b>: phân công, giao việc, lãnh đạo xem xét và phê duyệt bằng chữ ký điện tử. Song song: FAST làm kế toán lõi, SMMS quản lý kỹ thuật tàu, e-learning cho thuyền viên.</p>
+      <blockquote data-step="1">“hầu hết các nội dung đã được phân công và giao việc trên Base”<small>Báo cáo của Ban Giám đốc · Báo cáo thường niên 2022, tr.27</small></blockquote></div>
+    <div class="dcol rv" style="--i:4"><div class="nm">Tân Cảng Logistics (TCL)</div><div class="mt">Cảng, ICD, depot container · Tổng Công ty Tân Cảng Sài Gòn</div>
+      <p>Năm 2021 đưa Base vào trong chương trình số hoá quản lý, điều hành, cùng chuyển khoản, hoá đơn điện tử, phần mềm thương vụ, chữ ký số.</p>
+      <blockquote data-step="2">“giảm thiểu chi phí hành chánh và nâng cao hiệu&nbsp;quả làm việc trực tuyến cho CB-CNV”<small>Tờ trình kết quả năm 2021 · Tài liệu ĐHĐCĐ 2022</small></blockquote></div>
+  </div>
+  <p class="srcline"><b>Nguồn:</b> VOSCO — BCTN 2021 (tr.14), 2022 (tr.27), 2025 (tr.24); tin VOSCO 16/07/2022. TCL — tài liệu ĐHĐCĐ thường niên 2022 (tr.7, tr.11).</p>
+</section>
+
+<!-- ================= 22 · HÀNH TRÌNH ĐANG CHẠY ================= -->
+<section class="slide" data-title="Logistics × Base" data-time="60">
+  <p class="eyebrow rv" style="--i:0">Logistics × Base</p>
+  <h2 class="rv" style="--i:1">Doanh nghiệp logistics <span class="hl">ứng dụng Base</span> để làm gì?</h2>
+  <div class="jr">
+    <div class="jc rv" style="--i:2"><span class="tg">Logistics tech · ContainerGo</span><span class="nm">ADDED-VALUE</span><p>Gần 20 năm làm logistics, chuyển sang mô hình logistics tech. <b>Base CRM</b> làm trung tâm dữ liệu khách hàng, đối tác; số hoá dữ liệu xe, tài xế, giấy phép, đăng kiểm, <b>cảnh báo khi đến hạn</b>; vận hành không giấy, KPI tự động.</p></div>
+    <div class="jc rv" style="--i:3"><span class="tg">Giao nhận · FDI</span><span class="nm">THT Cargo Logistics</span><p>Thành lập 2020, chi nhánh Đồng Nai, Bình Dương; hơn 60% khách hàng là doanh nghiệp Nhật. Số hoá <b>theo dõi tiến độ lô hàng</b> và kiểm soát tuân thủ để giữ chất lượng khi lớn lên.</p></div>
+    <div class="jc rv" style="--i:4"><span class="tg">Đường sắt</span><span class="nm">Ratraco</span><p>15 ga, hơn 400 toa, 1.000 container, 50 đầu kéo. Bắt đầu từ không gian làm việc tập trung, số hoá <b>tờ trình, đề xuất, thanh toán</b>; hướng tới AI Agent tóm tắt tờ trình, rà lỗi chứng từ, so báo giá.</p></div>
+    <div class="jc rv" style="--i:5"><span class="tg">Vận tải biển</span><span class="nm">Nhật Việt</span><p>Số hoá khoảng <b>700 đầu việc</b> với mục tiêu gắn kết tàu với bờ, giúp lãnh đạo nhìn rõ, minh bạch khối lượng công việc chung.</p></div>
+  </div>
+  <div class="also" data-step="1">Xây dựng văn phòng làm việc điện tử: <span class="chp plain">Logistics Đông Á</span><span class="chp plain">Logistics Dược phẩm Đông Á (DPL)</span><span class="chp plain">Global Pacific (PCT)</span><span class="chp plain">Container Thái Bình Dương (PCL)</span></div>
+  <p class="srcline"><b>Nguồn:</b> Base Customers (ADDED-VALUE, THT Cargo, Ratraco, Nhật Việt); VJST (Ratraco); Base Resources (THT); danh mục khách hàng Base.</p>
+</section>
+
+<!-- ================= 23 · PHẠM VI HAI LỚP ================= -->
+<section class="slide" data-title="Phạm vi: hai lớp" data-time="60">
+  <p class="eyebrow rv" style="--i:0">Trả lời câu hỏi phần 2</p>
+  <h2 class="rv" style="--i:1">Hai lớp phần mềm <span class="hl">nối với nhau</span></h2>
+  <div class="scope">
+    <div class="sc rv" style="--i:2"><h3>Dòng hàng</h3><p class="ttl">Phần mềm chuyên ngành lo</p><ul>
+      <li><b>TOS, ePort, eDO</b> — bãi container, cổng cảng, lệnh giao hàng</li>
+      <li><b>WMS</b> — vị trí kho, mã vạch, tồn kho, hạn dùng</li>
+      <li><b>TMS, GPS</b> — điều độ, tuyến đường, hành trình xe</li>
+      <li><b>IoT</b> — nhiệt độ, trạng thái hàng trên đường</li>
+      <li><b>Kế toán, ERP lõi</b> — sổ sách, hoá đơn</li></ul></div>
+    <div class="sc work rv" style="--i:3"><h3>Dòng việc</h3><p class="ttl">Base lo</p><ul>
+      <li><b>Quy trình đơn hàng</b> — báo giá, booking, chứng từ: có người giữ, có hạn</li>
+      <li><b>Phê duyệt</b> — tạm ứng, chi phí, hợp đồng, tờ trình; ký điện tử</li>
+      <li><b>Khách hàng, đối tác</b> — CRM, dữ liệu xe, tài xế, giấy phép</li>
+      <li><b>Giao việc</b> cho chi nhánh, bưu cục, tàu; báo cáo vận hành</li>
+      <li><b>Con người</b> — nhân sự, chấm công, lương, truyền thông nội bộ</li></ul></div>
+  </div>
+  <p class="band" data-step="1"><span>Dòng hàng</span> ⇄ <em>dòng việc</em>: nối qua API, webhook, dữ liệu dùng chung — không bắt bỏ hệ đang chạy.</p>
+  <p class="srcline"><b>Nguồn:</b> Tổng hợp từ các case khách hàng ở trên.</p>
+</section>
+
+<!-- ================= 24 · CHƯƠNG 3 ================= -->
+<section class="slide" data-title="Chương 3: Base 2.0" data-time="15">
+  <div class="ghost">03</div>
+  <p class="eyebrow rv" style="--i:0">Phần 3 · Base trong kỷ nguyên AI</p>
+  <h1 class="rv" style="--i:1">Tầm nhìn của Base khác ở đâu</h1>
+</section>
+
+<!-- ================= 25 · BASE TỔNG QUAN ================= -->
+<section class="slide" data-title="Base.vn tổng quan" data-time="40">
+  <p class="eyebrow rv" style="--i:0">Base.vn</p>
+  <h2 class="rv" style="--i:1">Nền tảng quản trị doanh nghiệp của người Việt</h2>
+  <div class="kpis">
+    <div class="kpi rv" style="--i:2"><b>2016</b><span>Thành lập tại Hà Nội</span><small>Công ty Cổ phần Base Enterprise, 08/2016</small></div>
+    <div class="kpi rv" style="--i:3"><b class="hl">12.000+</b><span>Doanh nghiệp chuyển đổi số cùng Base</span><small>Số liệu Base, 10/2026</small></div>
+    <div class="kpi rv" style="--i:4"><b>2021</b><span>FPT đầu tư chiến lược</span><small>Công bố 05/2021</small></div>
+  </div>
+  <p class="lede" data-step="1"><b>17/09/2026:</b> ra mắt <b>Base 2.0</b> tại Enterprise AI Summit 2026 — nền tảng thiết kế để con người và AI cùng vận hành doanh nghiệp.</p>
+  <p class="srcline"><b>Nguồn:</b> Wikipedia tiếng Việt “Base.vn”; CafeF 27/05/2021; số khách hàng do Base cung cấp 10/2026; Báo Đầu tư, Nhân Dân, CafeBiz 09/2026.</p>
+</section>
+
+<!-- ================= 26 · VẤN ĐỀ BASE 2.0 NHÌN THẤY ================= -->
+<section class="slide" data-title="Vấn đề Base 2.0 nhìn thấy" data-time="50">
+  <p class="eyebrow rv" style="--i:0">Vì sao có Base 2.0</p>
+  <h2 class="rv" style="--i:1">Thêm app, thêm AI <span class="bad">chưa làm</span> tổ chức giỏi hơn</h2>
+  <div class="cards">
+    <div class="card" data-step="1"><div class="no" style="color:var(--bad)">KHOẢNG TRỐNG 1</div><h3>Dữ liệu rời</h3><p>Mỗi app giữ một mảnh. AI trong app nào chỉ thấy mảnh của app đó.</p></div>
+    <div class="card" data-step="2"><div class="no" style="color:var(--bad)">KHOẢNG TRỐNG 2</div><h3>Kinh nghiệm không ở lại</h3><p>Làm xong một lô hàng, bài học nằm trong đầu người làm. Người nghỉ, bài học đi theo.</p></div>
+    <div class="card" data-step="3"><div class="no" style="color:var(--bad)">KHOẢNG TRỐNG 3</div><h3>AI không phối hợp</h3><p>Mỗi AI thấy một phần quy trình, nên khó cùng làm một việc đến cuối.</p></div>
+  </div>
+  <p class="qline" data-step="4" style="max-width:1200px;text-align:left;font-size:26px">“…điểm nghẽn lớn nhất không nằm ở năng lực của AI, mà nằm ở ‘Ngữ cảnh vận hành’ (Context).”<small>Ông Phạm Kim Hùng · Chủ tịch Base.vn · Enterprise AI Summit 2026</small></p>
+  <p class="srcline"><b>Nguồn:</b> Bài viết chính thức của Base.vn về Base 2.0, 28/08/2026; CafeBiz 17/09/2026, Soha 18/09/2026.</p>
+</section>
+
+<!-- ================= 27 · KIẾN TRÚC BỐN LỚP ================= -->
+<section class="slide" data-title="Kiến trúc bốn lớp" data-time="75">
+  <p class="eyebrow rv" style="--i:0">Kiến trúc sản phẩm Base 2.0</p>
+  <h2 class="rv" style="--i:1">Bốn lớp: <span class="hl-2">Service&nbsp;→&nbsp;Output&nbsp;→ Knowledge&nbsp;→&nbsp;Agent</span></h2>
+  <div class="arch">
+    <div class="ly rv" style="--i:2"><span class="lv">LỚP 1</span><h3>Service</h3><p>Một đơn vị việc có mục tiêu, người chịu trách nhiệm, dữ liệu, hành động và đầu ra xác định.</p><div class="ex"><em>Ví dụ logistics</em>Booking hàng xuất FCL: từ yêu cầu của khách đến booking xác nhận.</div></div>
+    <div class="ly rv" style="--i:3"><span class="lv">LỚP 2</span><h3>Output</h3><p>Đầu ra có cấu trúc của nhiều Service, gom thành dòng kết quả cấp doanh nghiệp.</p><div class="ex"><em>Ví dụ logistics</em>Booking đúng cut-off theo tuyến, theo khách → doanh thu và điểm nghẽn theo tuyến.</div></div>
+    <div class="ly rv" style="--i:4"><span class="lv">LỚP 3</span><h3>Knowledge</h3><p>Quy tắc làm việc (Workrules) và bài học từ việc đã làm (Case Studies &amp; Learnings).</p><div class="ex"><em>Ví dụ logistics</em>Quy tắc giờ cắt máng; bài học từ lô trễ SI tháng trước.</div></div>
+    <div class="ly rv" style="--i:5"><span class="lv">LỚP 4</span><h3>Agent</h3><p>AI dùng mục tiêu, ngữ cảnh và tri thức để tham gia việc — từ một nhiệm vụ đến đội agent.</p><div class="ex"><em>Ví dụ logistics</em>Rà bộ chứng từ còn thiếu gì trước cut-off; người phụ trách duyệt.</div></div>
+  </div>
+  <p class="loop" data-step="1"><i>↻</i><span>Mỗi vòng vận hành để lại tri thức cho vòng sau. Base gọi đích đến là <span class="hl-2">Intelligent Organization</span>.</span></p>
+  <p class="srcline"><b>Nguồn:</b> Bài viết chính thức của Base.vn, 28/08/2026.</p>
+</section>
+
+<!-- ================= 28 · KHÁC BIỆT ================= -->
+<section class="slide" data-title="Khác phần mềm theo từng app" data-time="55">
+  <p class="eyebrow rv" style="--i:0">Base 2.0</p>
+  <h2 class="rv" style="--i:1">Khác biệt so với <span class="hl">phần mềm theo app</span> trên thị trường</h2>
+  <div class="versus">
+    <div class="vcol them rv" style="--i:2"><h3>Phần mềm theo từng app</h3><ul>
+      <li><i>✕</i>Bắt đầu từ menu tính năng</li>
+      <li><i>✕</i>AI gắn vào từng app, mỗi AI thấy một phần</li>
+      <li><i>✕</i>Làm xong là hết, kinh nghiệm nằm trong đầu từng người</li>
+      <li><i>✕</i>Muốn dùng phải dời nhà, bỏ hệ đang chạy</li></ul></div>
+    <div class="vcol you" data-step="1"><h3>Base 2.0</h3><ul>
+      <li><i>✓</i>Bắt đầu từ việc cần xong và đầu ra của nó</li>
+      <li><i>✓</i>AI là một bước trong quy trình, có chỗ đứng, có người duyệt</li>
+      <li><i>✓</i>Mỗi lần làm để lại quy tắc và bài học</li>
+      <li><i>✓</i>Nối hệ đang có; tự tạo ứng dụng, AI Agent đặc thù</li></ul></div>
+  </div>
+  <p class="srcline"><b>Nguồn:</b> Bài viết chính thức của Base.vn 28/08/2026; Nhân Dân, Báo Đầu tư 09/2026.</p>
+</section>
+
+<!-- ================= 29 · BẢN ĐỒ TRÊN BASE 2.0 ================= -->
+<section class="slide top" data-title="Bản đồ Base 2.0 cho logistics" data-time="50">
+  <p class="eyebrow rv" style="--i:0">Phạm vi trên Base 2.0</p>
+  <h2 class="rv" style="--i:1">Base 2.0: một nền tảng cho <span class="hl">dòng việc</span></h2>
+  <div class="mp">
+    <div class="mrow ai rv" style="--i:2"><div class="lb">AI &amp; Agent</div><div class="bx"><div class="grp"><b>Tham gia công việc</b><span>Agent</span><span>Agents hub</span><span>AI Workspace</span><span>Knowledge</span><span>Atlas</span></div></div></div>
+    <div class="mrow rv" style="--i:3"><div class="lb">Vận hành<small>dòng việc</small></div><div class="bx">
+      <div class="grp"><b>Công việc, quy trình</b><span>BPM</span><span>Request</span><span>Workflow</span><span>Project</span><span>Task</span><span>E-Office</span><span>E-Sign</span></div>
+      <div class="grp"><b>Khách hàng</b><span>Sales</span><span>Contract</span><span>Success</span></div>
+      <div class="grp"><b>Con người</b><span>HRIS</span><span>Timesheet</span><span>Payroll</span><span>E-Hiring</span></div>
+      <div class="grp"><b>Tài chính</b><span>Finance</span><span>Invoice</span><span>Asset</span></div>
+      <div class="grp"><b>Truyền thông</b><span>Chat</span><span>Townhall</span><span>Meeting</span></div></div></div>
+    <div class="mrow rv" style="--i:4"><div class="lb">Kết nối</div><div class="bx"><div class="grp"><b>Tự động hoá, dữ liệu dùng chung, mở rộng</b><span>Automation</span><span>Datasets</span><span>Form</span><span>API · webhook</span></div></div></div>
+    <div class="mrow ext" data-step="1"><div class="lb">Hệ của doanh&nbsp;nghiệp<small>dòng hàng — giữ nguyên</small></div><div class="bx"><div class="grp"><b>Phần mềm chuyên ngành đang chạy</b><span>TOS · ePort</span><span>WMS</span><span>TMS · GPS</span><span>IoT</span><span>Kế toán · ERP</span></div></div></div>
+  </div>
+  <p class="srcline"><b>Nguồn:</b> Giao diện Base 2.0, 09/2026 (danh sách rút gọn).</p>
+</section>
+
+<!-- ================= 30 · KẾT CỘNG DỒN ================= -->
+<section class="slide" data-title="Đóng vòng" data-time="45">
+  <div class="stack">
+    <p data-step="1">Lô hàng có phần mềm chuyên ngành theo dõi.</p>
+    <p data-step="2">Việc quanh lô hàng có người giữ, có hạn, có đầu ra.</p>
+    <p data-step="3">Mỗi lô hàng để lại bài học cho lô sau.</p>
+    <p class="final grad" data-step="4">Biết container ở đâu. Biết hồ sơ đang ở ai.</p>
+  </div>
+</section>
+
+<!-- ================= 31 · NGUỒN ================= -->
+<section class="slide top" data-title="Nguồn tham khảo" data-time="10">
+  <p class="eyebrow rv" style="--i:0">Nguồn tham khảo · truy cập 10/2026</p>
+  <ul class="refs rv" style="--i:1">
+    <li class="refh">Bối cảnh ngành</li>
+    <li><em>01</em><a href="https://trungtamwto.vn/chuyen-de/25096-chi-phi-logistics-cua-viet-nam-cao-hon-nhieu-so-voi-the-gioi"><b>Trung tâm WTO – VCCI</b> · Chi phí logistics của Việt Nam cao hơn nhiều so với thế giới (số liệu VLA)</a></li>
+    <li><em>02</em><a href="https://baochinhphu.vn/chien-luoc-phat-trien-dich-vu-logistics-viet-nam-thoi-ky-2025-2035-tam-nhin-den-2050-10225100916414501.htm"><b>Báo Chính phủ</b> · Chiến lược phát triển dịch vụ logistics 2025–2035, QĐ 2229/QĐ-TTg</a></li>
+    <li><em>03</em><a href="https://tapchicongthuong.vn/thuc-trang-va-giai-phap-chuyen-doi-so-nganh-logistics-viet-nam-89160.htm"><b>Tạp chí Công Thương</b> · Thực trạng và giải pháp chuyển đổi số ngành logistics (Báo cáo Logistics VN 2023)</a></li>
+    <li><em>04</em><a href="https://www.quanlynhanuoc.vn/2024/05/14/chuyen-doi-so-trong-linh-vuc-logistics-o-viet-nam/"><b>Tạp chí Quản lý Nhà nước</b> · Chuyển đổi số trong lĩnh vực logistics ở Việt Nam, 05/2024</a></li>
+    <li><em>05</em><a href="https://tienphong.vn/thu-tuong-chi-ra-6-diem-nghen-cua-logistics-viet-nam-post1800515.tpo"><b>Tiền Phong</b> · Thủ tướng chỉ ra 6 điểm nghẽn của logistics Việt Nam</a></li>
+    <li><em>06</em><a href="https://en.vneconomy.vn/improved-traffic-infrastructure-key-to-enhancing-logistics-ranking.htm"><b>VnEconomy</b> · LPI 2023: Việt Nam hạng 43</a></li>
+    <li><em>07</em><a href="https://www.scmr.com/article/enhancing-operational-intelligence-in-supply-chain-management-through-ai-ml"><b>SCMR</b> · dẫn McKinsey 2021: −15% chi phí logistics, −35% tồn kho, +65% mức phục vụ</a></li>
+    <li><em>08</em><a href="https://www.vietnamplus.vn/ty-le-xe-van-tai-chay-rong-cao-se-ra-soat-phi-va-gia-cuoc-dau-vao-post403239.vnp"><b>VietnamPlus</b> · Tỷ lệ xe vận tải chạy rỗng cao</a>; <a href="https://vilas.edu.vn/xe-rong-chieu-ve-va-giai-phap-cua-start-up-viet.html">VILAS · xe rỗng chiều về</a></li>
+    <li><em>09</em><a href="https://www.hackread.com/notpetya-attack-maersk-reinstalled-45000-pcs-2500-apps-4000-servers/"><b>Hackread</b> · Maersk cài lại 45.000 PC, 4.000 server sau NotPetya</a>; <a href="https://scmagazine.com/news/notpetya-attack-totally-destroyed-maersks-computer-network-chairman">SC Magazine</a></li>
+    <li><em>10</em><a href="https://vov.vn/kinh-te/chuyen-doi-xanh-trong-nganh-logistics-dang-la-xu-huong-tat-yeu-post1123190.vov"><b>VOV</b> · Chuyển đổi xanh trong ngành logistics, 24/09/2024 (DPL)</a></li>
+    <li><em>11</em><a href="https://www.vinafco.com.vn/vi/news/vinafco-khoi-dong-chuong-trinh-so-hoa-van-hanh-tai-cau-truc-de-huong-toi-mo-hinh-logistics-tich"><b>Vinafco</b> · Khởi động chương trình số hoá vận hành, 03/2026</a></li>
+    <li><em>12</em><a href="https://doanhnghiepvn.vn/chuyen-doi-so/chuyen-doi-so-trong-doanh-nghiep-logistics-cong-nghe-chi-la-phuong-tien-quan-trong-o-cach-lam/20221010040505231"><b>Tạp chí Doanh nghiệp VN</b> · Công nghệ chỉ là phương tiện, quan trọng ở cách làm, 10/2022</a></li>
+    <li class="refh">Nghiệp vụ đặc thù</li>
+    <li><em>13</em><a href="https://nghiencuu.tapchikinhtetaichinh.vn/giam-ty-le-container-rong-chieu-ve-tai-cong-ty-co-phan-logistics-dong-a-theo-dinh-huong-logistics-xanh-157079.html"><b>Tạp chí Kinh tế Tài chính</b> · Giảm tỷ lệ container rỗng chiều về tại Logistics Đông Á</a></li>
+    <li><em>14</em><a href="https://baohaiquanvietnam.vn/tin-tuc/tan-cang-sai-gon-tien-phong-ve-so-hoa-trong-quan-ly-khai-thac-cang-bien"><b>Báo Hải quân VN</b> · Tân Cảng Sài Gòn tiên phong số hoá khai thác cảng</a></li>
+    <li><em>15</em><a href="https://www.tinnhanhchungkhoan.vn/gemadept-tien-phong-mo-hinh-cang-logistics-thong-minh-va-ben-vung-post311229.html"><b>Tin nhanh Chứng khoán</b> · Gemadept: mô hình cảng – logistics thông minh</a></li>
+    <li><em>16</em><a href="https://gosmartlog.com/ung-dung-swm-vinafco-dao-sau-nganh-ban-le"><b>Smartlog</b> · Ứng dụng SWM, Vinafco “đào sâu” ngành bán lẻ</a></li>
+    <li><em>17</em><a href="https://vneconomy.vn/khai-truong-trung-tam-logistics-tu-dong-tiet-kiem-91-nhan-luc.htm"><b>VnEconomy</b> · Trung tâm logistics tự động tiết kiệm 91% nhân lực (Viettel Post)</a></li>
+    <li><em>18</em><a href="https://vietq.vn/bai-2-truy-xuat-va-quan-ly-chuoi-lanh-quyet-dinh-chat-luong-hang-hoa-d242179.html"><b>VietQ</b> · Truy xuất và quản lý chuỗi lạnh</a>; <a href="https://aba.com.vn/">ABA Cooltrans</a></li>
+    <li class="refh">Khách hàng logistics của Base</li>
+    <li><em>19</em><a href="https://vnexpress.net/247express-so-hoa-toan-dien-hon-200-buu-cuc-cung-base-vn-4516703.html"><b>VnExpress</b> · 247Express số hoá toàn diện hơn 200 bưu cục cùng Base.vn</a></li>
+    <li><em>20</em><a href="https://baodautu.vn/icd-tan-cang-song-than-tien-phong-so-hoa-quyet-tam-nang-tam-dich-vu---dong-hanh-phat-trien-d546087.html"><b>Báo Đầu tư</b> · ICD Tân Cảng Sóng Thần tiên phong số hoá</a>; <a href="https://customers.base.vn/icd-song-than-tien-phong-so-hoa/">Base Customers</a></li>
+    <li><em>21</em><a href="https://resources.base.vn/logistics/he-thong-theo-doi-tien-do-don-hang-logistics/"><b>Base Resources</b> · Case study theo dõi tiến độ đơn hàng logistics (CTX)</a></li>
+    <li><em>22</em><a href="https://www.vosco.vn/uploads/voscovn/news/2023_03/bao-cao-thuong-nien-2022-dang-web_1099.pdf#page=30"><b>VOSCO</b> · Báo cáo thường niên 2022</a>; <a href="https://www.vosco.vn/uploads/voscovn/news/2026_03/20260306-vos-bao-cao-thuong-nien-nam-2025-signed_1422.pdf#page=26">BCTN 2025</a>; <a href="https://www.vosco.vn/uploads/voscovn/news/2022_03/bao-cao-thuong-nien-2021-web_1001.pdf#page=16">BCTN 2021</a></li>
+    <li><em>23</em><a href="https://tancanglogistics.com/quan-he-co-dong/Documents/TAI%20LIEU%20DAI%20HOI%20DONG%20CO%20DONG%20THUONG%20NIEN%20202220220526162827.pdf#page=8"><b>Tân Cảng Logistics</b> · Tài liệu ĐHĐCĐ 2022</a>; <a href="https://tancanglogistics.com/quan-he-co-dong/Documents/20250325%20-%20TCL%20-%20BAO%20CAO%20THUONG%20NIEN%20NAM%20202420250325150512.pdf#page=3">BCTN 2024</a></li>
+    <li><em>24</em><a href="https://customers.base.vn/added-value-chuyen-doi-so-logistics-containergo/"><b>Base Customers</b> · ADDED-VALUE và hệ sinh thái ContainerGo</a></li>
+    <li><em>25</em><a href="https://customers.base.vn/tht-cargo-logistics-tao-dung-van-hoa-tang-truong-ben-vung-cung-base/"><b>Base Customers</b> · THT Cargo Logistics</a>; <a href="https://resources.base.vn/hr/tht-cargo-logistics-xay-dung-van-hoa-de-truong-ton/">Base Resources</a></li>
+    <li><em>26</em><a href="https://vjst.vn/ratraco-hop-tac-base-kien-tao-mo-hinh-van-tai-duong-sat-thong-minh-tu-van-hanh-86270.html"><b>VJST</b> · Ratraco hợp tác Base</a>; <a href="https://customers.base.vn/ratraco-di-tat-don-dau-cong-nghe-kien-tao-mo-hinh-van-tai-duong-sat-thong-minh-tu-van-hanh/">Base Customers</a></li>
+    <li><em>27</em><a href="https://customers.base.vn/so-hoa-than-toc-700-cong-viec-nhat-viet-quyet-tam-gan-ket-tau-bo/"><b>Base Customers</b> · Nhật Việt số hoá 700 công việc</a>; <a href="https://customers.base.vn/giao-nhan-van-tai-logistics/">danh mục Logistics</a></li>
+    <li><em>28</em><a href="https://besgroup.vn/bes-kick-off-du-an-hop-tac-trien-khai-he-thong-erp-voi-dpl/"><b>BES</b> · Dự án ERP với DPL</a>; <a href="https://valoma.vn/tuyen-dung/cong-ty-co-phan-logistics-duoc-pham-dong-a-tuyen-dung/">VALOMA · thư DPL 08/2024</a></li>
+    <li class="refh">Base và Base 2.0</li>
+    <li><em>29</em><a href="https://vi.wikipedia.org/wiki/Base.vn"><b>Wikipedia</b> · Base.vn</a>; <a href="https://cafef.vn/start-up-cong-nghe-basevn-la-ai-ma-duoc-fpt-va-8-quy-dau-tu-san-don-20210527181108434.chn">CafeF 05/2021 · FPT đầu tư</a></li>
+    <li><em>30</em><a href="https://baodautu.vn/basevn-ra-mat-base-20-mo-huong-moi-cho-doanh-nghiep-trong-ky-nguyen-ai-d704598.html"><b>Báo Đầu tư</b> · Base.vn ra mắt Base 2.0</a>; <a href="https://nhandan.vn/base-chinh-thuc-gioi-thieu-base-20-nen-tang-moi-cho-ky-nguyen-con-nguoi-va-ai-cung-lam-viec-post989216.html">Nhân Dân</a></li>
+    <li><em>31</em><a href="https://cafebiz.vn/enterprise-ai-summit-2026-base-20-muon-bien-ai-agent-thanh-luc-luong-lao-dong-moi-trong-doanh-nghiep-176260917230825747.chn"><b>CafeBiz</b> · Base 2.0 muốn biến AI Agent thành lực lượng lao động mới</a>; <a href="https://soha.vn/do-tien-mua-ai-nhung-van-loay-hoay-chu-tich-base-dat-cau-hoi-nhuc-nhoi-cho-nha-quan-tri-doanh-nghiep-198260918100555313.htm">Soha</a></li>
+    <li><em>32</em><b>Base.vn</b> · Bài viết chính thức về Base 2.0 và kiến trúc Service → Output → Knowledge → Agent, 28/08/2026</li>
+    <li><em>33</em><b>Tài liệu nội bộ Base</b> · Bộ giải pháp Base cho Logistics (quy trình mẫu); giao diện Base 2.0 ghi nhận 22/09/2026</li>
+  </ul>
+</section>
+
+<script>
+/* Dự phòng cho trình duyệt chưa hỗ trợ text-wrap: pretty — nối hai chữ cuối để không có dòng chỉ một chữ */
+(function(){if(window.CSS&&CSS.supports&&CSS.supports('text-wrap','pretty'))return;
+  document.querySelectorAll('#stage h1,#stage h2,#stage h3,#stage p,#stage li,#stage small,#stage blockquote,#stage .who,#stage .nm,#stage .bl,#stage .mt,#stage .e,#stage .t,#stage .p,#stage .tm,#stage .out,#stage .st,#stage .co').forEach(function(el){
+    if(el.closest('.notes'))return;var w=document.createTreeWalker(el,NodeFilter.SHOW_TEXT),n,last=null;
+    while((n=w.nextNode())){if(/\S\s+\S/.test(n.textContent))last=n}
+    if(last)last.textContent=last.textContent.replace(/\s+(\S+\s*)$/,' $1');});
+})();
+</script>
+
+</main>
+<p class="mfoot">Base.vn · Tài liệu tham khảo cho doanh nghiệp logistics · 10/2026</p>
+<script>
+/* =====================================================================
+   ENGINE MOBILE — đọc dọc. Hiệu ứng giữ đúng thông số deck:
+   • .rv trồi lên so le khi phần (slide) đi vào màn hình.
+   • [data-step] hiện lần lượt theo số bước khi tới vị trí; dòng mới nhất có class "now" (kết cộng dồn).
+   • [data-cls] bật class theo bước khi phần đi vào màn hình (vd. cờ "chưa ai trả lời").
+   • Giảm chuyển động: hiện ngay trạng thái cuối.
+   ===================================================================== */
+(function(){
+'use strict';
+var REDUCE=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+var secs=[].slice.call(document.querySelectorAll('#stage > .slide')), N=secs.length;
+function pad(n){return String(n).padStart(2,'0')}
+function esc(t){return String(t||'').replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function clsPairs(e){return e.dataset.cls.split(/\s+/).map(function(p){var m=p.split(':');return m.length===2?[+m[0],m[1]]:null}).filter(Boolean)}
+secs.forEach(function(s,i){s.id='s'+(i+1)});
+
+function activate(s){
+  if(!s||s.classList.contains('is-active'))return;
+  s.classList.add('is-active');
+  [].slice.call(s.querySelectorAll('[data-cls]')).forEach(function(e){clsPairs(e).forEach(function(p){
+    if(REDUCE)e.classList.add(p[1]);else setTimeout(function(){e.classList.add(p[1])},600+p[0]*450)})});
+}
+function rank(e){var s=e.closest('.slide');return secs.indexOf(s)*1000+(+e.dataset.step||0)}
+var queue=[],timer=null;
+function show(e){
+  var s=e.closest('.slide');
+  [].slice.call(s.querySelectorAll('[data-step].now')).forEach(function(x){x.classList.remove('now')});
+  e.classList.add('on','now');
+}
+function flush(){if(!queue.length){timer=null;return}queue.sort(function(a,b){return rank(a)-rank(b)});show(queue.shift());timer=setTimeout(flush,REDUCE?0:240)}
+
+if(!('IntersectionObserver' in window)){secs.forEach(activate);document.querySelectorAll('#stage [data-step]').forEach(show)}
+else{
+  var ioS=new IntersectionObserver(function(es){es.forEach(function(en){if(en.isIntersecting){activate(en.target);ioS.unobserve(en.target)}})},{rootMargin:'0px 0px -12% 0px',threshold:0});
+  var ioE=new IntersectionObserver(function(es){es.forEach(function(en){if(!en.isIntersecting)return;ioE.unobserve(en.target);activate(en.target.closest('.slide'));
+    queue.push(en.target);if(!timer)timer=setTimeout(flush,REDUCE?0:280)})},{rootMargin:'0px 0px -14% 0px',threshold:0.12});
+  secs.forEach(function(s){ioS.observe(s)});
+  document.querySelectorAll('#stage [data-step]').forEach(function(e){ioE.observe(e)});
+}
+activate(secs[0]);
+
+/* thanh trên cùng: tên phần đang đọc, số thứ tự, tiến độ */
+var ttl=document.getElementById('mttl'),cnt=document.getElementById('mcnt'),bar=document.getElementById('mbar'),list=document.getElementById('mlist'),btn=document.getElementById('mtoc'),cur=-1,ticking=false;
+function onScroll(){ticking=false;var y=innerHeight*0.35,idx=0;
+  for(var i=0;i<N;i++){if(secs[i].getBoundingClientRect().top<=y)idx=i;else break}
+  if(idx!==cur){cur=idx;ttl.textContent=secs[idx].dataset.title||'';cnt.textContent=pad(idx+1)+' / '+pad(N);
+    [].slice.call(list.querySelectorAll('a')).forEach(function(a,n){a.classList.toggle('cur',n===idx)})}
+  var h=document.documentElement.scrollHeight-innerHeight;bar.style.width=(h>0?Math.min(100,Math.max(0,scrollY/h*100)):0)+'%'}
+addEventListener('scroll',function(){if(!ticking){ticking=true;requestAnimationFrame(onScroll)}},{passive:true});
+addEventListener('resize',onScroll);
+
+/* mục lục */
+list.innerHTML=secs.map(function(s,i){return '<a href="#s'+(i+1)+'"><em>'+pad(i+1)+'</em><span>'+esc(s.dataset.title)+'</span></a>'}).join('');
+btn.addEventListener('click',function(){list.hidden=!list.hidden;btn.setAttribute('aria-expanded',String(!list.hidden))});
+list.addEventListener('click',function(e){var a=e.target.closest('a');if(!a)return;e.preventDefault();list.hidden=true;btn.setAttribute('aria-expanded','false');
+  var t=document.getElementById(a.getAttribute('href').slice(1));activate(t);t.scrollIntoView({behavior:REDUCE?'auto':'smooth',block:'start'})});
+onScroll();
+window.__mobile={state:function(){return {cur:cur+1,total:N,shown:document.querySelectorAll('#stage [data-step].on').length,steps:document.querySelectorAll('#stage [data-step]').length}}};
+})();
+
+</script>
+</body>
+</html>
