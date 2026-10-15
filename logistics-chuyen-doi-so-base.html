@@ -9,11 +9,11 @@
   Dựng từ asset.base-2-0.html-deck-starter v1.1.0 (giữ nguyên engine và CSS gốc; bố cục riêng ở CSS mục 11).
   Ba phần: (1) vì sao logistics phải quan tâm công nghệ · (2A) nghiệp vụ đặc thù — dòng hàng · (2B) vận hành nội bộ — dòng việc, case khách hàng Base · (3) Base và Base 2.0.
   Mọi số liệu có dòng nguồn ở chân slide và mục Nguồn tham khảo cuối deck. Giao diện/mảnh dựng lại có nhãn "Minh hoạ".
-  Bản gửi khách: không chứa ghi chú người nói (ghi chú nằm trong src/slides.html). Điện thoại cầm dọc tự mở bản mobile.
+  Bản gửi khách: không chứa ghi chú người nói (ghi chú nằm trong src/slides.html). Điện thoại cầm dọc tự đổi sang giao diện đọc dọc nhúng trong cùng file.
   Phím: → tiếp · ← lùi · G mục lục · F toàn màn hình · P xem toàn bộ slide · ? trợ giúp.
 -->
-<script>/* điện thoại cầm dọc: mở bản đọc dọc tối ưu cho mobile */
-(function(){try{if(innerWidth<760&&innerHeight>innerWidth&&location.hash!=='#deck')location.replace('logistics-chuyen-doi-so-base-mobile.html')}catch(e){}})();</script>
+<script>/* điện thoại cầm dọc: bật giao diện đọc dọc nhúng sẵn trong file */
+(function(){try{if(innerWidth<760&&innerHeight>innerWidth&&location.hash!=='#deck')document.documentElement.classList.add('m','js')}catch(e){}})();</script>
 <style>
 /* ============ 1. TOKENS — đổi màu thương hiệu ở đây, giữ nguyên nghĩa màu trạng thái ============ */
 :root{
@@ -607,9 +607,193 @@ p,li,small,span,b,em,div,blockquote{text-wrap:pretty}
 .xl .tabs span{border:0;border-radius:0;background:transparent;font-size:11px;font-weight:500;color:#6B7280;padding:2px 10px}
 .xl .tabs span.on{background:#fff;color:#217346;font-weight:700;border-bottom:2px solid #217346}
 
+/* ============ 12. BẢN MOBILE — đọc dọc, cùng nội dung và hiệu ứng với deck ============ */
+html.m,html.m body{height:auto;overflow-x:hidden;overflow-y:auto}
+html.m{scroll-padding-top:60px;-webkit-text-size-adjust:100%}
+html.m body{background:var(--bg);min-height:100%}
+html.m body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(520px 420px at 92% 0%,var(--glow-1),transparent 66%),radial-gradient(480px 420px at 0% 100%,var(--glow-2),transparent 62%),linear-gradient(170deg,var(--bg-2) 0%,var(--bg) 55%)}
+html.m #stage{position:relative;left:auto;top:auto;width:auto;height:auto;transform:none!important;overflow:visible;background:none;z-index:1;max-width:680px;margin:0 auto;padding:52px 0 24px}
+html.m #stage::after{display:none}
+html.m .slide{position:relative;inset:auto;opacity:1;visibility:visible;transform:none;transition:none;z-index:auto;
+  padding:42px 20px 30px;gap:16px;justify-content:flex-start;align-items:stretch;text-align:left;border-top:1px solid var(--line);overflow:hidden}
+html.m .slide.top{padding-top:42px;gap:16px}
+html.m .slide:first-child{border-top:0;min-height:calc(100svh - 52px);justify-content:center;align-items:center;text-align:center}
+html.m .slide:has(> .ghost),html.m .slide:has(> h2.grad),html.m .slide:has(.stack){min-height:58svh;justify-content:center;align-items:center;text-align:center}
+/* chữ */
+html.m .eyebrow{font-size:11.5px;letter-spacing:.16em;line-height:1.5}
+html.m h1{font-size:33px;line-height:1.2;letter-spacing:-.015em}
+html.m .slide:first-child h1{font-size:38px}
+html.m h2{font-size:26px;line-height:1.25;letter-spacing:-.01em}
+html.m h3{font-size:19px;line-height:1.3}
+html.m .sub{font-size:17px;line-height:1.5}
+html.m .small{font-size:13px}
+html.m .lede{font-size:16px;line-height:1.55}
+html.m .srcline{position:static;left:auto;right:auto;bottom:auto;font-size:12px;line-height:1.5;margin-top:2px;opacity:.8}
+html.m .tagline{font-size:11px}
+html.m .ghost{font-size:210px}
+html.m .mcue{margin-top:28px;font:600 13px var(--f-ui);color:var(--ink-2);letter-spacing:.06em;animation:cue 1.8s var(--ease-2) infinite}
+@keyframes cue{50%{transform:translateY(6px);opacity:.6}}
+/* hiện dần khi cuộn tới (cùng thông số với deck: trồi 18px + bỏ mờ, so le) */
+html.m.js .slide:not(.is-active) .rv{opacity:0}
+html.m:not(.js) [data-step]{opacity:1;transform:none;filter:none}
+/* lưới nhiều cột → một cột */
+html.m .cards,html.m .kpis,html.m .ops,html.m .jr,html.m .duo,html.m .scope,html.m .arch,html.m .rules,html.m .versus,html.m .quotes,html.m .quotes.q4{grid-template-columns:1fr;gap:12px;max-width:none}
+html.m .card{padding:20px}
+html.m .card .no{font-size:12px}
+html.m .card h3{margin:8px 0 6px}
+html.m .card p{font-size:15.5px}
+html.m .kpi{padding:18px 20px;gap:6px}
+html.m .kpi b{font-size:46px}
+html.m .kpi span{font-size:17px}
+html.m .kpi small{font-size:13.5px}
+/* mức độ số hoá */
+html.m .meter{gap:12px}
+html.m .meter .cap0{font-size:15px}
+html.m .meter .barx{height:58px}
+html.m .meter .seg.a{padding:0 14px;font-size:14.5px}
+html.m .meter .seg.a em{font-size:22px;margin-right:8px}
+html.m .meter .seg.b{font-size:12.5px}
+html.m .meter .n3{grid-template-columns:1fr;gap:10px}
+html.m .meter .nt{font-size:15px;padding:12px 16px}
+html.m .meter .nt b{font-size:28px}
+/* câu nói */
+html.m .quote,html.m .quotes.q4 .quote{padding:18px;gap:10px}
+html.m .quote p,html.m .quotes.q4 .quote p{font-size:19px;line-height:1.4}
+html.m .who,html.m .quotes.q4 .who{font-size:13px;align-items:flex-start}
+html.m .av{flex:0 0 34px;width:34px;height:34px;font-size:13px}
+/* hai cột ✕ / ✓ */
+html.m .vcol,html.m .versus.dense .vcol{padding:18px}
+html.m .vcol h3{font-size:12.5px;margin-bottom:8px}
+html.m .vcol li,html.m .versus.dense .vcol li{font-size:16px;line-height:1.45;padding:7px 0;gap:10px}
+/* hai dòng chảy */
+html.m .lane{grid-template-columns:1fr;gap:12px;padding:16px}
+html.m .lane .lt b{font-size:22px}
+html.m .lane .lt small{font-size:14px}
+html.m .lane .steps{flex-wrap:wrap;gap:6px}
+html.m .lane .st{flex:0 0 auto;padding:8px 11px;font-size:14px}
+html.m .lane .ar{display:none}
+html.m .lane .st:not(:last-child)::after{content:"→";margin-left:8px;color:var(--k);font-weight:800}
+html.m .lane .tool{grid-column:auto;margin:0;font-size:14px}
+/* ma trận bài toán */
+html.m .mx .hd{display:none}
+html.m .mx .r{grid-template-columns:1fr;gap:8px;padding:14px 16px}
+html.m .mx .p{font-size:17px}
+html.m .mx .t,html.m .mx .e{font-size:14.5px}
+html.m .mx .t::before{content:"Công nghệ: ";color:var(--ink-2);font-weight:700}
+/* hệ chuyên ngành song song Base */
+html.m .stk .hd{display:none}
+html.m .stk .r{grid-template-columns:1fr;gap:10px;padding:14px 16px}
+html.m .stk .co{font-size:18px}
+html.m .stk .r>.chips:nth-child(2)::before,html.m .stk .r>.chips:nth-child(3)::before{flex:0 0 100%;font:800 11px var(--f-ui);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-2)}
+html.m .stk .r>.chips:nth-child(2)::before{content:"Phần mềm chuyên ngành"}
+html.m .stk .r>.chips:nth-child(3)::before{content:"Base đảm nhận"}
+html.m .chp{font-size:13.5px;padding:5px 10px;white-space:normal}
+/* mớ hỗn độn: các mảnh xếp dọc, cờ đứng ngay dưới mảnh tương ứng */
+html.m .mess,html.m .mess.apps{position:relative;width:100%;height:auto;display:flex;flex-direction:column;align-items:center;gap:12px;padding:4px 0}
+html.m .mess>*{position:relative!important;left:auto!important;top:auto!important}
+html.m .mess .win,html.m .mess .frag{width:100%!important;max-width:380px}
+html.m .mess .frag.note{max-width:250px}
+html.m .mess>.zl{order:1;transform:rotate(-1.2deg)}
+html.m .mess>.flag:nth-child(6){order:2}
+html.m .mess>.xl{order:3;transform:rotate(1deg)}
+html.m .mess>.flag:nth-child(7){order:4}
+html.m .mess>.ml{order:5;transform:rotate(-1deg)}
+html.m .mess>.flag:nth-child(8){order:6}
+html.m .mess>.pp{order:7;transform:rotate(1.2deg)}
+html.m .mess>.flag:nth-child(9){order:8}
+html.m .mess>.note{order:9;transform:rotate(-2deg)}
+html.m .mess .flag{transform:none;font-size:12px;padding:6px 10px}
+html.m .xl th,html.m .xl td{padding:4px 5px}
+/* sáu vấn đề */
+html.m .op{padding:18px}
+html.m .op h3{font-size:19px}
+html.m .op p{font-size:15px}
+html.m .op .at{font-size:13px}
+/* chuỗi bước */
+html.m .chain{grid-template-columns:1fr 1fr;gap:10px}
+html.m .cn{padding:12px 12px 10px;gap:6px}
+html.m .cn::after{display:none}
+html.m .cn b{font-size:16px;min-height:0}
+html.m .cn .tm{font-size:13px}
+html.m .cn .sla{font-size:12px}
+html.m .cn .out{font-size:12.5px}
+html.m .chsum{font-size:17px;line-height:1.4}
+html.m .rule{font-size:15px;padding:14px 16px}
+html.m .rule b{font-size:17px}
+/* case */
+html.m .story{grid-template-columns:1fr;gap:12px}
+html.m .story .id{padding:20px;gap:8px}
+html.m .story .id .nm{font-size:27px}
+html.m .story .id .mt{font-size:14.5px}
+html.m .story .id .big{font-size:56px;margin-top:6px}
+html.m .story .id .bl{font-size:17px}
+html.m .blk{grid-template-columns:1fr;gap:6px;padding:14px 16px}
+html.m .blk h4{font-size:12px;padding-top:0}
+html.m .blk p{font-size:15.5px}
+html.m .qline,html.m .slide .qline[style]{font-size:17px!important}
+html.m .qline small{font-size:13px}
+html.m .dcol{padding:18px}
+html.m .dcol .nm{font-size:23px}
+html.m .dcol .mt{font-size:14px}
+html.m .dcol p{font-size:15.5px}
+html.m .dcol blockquote{font-size:18px}
+html.m .dcol blockquote small{font-size:12.5px}
+html.m .jc{padding:18px}
+html.m .jc .nm{font-size:20px}
+html.m .jc p{font-size:15px}
+html.m .also{justify-content:flex-start;font-size:15px;gap:8px}
+/* phạm vi hai lớp */
+html.m .sc{padding:18px 18px 8px}
+html.m .sc .ttl{font-size:21px}
+html.m .sc li{font-size:15.5px}
+html.m .band{font-size:16px;padding:14px 16px}
+/* kiến trúc bốn lớp */
+html.m .arch{gap:26px}
+html.m .ly{padding:18px}
+html.m .ly h3{font-size:23px}
+html.m .ly p{font-size:15px}
+html.m .ly .ex{font-size:14.5px}
+html.m .ly:not(:last-child)::after{content:"↓";right:auto;left:50%;top:auto;bottom:-24px;transform:translateX(-50%)}
+html.m .loop{font-size:16px;align-items:flex-start;text-align:left}
+/* bản đồ Base 2.0 */
+html.m .mrow{grid-template-columns:1fr;gap:6px}
+html.m .mrow .lb{font-size:12px;flex-direction:row;gap:8px;align-items:baseline}
+html.m .mrow .bx{flex-wrap:wrap;padding:10px;gap:8px}
+html.m .grp{flex:1 1 100%}
+html.m .grp b{font-size:14.5px}
+html.m .grp span{font-size:12.5px}
+/* đóng vòng, nguồn */
+html.m .stack{gap:12px}
+html.m .stack p{font-size:22px;line-height:1.3}
+html.m .stack p.final{font-size:28px}
+html.m .refs{columns:1;font-size:13px}
+/* thanh trên cùng + mục lục */
+html.m #mtop{position:fixed;top:0;left:0;right:0;height:52px;z-index:50;display:flex;align-items:center;gap:12px;padding:0 14px;padding-top:env(safe-area-inset-top);
+  background:rgba(7,11,29,.84);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);font-family:var(--f-ui)}
+html.m #mtoc{all:unset;cursor:pointer;flex:0 0 36px;height:36px;border-radius:10px;display:grid;place-items:center;background:var(--card-2);color:var(--ink);font-size:17px}
+html.m #mtop .mt{flex:1;min-width:0;display:flex;align-items:center;gap:10px}
+html.m #mttl{flex:1;min-width:0;font-size:14px;font-weight:700;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+html.m #mcnt{font-size:12px;font-weight:600;color:var(--ink-2);font-variant-numeric:tabular-nums}
+html.m #mbar{position:absolute;left:0;bottom:-1px;height:2px;width:0;background:linear-gradient(90deg,var(--accent),var(--accent-2))}
+html.m #mlist{position:fixed;left:0;right:0;top:52px;bottom:0;z-index:49;background:rgba(5,8,22,.97);overflow:auto;padding:8px 16px 40px;font-family:var(--f-ui)}
+html.m #mlist[hidden]{display:none}
+html.m #mlist a{display:flex;gap:12px;padding:12px 4px;border-bottom:1px solid var(--line);color:var(--ink);text-decoration:none;font-size:15px;line-height:1.4}
+html.m #mlist a em{font-style:normal;color:var(--accent);font-weight:800;min-width:26px}
+html.m #mlist a.cur{color:var(--accent)}
+html.m .mfoot{position:relative;z-index:1;text-align:center;padding:20px 20px 36px;font:500 12px var(--f-ui);color:var(--ink-3)}
+#mtop,#mlist,.mfoot{display:none}
+html.m #mlist{display:block}
+html.m #mlist[hidden]{display:none}
+html.m .mfoot{display:block}
+html.m #viewport{position:static;inset:auto;overflow:visible}
+html.m #bar,html.m #dots,html.m #counter,html.m #hint,html.m #notes,html.m #overview,html.m #help,html.m #mlabel{display:none!important}
+
 </style>
 </head>
 <body>
+<header id="mtop"><button id="mtoc" type="button" aria-label="Mục lục" aria-expanded="false" aria-controls="mlist">☰</button><div class="mt"><span id="mttl">Bức tranh chuyển đổi số ngành logistics</span><span id="mcnt"></span></div><i id="mbar"></i></header>
+<nav id="mlist" hidden></nav>
 <div id="viewport"><div id="stage">
 
 <!-- ================= 01 · MỞ ================= -->
@@ -1122,6 +1306,7 @@ p,li,small,span,b,em,div,blockquote{text-wrap:pretty}
 </script>
 
 </div></div>
+<p class="mfoot">Base.vn · Tài liệu tham khảo cho doanh nghiệp logistics · 10/2026</p>
 
 <div id="bar"></div><div id="dots"></div><div id="counter"></div>
 <div id="hint">Nhấp chuột hoặc bấm → để xem tiếp · ← lùi · G mục lục · F toàn màn hình</div>
@@ -1146,7 +1331,7 @@ p,li,small,span,b,em,div,blockquote{text-wrap:pretty}
    • Mọi bước dựng lại được TỨC THÌ (lùi, nhảy, in, giảm chuyển động) → không có trạng thái "kẹt".
    • Rời slide là dừng mọi timer / hoạt ảnh của slide đó.
    ===================================================================== */
-(function(){
+if(!document.documentElement.classList.contains('m'))(function(){
 'use strict';
 var stage=document.getElementById('stage');
 var slides=[].slice.call(stage.querySelectorAll(':scope > .slide'));
@@ -1378,6 +1563,73 @@ var m=/^#(\d+)(?:\.(\d+))?$/.exec(location.hash||'');
 if(m){cur=-1;go(+m[1]-1,+(m[2]||0),'jump')}else{cur=-1;go(0,0,'fwd')}
 window.__deck={go:go,next:next,prev:prev,state:function(){return {slide:cur+1,step:step,steps:STEPS[cur]}}};
 })();
+</script>
+<script>
+if(document.documentElement.classList.contains('m')){
+/* chuẩn bị cho giao diện đọc dọc: tiêu đề chỉ giữ xuống dòng ở ranh giới câu, thêm gợi ý cuộn */
+[].slice.call(document.querySelectorAll('#stage h1,#stage h2')).forEach(function(h){h.innerHTML=h.innerHTML.replace(/([^.?!])<br>/g,'$1 ')});
+(function(){var f=document.querySelector('#stage > .slide');if(f){var c=document.createElement('p');c.className='mcue';c.textContent='Kéo xuống để xem ↓';f.appendChild(c)}})();
+/* =====================================================================
+   ENGINE MOBILE — đọc dọc. Hiệu ứng giữ đúng thông số deck:
+   • .rv trồi lên so le khi phần (slide) đi vào màn hình.
+   • [data-step] hiện lần lượt theo số bước khi tới vị trí; dòng mới nhất có class "now" (kết cộng dồn).
+   • [data-cls] bật class theo bước khi phần đi vào màn hình (vd. cờ "chưa ai trả lời").
+   • Giảm chuyển động: hiện ngay trạng thái cuối.
+   ===================================================================== */
+(function(){
+'use strict';
+var REDUCE=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+var secs=[].slice.call(document.querySelectorAll('#stage > .slide')), N=secs.length;
+function pad(n){return String(n).padStart(2,'0')}
+function esc(t){return String(t||'').replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function clsPairs(e){return e.dataset.cls.split(/\s+/).map(function(p){var m=p.split(':');return m.length===2?[+m[0],m[1]]:null}).filter(Boolean)}
+secs.forEach(function(s,i){s.id='s'+(i+1)});
+
+function activate(s){
+  if(!s||s.classList.contains('is-active'))return;
+  s.classList.add('is-active');
+  [].slice.call(s.querySelectorAll('[data-cls]')).forEach(function(e){clsPairs(e).forEach(function(p){
+    if(REDUCE)e.classList.add(p[1]);else setTimeout(function(){e.classList.add(p[1])},600+p[0]*450)})});
+}
+function rank(e){var s=e.closest('.slide');return secs.indexOf(s)*1000+(+e.dataset.step||0)}
+var queue=[],timer=null;
+function show(e){
+  var s=e.closest('.slide');
+  [].slice.call(s.querySelectorAll('[data-step].now')).forEach(function(x){x.classList.remove('now')});
+  e.classList.add('on','now');
+}
+function flush(){if(!queue.length){timer=null;return}queue.sort(function(a,b){return rank(a)-rank(b)});show(queue.shift());timer=setTimeout(flush,REDUCE?0:240)}
+
+if(!('IntersectionObserver' in window)){secs.forEach(activate);document.querySelectorAll('#stage [data-step]').forEach(show)}
+else{
+  var ioS=new IntersectionObserver(function(es){es.forEach(function(en){if(en.isIntersecting){activate(en.target);ioS.unobserve(en.target)}})},{rootMargin:'0px 0px -12% 0px',threshold:0});
+  var ioE=new IntersectionObserver(function(es){es.forEach(function(en){if(!en.isIntersecting)return;ioE.unobserve(en.target);activate(en.target.closest('.slide'));
+    queue.push(en.target);if(!timer)timer=setTimeout(flush,REDUCE?0:280)})},{rootMargin:'0px 0px -14% 0px',threshold:0.12});
+  secs.forEach(function(s){ioS.observe(s)});
+  document.querySelectorAll('#stage [data-step]').forEach(function(e){ioE.observe(e)});
+}
+activate(secs[0]);
+
+/* thanh trên cùng: tên phần đang đọc, số thứ tự, tiến độ */
+var ttl=document.getElementById('mttl'),cnt=document.getElementById('mcnt'),bar=document.getElementById('mbar'),list=document.getElementById('mlist'),btn=document.getElementById('mtoc'),cur=-1,ticking=false;
+function onScroll(){ticking=false;var y=innerHeight*0.35,idx=0;
+  for(var i=0;i<N;i++){if(secs[i].getBoundingClientRect().top<=y)idx=i;else break}
+  if(idx!==cur){cur=idx;ttl.textContent=secs[idx].dataset.title||'';cnt.textContent=pad(idx+1)+' / '+pad(N);
+    [].slice.call(list.querySelectorAll('a')).forEach(function(a,n){a.classList.toggle('cur',n===idx)})}
+  var h=document.documentElement.scrollHeight-innerHeight;bar.style.width=(h>0?Math.min(100,Math.max(0,scrollY/h*100)):0)+'%'}
+addEventListener('scroll',function(){if(!ticking){ticking=true;requestAnimationFrame(onScroll)}},{passive:true});
+addEventListener('resize',onScroll);
+
+/* mục lục */
+list.innerHTML=secs.map(function(s,i){return '<a href="#s'+(i+1)+'"><em>'+pad(i+1)+'</em><span>'+esc(s.dataset.title)+'</span></a>'}).join('');
+btn.addEventListener('click',function(){list.hidden=!list.hidden;btn.setAttribute('aria-expanded',String(!list.hidden))});
+list.addEventListener('click',function(e){var a=e.target.closest('a');if(!a)return;e.preventDefault();list.hidden=true;btn.setAttribute('aria-expanded','false');
+  var t=document.getElementById(a.getAttribute('href').slice(1));activate(t);t.scrollIntoView({behavior:REDUCE?'auto':'smooth',block:'start'})});
+onScroll();
+window.__mobile={state:function(){return {cur:cur+1,total:N,shown:document.querySelectorAll('#stage [data-step].on').length,steps:document.querySelectorAll('#stage [data-step]').length}}};
+})();
+
+}
 </script>
 </body>
 </html>
