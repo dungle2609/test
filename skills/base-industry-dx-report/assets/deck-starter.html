@@ -1,0 +1,1028 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Từ đồng ý đến hoàn thành — deck mẫu Base 2.0</title>
+<!--
+  DECK STARTER · BaseOS · asset.base-2-0.html-deck-starter · v1.1.0 (2026-09-24)
+  -----------------------------------------------------------------------------
+  Khung trình chiếu HTML một file, chạy offline. Nội dung bên dưới là VÍ DỤ MINH HOẠ
+  (khách giả định, số liệu giả định, giao diện dựng lại) — thay toàn bộ trước khi dùng.
+  Hướng dẫn đầy đủ: 07_skills/items/base-2-0-html-presentation-design.md (mục 4).
+  v1.0.1: h1.xl line-height 1.12 → 1.15 (không cắt dấu tiếng Việt khi xuống dòng); chữ dòng nhật ký
+      trong demo giữ màu ui-ink, chỉ chấm mang màu trạng thái.
+  v1.1.0: thêm 5 bố cục (CSS mục 5.11–5.15, slide phụ lục 15–20); demo duyệt: sau khi duyệt, dòng thời gian
+      ghi "đã duyệt" và bước Đặt hàng chuyển sang "đang xử lý".
+
+  Cách viết nội dung (không cần sửa phần <script> cuối file):
+  • Mỗi slide: <section class="slide" data-title="…" data-time="45"> … <aside class="notes">…</aside></section>
+      data-time = số giây dự kiến cho slide (dùng cho đồng hồ nhịp và bảng tổng quan).
+  • Hiện dần theo lần bấm: gắn data-step="1", "2"… vào phần tử. data-only="2" chỉ hiện ở bước 2;
+      data-until="2" hiện từ đầu và ẩn từ bước 2. data-cls="1:hot 4:short" bật class theo bước.
+      Phần tử có class "rv" (kèm style="--i:0,1,2…") trồi lên so le khi vào slide — đừng gắn rv và data-step
+      trên cùng một phần tử. Lịch lát cắt thời gian: <div class="cal" data-days="30" data-late-from="26">.
+  • Slide 15–20 là PHỤ LỤC: mẫu 5 bố cục bổ sung (mớ hỗn độn, chấm đếm công sức, thẻ màu theo loại việc,
+      mạng lưới luồng, vòng hệ sinh thái). Chép slide cần dùng vào đúng nhịp của deck, xoá phần còn lại.
+  • Demo mô phỏng thao tác: một khối <div class="shot" id="…"> gồm .cam > nhiều .state (ảnh chụp
+      hoặc HTML) + kịch bản JSON <script type="application/json" data-for="id-của-shot">.
+      Bước k của slide chạy mảng steps[k-1]. Hành động: cursor · click · type · ring · unring · spot ·
+      unspot · zoom · unzoom · swap · patch · unpatch · toast · untoast · count · cls · log · caption · wait.
+      Thêm "par": true để hành động chạy cùng lúc với hành động liền trước.
+      Điểm nóng (hotspots): [x, y, w, h] tính theo % khung ảnh, hoặc {"sel": "#id"} với mock HTML.
+  • Phím: → Space PageDown = tiếp · ← PageUp = lùi · ↑ ↓ = nhảy slide · N ghi chú · G tổng quan ·
+      T đồng hồ (Shift+T đặt lại) · R phát lại slide · F toàn màn hình · P chế độ in/PDF ·
+      M đo toạ độ điểm nóng · ? trợ giúp · Home/End.
+  • Trung thực: ảnh chụp sản phẩm thật → data-label="Ảnh chụp Base 2.0 · <ngày>" + data-source;
+      giao diện dựng lại → giữ nhãn "MÔ PHỎNG". Không vẽ thêm chức năng sản phẩm không có.
+-->
+<style>
+/* ============ 1. TOKENS — đổi màu thương hiệu ở đây, giữ nguyên nghĩa màu trạng thái ============ */
+:root{
+  --bg:#070B1D; --bg-2:#101741;
+  --glow-1:rgba(99,102,241,.30); --glow-2:rgba(37,99,235,.24);
+  --ink:#F4F6FF; --ink-2:#B3BBDA; --ink-3:#7680A6;
+  --line:rgba(255,255,255,.11); --card:rgba(255,255,255,.055); --card-2:rgba(255,255,255,.085);
+  --accent:#5B8CFF; --accent-2:#A78BFA;               /* màu thương hiệu: thay bằng màu Base / của khách */
+  --ok:#22C58B; --bad:#FF5D6C; --warn:#FBBF24;        /* trạng thái: xanh = đúng/xong · đỏ = lỗi/quá hạn · vàng = chờ */
+  --t-process:#2563EB; --t-project:#8B5CF6; --t-field:#14B8A6; --t-approval:#F59E0B; /* màu theo loại việc */
+  --ui-bg:#F4F6FB; --ui-card:#FFFFFF; --ui-line:#E2E6F0; --ui-ink:#131A33; --ui-mute:#687292; --ui-accent:#2563EB;
+  --f-display:"Be Vietnam Pro","Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --f-ui:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+  --ease:cubic-bezier(.22,.61,.36,1); --ease-2:cubic-bezier(.2,.7,.2,1); --ease-cur:cubic-bezier(.4,0,.2,1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--ink);font-family:var(--f-display);-webkit-font-smoothing:antialiased}
+
+/* ============ 2. SÂN KHẤU 1600×900, co theo màn hình ============ */
+#viewport{position:fixed;inset:0;overflow:hidden}
+#stage{position:absolute;left:50%;top:50%;width:1600px;height:900px;transform:translate(-50%,-50%);transform-origin:center center;overflow:hidden;
+  background:radial-gradient(1000px 700px at 82% 8%,var(--glow-1),transparent 62%),radial-gradient(900px 640px at 8% 92%,var(--glow-2),transparent 60%),linear-gradient(160deg,var(--bg-2) 0%,var(--bg) 58%)}
+#stage::after{content:"";position:absolute;inset:0;pointer-events:none;background-image:radial-gradient(rgba(255,255,255,.05) 1px,transparent 1px);background-size:4px 4px;opacity:.55;z-index:0}
+.slide{position:absolute;inset:0;padding:76px 104px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;gap:30px;z-index:1;
+  opacity:0;visibility:hidden;transform:scale(1.014);transition:opacity .5s var(--ease),transform .62s var(--ease),visibility 0s linear .62s}
+.slide.is-active{opacity:1;visibility:visible;transform:none;transition-delay:0s;z-index:2}
+.slide.left{align-items:flex-start;text-align:left}
+.slide.top{justify-content:flex-start;padding-top:56px;gap:22px}
+.notes{display:none}
+
+/* ============ 3. CHỮ — tiêu đề tiếng Việt: line-height ≥ 1.15, tracking ≥ -0.02em để không cắt dấu ============ */
+.eyebrow{font-size:15px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-3)}
+h1{font-size:74px;font-weight:800;line-height:1.16;letter-spacing:-.02em;max-width:1320px}
+h1.xl{font-size:96px;line-height:1.15}
+h2{font-size:56px;font-weight:800;line-height:1.18;letter-spacing:-.018em;max-width:1320px}
+h3{font-size:30px;font-weight:700;line-height:1.25}
+.sub{font-size:27px;line-height:1.45;color:var(--ink-2);font-weight:500;max-width:1120px}
+.small{font-size:18px;color:var(--ink-3);font-weight:500}
+.hl{color:var(--accent)} .hl-2{color:var(--accent-2)} .ok{color:var(--ok)} .bad{color:var(--bad)} .warn{color:var(--warn)}
+.grad{background:linear-gradient(96deg,#7DD3FC,var(--accent) 46%,var(--accent-2));-webkit-background-clip:text;background-clip:text;color:transparent;padding:.06em 0}
+.claim{align-self:stretch;display:flex;gap:18px;align-items:flex-start;text-align:left;font-size:30px;font-weight:700;line-height:1.28;letter-spacing:-.01em}
+.claim::before{content:"";flex:0 0 5px;align-self:stretch;border-radius:3px;background:linear-gradient(var(--accent),var(--accent-2))}
+.cap{min-height:34px;font-size:23px;font-weight:600;color:var(--ink-2)}
+.cap.swap{animation:capIn .45s var(--ease-2)}
+@keyframes capIn{from{opacity:0;transform:translateY(8px)}}
+
+/* ============ 4. HIỆN DẦN ============ */
+.rv{animation:rv .7s var(--ease-2) both;animation-delay:calc(var(--i,0) * 95ms + 90ms)}
+.slide:not(.is-active) .rv,.slide.static .rv{animation:none}
+@keyframes rv{from{opacity:0;transform:translateY(18px);filter:blur(6px)}}
+[data-step],[data-only],[data-until]{opacity:0;transform:translateY(16px);filter:blur(4px);transition:opacity .5s var(--ease-2),transform .6s var(--ease-2),filter .5s}
+[data-step].on,[data-only].on,[data-until].on{opacity:1;transform:none;filter:none}
+.pop[data-step]{transform:scale(.93)} .pop[data-step].on{transform:none}
+.no-anim,.no-anim *{transition:none!important}
+
+/* ============ 5. BỐ CỤC MẪU (archetypes) ============ */
+/* 5.1 Trục một con số: YES → DONE */
+.axis{display:flex;align-items:center;width:1080px;margin-top:8px}
+.axis .w{font-weight:800;font-size:52px;letter-spacing:-.02em;min-width:150px;white-space:nowrap;line-height:1.15}
+.axis .w.end{text-align:right;color:var(--ok)}
+.axis .track{flex:1;height:2px;margin:0 24px;position:relative;background:linear-gradient(90deg,rgba(255,255,255,.4),rgba(255,255,255,.12));transition:flex .9s var(--ease)}
+.axis.short .track{flex:.28}
+.axis .node{position:absolute;top:50%;width:16px;height:16px;margin:-8px 0 0 -8px;border-radius:5px;background:var(--bad);box-shadow:0 0 0 4px rgba(255,93,108,.18),0 0 18px rgba(255,93,108,.5);animation:blink 1.4s ease-in-out infinite}
+.axis.short .node{background:var(--ok);box-shadow:0 0 0 4px rgba(34,197,139,.18),0 0 18px rgba(34,197,139,.5);animation:none}
+@keyframes blink{50%{opacity:.35}}
+/* 5.2 Lịch lát cắt thời gian */
+.cal{display:grid;grid-template-columns:repeat(10,86px);gap:12px}
+.day{height:66px;border-radius:12px;background:var(--card);border:1px solid var(--line);display:grid;place-items:center;font-size:22px;font-weight:600;color:var(--ink-2);transition:background .5s,color .5s,border-color .5s}
+.cal.hot .day.late{background:rgba(255,93,108,.22);border-color:rgba(255,93,108,.6);color:#fff}
+/* 5.3 Tường câu nói */
+.quotes{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;width:100%;max-width:1360px}
+.quote{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:30px 28px;text-align:left;display:flex;flex-direction:column;gap:18px}
+.quote p{font-size:27px;font-weight:600;line-height:1.35}
+.who{display:flex;align-items:center;gap:12px;font-size:17px;color:var(--ink-3);font-weight:600}
+.av{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font-size:15px;font-weight:800;color:#0B1030;background:var(--accent-2)}
+/* 5.4 Ba cột / thẻ */
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:26px;width:100%;max-width:1360px}
+.card{background:linear-gradient(180deg,var(--card-2),var(--card));border:1px solid var(--line);border-radius:22px;padding:34px 30px;text-align:left}
+.card .no{font-size:15px;font-weight:800;letter-spacing:.14em;color:var(--accent)}
+.card h3{margin:12px 0 10px}
+.card p{font-size:21px;line-height:1.45;color:var(--ink-2)}
+/* 5.5 So sánh A/B có dòng ẩn */
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:28px;width:100%;max-width:1180px}
+.cmp{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:26px 30px;text-align:left}
+.cmp h3{font-size:28px;margin-bottom:10px}
+.row{display:flex;justify-content:space-between;align-items:baseline;padding:13px 0;border-top:1px solid var(--line);font-size:21px;color:var(--ink-2)}
+.row b{font-size:25px;color:#fff;font-variant-numeric:tabular-nums}
+.row.total b{font-size:32px}
+.row b.ok{color:var(--ok)} .row b.bad{color:var(--bad)}
+.tagline{font-size:14px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:5px 12px;border-radius:999px;border:1px solid var(--line);color:var(--ink-3)}
+/* 5.6 Họ vs Bạn */
+.versus{display:grid;grid-template-columns:1fr 1fr;gap:28px;width:100%;max-width:1320px}
+.vcol{border-radius:22px;padding:30px 34px;text-align:left;border:1px solid var(--line);background:var(--card)}
+.vcol.you{border-color:rgba(34,197,139,.45);background:linear-gradient(180deg,rgba(34,197,139,.10),rgba(34,197,139,.03))}
+.vcol h3{font-size:18px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3);margin-bottom:14px}
+.vcol li{list-style:none;font-size:25px;line-height:1.4;padding:10px 0;display:flex;gap:14px}
+.vcol li i{font-style:normal;font-weight:800}
+.vcol.them li i{color:var(--bad)} .vcol.you li i{color:var(--ok)}
+/* 5.7 Chân trời: nền (baseline) và lợi thế (edge) */
+.horizon{width:100%;max-width:1200px;display:flex;flex-direction:column;align-items:center;gap:22px}
+.horizon .edge{font-family:Georgia,"Times New Roman",serif;font-style:italic;font-size:92px;font-weight:600;line-height:1.1}
+.horizon .items{display:flex;gap:44px;font-size:23px;color:var(--ink-2);flex-wrap:wrap;justify-content:center}
+.horizon .line{width:100%;height:2px;background:linear-gradient(90deg,transparent,var(--warn),transparent);opacity:.8}
+.horizon .base{font-size:16px;font-weight:800;letter-spacing:.3em;color:var(--warn)}
+/* 5.8 Chia chương */
+.ghost{position:absolute;left:50%;top:50%;transform:translate(-50%,-54%);font-size:420px;font-weight:800;letter-spacing:-.05em;line-height:1;color:rgba(255,255,255,.035);z-index:-1;user-select:none}
+/* 5.9 Kết cộng dồn */
+.stack{display:flex;flex-direction:column;gap:14px;align-items:center}
+.stack p{font-size:44px;font-weight:800;line-height:1.2;letter-spacing:-.015em;transition:opacity .5s,color .5s}
+.stack p.on:not(.now){opacity:.4}
+.stack p.final{font-size:60px}
+/* 5.10 Danh sách bước tiếp theo */
+.nexts{display:flex;flex-direction:column;gap:16px;width:100%;max-width:980px}
+.nexts li{list-style:none;display:flex;gap:18px;align-items:center;text-align:left;font-size:28px;font-weight:600;padding:18px 24px;border-radius:16px;background:var(--card);border:1px solid var(--line)}
+.nexts li b{flex:0 0 44px;height:44px;border-radius:12px;display:grid;place-items:center;background:var(--accent);color:#08102E;font-size:20px}
+/* 5.11 Mớ hỗn độn: mảnh giao diện nghiêng + cờ "chưa ai trả lời" (nước đi B2). Vị trí: --x --y, độ nghiêng: --r */
+.mess{position:relative;width:1320px;height:470px}
+.mess>*{position:absolute;left:var(--x);top:var(--y);transform:rotate(var(--r,0deg))}
+.frag{width:300px;background:var(--ui-card);color:var(--ui-ink);border-radius:12px;padding:14px 16px 10px;text-align:left;font:500 14px/1.4 var(--f-ui);box-shadow:0 22px 46px -12px rgba(0,0,0,.7)}
+.frag.wide{width:330px}
+.frag .src{display:block;font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--ui-mute);margin-bottom:6px}
+.frag .msg{display:flex;justify-content:space-between;gap:12px;padding:7px 0;border-top:1px solid var(--ui-line)}
+.frag .msg small{color:var(--ui-mute);font-size:12.5px;white-space:nowrap}
+.frag .msg.un{font-weight:700}
+.frag .badge{position:absolute;right:-10px;top:-10px;min-width:30px;height:30px;padding:0 8px;border-radius:999px;background:#DC2626;color:#fff;display:grid;place-items:center;font:800 14px var(--f-ui)}
+.frag table{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:4px}
+.frag th,.frag td{border:1px solid var(--ui-line);padding:6px 8px;text-align:left}
+.frag th{background:var(--ui-bg);font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ui-mute)}
+.frag td.q{color:#DC2626;font-weight:800;text-align:center}
+.frag .ln{display:flex;justify-content:space-between;gap:12px;padding:6px 0;border-bottom:1px dashed var(--ui-line)}
+.frag .ln span{color:var(--ui-mute)}
+.frag .ln b.miss{color:#DC2626}
+.frag.note{width:220px;padding:16px 16px 14px;background:#FDE68A;color:#422006;border-radius:4px;font:700 18px/1.35 var(--f-display)}
+.frag.note small{display:block;margin-top:8px;font:500 13px var(--f-ui)}
+.flag{font:800 14px var(--f-ui);letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;padding:7px 12px;border-radius:8px;color:var(--bad);background:rgba(255,93,108,.14);border:1px solid rgba(255,93,108,.5);opacity:0;transition:opacity .45s var(--ease-2)}
+.flag.warn{color:var(--warn);background:rgba(251,191,36,.12);border-color:rgba(251,191,36,.5)}
+.mess.loud .flag{opacity:1}
+/* 5.12 Chấm đếm công sức: mỗi chấm một bước làm tay, sáng dần sau một lần bấm (nước đi B6).
+   data-cls="1:run 2:done" trên .effort · --n = số bước · --i = thứ tự (0…n-1) · chấm .w = chỗ việc nằm chờ */
+.effort{--n:11;position:relative;width:1240px;height:250px;text-align:center}
+.effort .rail{position:absolute;left:0;right:0;top:20px;height:2px;background:var(--line)}
+.effort .dots{position:absolute;left:-12px;right:-12px;top:9px;display:flex;justify-content:space-between}
+.effort .dot{width:24px;height:24px;border-radius:50%;background:var(--bg-2);border:2px solid rgba(255,255,255,.22);transition:background .4s,border-color .4s,box-shadow .4s}
+.effort.run .dot{background:var(--ink-2);border-color:var(--ink-2);box-shadow:0 0 16px rgba(179,187,218,.4);animation:dotOn .35s var(--ease-2) backwards;animation-delay:calc(var(--i) * 430ms)}
+@keyframes dotOn{from{background:var(--bg-2);border-color:rgba(255,255,255,.22);box-shadow:none;transform:scale(.6)}}
+.effort.done .dot.w{background:var(--warn);border-color:var(--warn);box-shadow:0 0 0 5px rgba(251,191,36,.18),0 0 18px rgba(251,191,36,.5)}
+.effort .ecap{position:absolute;left:0;right:0;top:60px;font-size:26px;font-weight:600;line-height:1.45;color:var(--ink-2);opacity:0}
+.effort .ecap b{color:var(--ink);font-weight:800}
+.effort.run .ecap{animation:ecap 430ms linear;animation-delay:calc(var(--i) * 430ms)}
+.effort.run .ecap.sum{opacity:1;animation:ecapIn .45s var(--ease-2) backwards;animation-delay:calc(var(--n) * 430ms);transition:opacity .4s}
+.effort.done .ecap.sum{opacity:0}
+.slide.static .effort *{animation:none!important}
+@keyframes ecap{0%,100%{opacity:1}}
+@keyframes ecapIn{from{opacity:0;transform:translateY(8px)}}
+.effort .co{position:absolute;top:120px;left:calc(var(--i) / (var(--n) - 1) * 100%);width:230px;margin-left:-115px;padding:12px 14px;border-radius:14px;background:var(--card);border:1px solid rgba(251,191,36,.45);font-size:19px;font-weight:600;line-height:1.35;color:var(--ink-2)}
+.effort .co b{display:block;color:var(--warn);font-weight:800;margin-bottom:2px}
+.effort .co::before{content:"";position:absolute;left:50%;top:-87px;height:87px;width:1px;background:rgba(251,191,36,.45)}
+/* 5.13 Thẻ màu theo loại việc: mỗi loại một cấu trúc, chung một đích (nước đi C6). Màu = màu tuyến --t-* */
+.kinds{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;width:100%;max-width:1360px}
+.kind{--k:var(--t-process);--kt:rgba(37,99,235,.18);display:flex;flex-direction:column;gap:12px;text-align:left;padding:22px 22px 24px;border-radius:22px;border:1px solid var(--line);border-top:5px solid var(--k);background:linear-gradient(180deg,var(--kt),rgba(255,255,255,0) 72%),var(--card)}
+.kind.project{--k:var(--t-project);--kt:rgba(139,92,246,.2)}
+.kind.field{--k:var(--t-field);--kt:rgba(20,184,166,.18)}
+.kind.approval{--k:var(--t-approval);--kt:rgba(245,158,11,.18)}
+.kind .lb{display:flex;align-items:center;gap:10px;font-size:14px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--ink)}
+.kind .lb i{width:12px;height:12px;border-radius:4px;background:var(--k)}
+.kind h3{font-size:24px;line-height:1.3}
+.kind .mini{margin-top:auto;display:flex;flex-direction:column;gap:6px;padding:10px;border-radius:12px;background:var(--ui-bg);font:600 13px/1.3 var(--f-ui);color:var(--ui-ink)}
+.kind .mini .r{display:flex;align-items:center;gap:8px;background:var(--ui-card);border:1px solid var(--ui-line);border-radius:8px;padding:7px 9px}
+.kind .mini .r i{flex:0 0 12px;height:12px;border-radius:50%;background:var(--k)}
+.kind .mini .r i.o{background:#CBD5E1}
+.kind .mini .r small{margin-left:auto;color:var(--ui-mute);font-size:12px;font-weight:500;white-space:nowrap}
+.kind .mini .r.done{background:#DCFCE7;border-color:#BBF7D0;color:#166534}
+.kind .mini .r.done i{background:#16A34A}
+.kind .mini .r.done small{color:#166534}
+.kind .mini .g{display:grid;grid-template-columns:78px 1fr;align-items:center;gap:8px;background:var(--ui-card);border:1px solid var(--ui-line);border-radius:8px;padding:7px 9px}
+.kind .mini .g span{position:relative;height:12px;border-radius:6px;background:var(--ui-bg)}
+.kind .mini .g span b{position:absolute;top:0;bottom:0;left:var(--a);width:var(--w);border-radius:6px;background:var(--k)}
+/* 5.14 Mạng lưới luồng: một hồ sơ nối nhiều quy trình, cạnh sáng theo thứ tự (Work §16).
+   data-cls="1:s1 2:s2 3:s3" trên .net · nút .n đặt bằng --x --y (tâm, px) · .lN sáng ở bước N · .d sáng trễ (toả nhánh) */
+.net{position:relative;width:1320px;height:440px}
+.net svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.net .e{fill:none;stroke:rgba(255,255,255,.16);stroke-width:2}
+.net .e.lit{stroke:var(--accent);stroke-width:3;stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset .8s var(--ease)}
+.net.s1 .e.l1,.net.s2 .e.l2,.net.s3 .e.l3{stroke-dashoffset:0}
+.net .n{position:absolute;left:var(--x);top:var(--y);width:190px;margin-left:-95px;transform:translateY(-50%);padding:10px 14px 12px;border-radius:16px;background:var(--bg-2);border:1px solid var(--line);text-align:left;display:flex;flex-direction:column;gap:6px;transition:border-color .45s .5s,background .45s .5s,box-shadow .45s .5s}
+.net .n b{font-size:19px;line-height:1.25}
+.net .n em{align-self:flex-start;font:800 11px var(--f-ui);font-style:normal;letter-spacing:.14em;text-transform:uppercase;padding:3px 8px;border-radius:999px;border:1px solid var(--line);color:var(--ink-2)}
+.net .n em.ai{color:#0B1030;background:var(--accent-2);border-color:var(--accent-2)}
+.net .n.l0,.net.s1 .n.l1,.net.s2 .n.l2,.net.s3 .n.l3{border-color:var(--accent);background:#17214F;box-shadow:0 0 0 4px rgba(91,140,255,.14)}
+.net .e.lit.d{transition-delay:.6s}
+.net .n.d{transition-delay:1.2s}
+/* 5.15 Vòng hệ sinh thái: app xếp quanh một lõi — chỉ dùng SAU khi đã kể xong vấn đề.
+   --n = số app · --i = vị trí (0 ở đỉnh, theo chiều kim đồng hồ) · .hot sáng khi .eco có class hl (data-cls="1:hl") */
+.split{display:flex;align-items:center;justify-content:space-between;gap:64px;width:100%}
+.split>div:first-child{flex:1;display:flex;flex-direction:column;gap:22px}
+.eco{--n:8;position:relative;flex:0 0 620px;width:620px;height:620px}
+.eco .orb{position:absolute;left:50%;top:50%;border-radius:50%;border:1px solid rgba(255,255,255,.08);transform:translate(-50%,-50%)}
+.eco .orb.o1{width:300px;height:300px}
+.eco .orb.o2{width:470px;height:470px}
+.eco .orb.o3{width:610px;height:610px;border-color:rgba(255,255,255,.05)}
+.eco .core{position:absolute;left:50%;top:50%;width:150px;height:150px;margin:-75px 0 0 -75px;border-radius:50%;display:grid;place-items:center;text-align:center;background:var(--accent);color:#08102E;font-size:24px;font-weight:800;line-height:1.15;box-shadow:0 0 0 10px rgba(91,140,255,.14),0 0 60px rgba(91,140,255,.4)}
+.eco .app{--a:calc(var(--i) * 360deg / var(--n) - 90deg);position:absolute;left:50%;top:50%;width:150px;height:50px;margin:-25px 0 0 -75px;border-radius:999px;display:grid;place-items:center;background:var(--bg-2);border:1px solid var(--line);font-size:19px;font-weight:700;color:var(--ink-2);transform:rotate(var(--a)) translate(235px) rotate(calc(var(--a) * -1));transition:border-color .45s,color .45s,background .45s}
+.eco.hl .app.hot{border-color:var(--accent);color:var(--ink);background:#17214F}
+
+/* ============ 6. DEMO MÔ PHỎNG: .shot > .cam > .state + .ov ============ */
+.shot{position:relative;border-radius:16px;overflow:hidden;background:var(--ui-bg);flex:0 0 auto;
+  box-shadow:0 40px 90px -24px rgba(0,0,0,.75),0 0 0 1px rgba(255,255,255,.10)}
+.shot.wide{width:1000px;aspect-ratio:16/10}
+.shot.phone{width:290px;aspect-ratio:9/18.5;border-radius:38px;box-shadow:0 40px 90px -24px rgba(0,0,0,.75),0 0 0 10px #1B2140,0 0 0 11px rgba(255,255,255,.14)}
+.cam{position:absolute;inset:0;transform-origin:50% 50%;transition:transform .75s var(--ease-cur)}
+.state{position:absolute;inset:0;opacity:0;transition:opacity .45s var(--ease)}
+.state.is-on{opacity:1}
+.state>img{display:block;width:100%;height:100%;object-fit:cover}
+.ov{position:absolute;inset:0;pointer-events:none;z-index:5}
+.box{position:absolute}
+.box.ring{border:3px solid var(--ui-accent);border-radius:10px;box-shadow:0 0 0 6px rgba(37,99,235,.16),0 0 26px rgba(37,99,235,.45);opacity:0;transform:scale(1.08);transition:opacity .3s,transform .35s var(--ease-2)}
+.box.ring.warn{border-color:#F59E0B;box-shadow:0 0 0 6px rgba(245,158,11,.18),0 0 26px rgba(245,158,11,.5)}
+.box.ring.ok{border-color:#16A34A;box-shadow:0 0 0 6px rgba(22,163,74,.16),0 0 26px rgba(22,163,74,.45)}
+.box.ring.on{opacity:1;transform:none}
+.box.spot{border-radius:12px;box-shadow:0 0 0 4000px rgba(10,14,34,.58);opacity:0;transition:opacity .4s}
+.box.spot.on{opacity:1}
+.box.patch{display:flex;align-items:center;justify-content:center;opacity:0;transform:scale(.94);transition:opacity .3s,transform .35s var(--ease-2)}
+.box.patch.on{opacity:1;transform:none}
+.box.typed{display:flex;align-items:center;padding:0 12px;font:500 15px var(--f-ui);color:var(--ui-ink);background:#fff;border:1.5px solid var(--ui-accent);border-radius:8px;white-space:nowrap;overflow:hidden}
+.caret{display:inline-block;width:2px;height:1.15em;background:var(--ui-accent);margin-left:2px;vertical-align:middle;animation:caret 1s steps(1) infinite}
+@keyframes caret{50%{opacity:0}}
+.box.logbox{background:#fff;border:1px solid var(--ui-line);border-radius:12px;padding:10px 12px;overflow:hidden;font:12px/1.4 var(--f-ui);color:var(--ui-ink);display:flex;flex-direction:column;gap:6px;box-shadow:0 12px 30px -12px rgba(16,24,64,.35)}
+.logbox .lg{display:flex;gap:10px;color:var(--ui-ink);opacity:0;transform:translateY(6px);transition:opacity .3s,transform .3s} /* chữ giữ ui-ink; chỉ chấm mang màu trạng thái (.ok/.bad toàn cục không tô cả dòng) */
+.logbox .lg.in{opacity:1;transform:none}
+.logbox .lg b{color:var(--ui-mute);font-weight:600;min-width:36px}
+.logbox .lg.ok span::before{content:"● ";color:#16A34A}
+.logbox .lg.bad span::before{content:"● ";color:#DC2626}
+.logbox .lg.info span::before{content:"● ";color:var(--ui-accent)}
+.cursor{position:absolute;left:64%;top:80%;width:28px;height:28px;margin:-3px 0 0 -5px;opacity:0;z-index:9;
+  transition:left .7s var(--ease-cur),top .7s var(--ease-cur),opacity .3s;filter:drop-shadow(0 4px 6px rgba(0,0,0,.35))}
+.cursor.on{opacity:1}
+.ripple{position:absolute;width:46px;height:46px;margin:-23px 0 0 -23px;border-radius:50%;border:3px solid var(--ui-accent);animation:rip .55s ease-out forwards;z-index:8}
+@keyframes rip{from{transform:scale(.25);opacity:.95}to{transform:scale(1.45);opacity:0}}
+.toast{position:absolute;right:16px;top:16px;max-width:62%;display:flex;gap:10px;align-items:center;padding:12px 16px;border-radius:12px;background:#0F1733;color:#fff;font:600 14px/1.4 var(--f-ui);
+  box-shadow:0 16px 36px -10px rgba(0,0,0,.5);opacity:0;transform:translateY(-10px);transition:opacity .35s,transform .4s var(--ease-2);z-index:10}
+.toast.on{opacity:1;transform:none}
+.toast.ok::before{content:"✓";color:#4ADE80;font-weight:800}
+.toast.bad::before{content:"!";color:#F87171;font-weight:800}
+.sim-tag{position:absolute;left:14px;bottom:12px;z-index:12;font:700 11px var(--f-ui);letter-spacing:.14em;text-transform:uppercase;color:#fff;background:rgba(15,23,51,.82);padding:5px 10px;border-radius:999px}
+.src-tag{position:absolute;right:14px;bottom:12px;z-index:12;font:500 11px var(--f-ui);color:var(--ui-mute);background:rgba(255,255,255,.9);padding:4px 9px;border-radius:999px}
+.err{position:absolute;left:24px;top:24px;z-index:50;background:#7F1D1D;color:#fff;font:600 14px var(--f-ui);padding:10px 14px;border-radius:10px;max-width:70%}
+/* đo toạ độ (phím M) */
+body.measure .shot{cursor:crosshair}
+.hs-dbg{position:absolute;border:1.5px dashed #F43F5E;background:rgba(244,63,94,.08);z-index:20}
+.hs-dbg span{position:absolute;left:0;top:-18px;font:700 11px var(--f-ui);color:#fff;background:#F43F5E;padding:1px 5px;border-radius:4px;white-space:nowrap}
+#mlabel{position:fixed;z-index:100;pointer-events:none;font:700 12px var(--f-ui);background:#F43F5E;color:#fff;padding:4px 8px;border-radius:6px;display:none}
+body.measure #mlabel{display:block}
+
+/* ============ 7. GIAO DIỆN MÔ PHỎNG (mock HTML) — thay bằng ảnh chụp thật khi có ============ */
+.app{position:absolute;inset:0;display:grid;grid-template-columns:200px 1fr;grid-template-rows:52px 1fr;font-family:var(--f-ui);color:var(--ui-ink);text-align:left;background:var(--ui-bg)}
+.app-top{grid-column:1/-1;display:flex;align-items:center;gap:16px;padding:0 18px;background:#fff;border-bottom:1px solid var(--ui-line)}
+.logo{display:flex;align-items:center;gap:9px;font-weight:800;font-size:15px}
+.logo i{width:24px;height:24px;border-radius:7px;background:linear-gradient(150deg,#60A5FA,#2563EB)}
+.search{flex:0 0 340px;margin-left:24px;height:32px;border-radius:8px;background:var(--ui-bg);border:1px solid var(--ui-line);font-size:13px;color:var(--ui-mute);display:flex;align-items:center;padding:0 12px}
+.me{margin-left:auto;width:30px;height:30px;border-radius:50%;background:#C7D2FE}
+.app-side{background:#fff;border-right:1px solid var(--ui-line);padding:16px 10px;display:flex;flex-direction:column;gap:3px;font-size:14px}
+.app-side a{padding:9px 12px;border-radius:8px;color:var(--ui-mute);font-weight:500}
+.app-side a.on{background:#EEF2FF;color:var(--ui-accent);font-weight:700}
+.app-main{padding:22px 26px;overflow:hidden}
+.app-main h4{font-size:20px;font-weight:800;margin-bottom:4px}
+.app-main .meta{font-size:13px;color:var(--ui-mute);margin-bottom:16px}
+.tabs{display:flex;gap:8px;margin-bottom:14px}
+.tabs span{font-size:13px;font-weight:600;padding:6px 12px;border-radius:999px;background:#fff;border:1px solid var(--ui-line);color:var(--ui-mute)}
+.tabs span.on{background:var(--ui-ink);color:#fff;border-color:var(--ui-ink)}
+.req{display:grid;grid-template-columns:1fr 150px 130px 120px;align-items:center;gap:12px;background:#fff;border:1px solid var(--ui-line);border-radius:12px;padding:14px 16px;margin-bottom:10px;font-size:14px;transition:box-shadow .3s,border-color .3s}
+.req b{font-size:15px;display:block;margin-bottom:3px}
+.req small{color:var(--ui-mute);font-size:12.5px}
+.req.sel{border-color:var(--ui-accent);box-shadow:0 0 0 3px rgba(37,99,235,.12)}
+.chip{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;padding:5px 10px;border-radius:999px;white-space:nowrap}
+.chip.wait{background:#FEF3C7;color:#92400E}
+.chip.ok{background:#DCFCE7;color:#166534}
+.chip.bad{background:#FEE2E2;color:#991B1B}
+.chip.info{background:#DBEAFE;color:#1E40AF}
+.money{font-weight:700;font-variant-numeric:tabular-nums}
+.detail{display:grid;grid-template-columns:1fr 262px;gap:18px;height:100%}
+.panel{background:#fff;border:1px solid var(--ui-line);border-radius:12px;padding:16px 18px}
+.fields{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin:12px 0 16px}
+.fields div{font-size:12.5px;color:var(--ui-mute)}
+.fields div b{display:block;font-size:15px;color:var(--ui-ink);margin-top:3px}
+.ctx{border:1px dashed #C7D2FE;background:#F8FAFF;border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:9px}
+.ctx .h{font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--ui-accent)}
+.ctx .it{display:flex;justify-content:space-between;font-size:14px}
+.ctx .it span{color:var(--ui-mute)}
+.acts{display:flex;gap:10px;justify-content:flex-end;margin-top:16px}
+.btn{font:700 14px var(--f-ui);padding:10px 18px;border-radius:9px;border:1px solid var(--ui-line);background:#fff;color:var(--ui-ink)}
+.btn.primary{background:var(--ui-accent);border-color:var(--ui-accent);color:#fff}
+.tl{display:flex;flex-direction:column;gap:12px;font-size:13px}
+.tl div{display:flex;gap:10px;align-items:flex-start}
+.tl i{flex:0 0 12px;height:12px;border-radius:50%;margin-top:3px;background:#16A34A}
+.tl i.now{background:#F59E0B;box-shadow:0 0 0 4px rgba(245,158,11,.2)}
+.tl i.next{background:#CBD5E1}
+.tl small{display:block;color:var(--ui-mute)}
+.box.patch .tlp{flex:1;align-self:stretch;justify-content:center;font-family:var(--f-ui);text-align:left}  /* nhãn dòng thời gian vá bằng patch */
+/* điện thoại */
+.pscreen{position:absolute;inset:0;background:#F4F6FB;font-family:var(--f-ui);color:var(--ui-ink);text-align:left;padding:46px 16px 16px;display:flex;flex-direction:column;gap:12px}
+.pscreen .bar{font-size:13px;font-weight:700;color:var(--ui-mute)}
+.pcard{background:#fff;border:1px solid var(--ui-line);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:10px}
+.pcard b{font-size:17px;line-height:1.3}
+.pcard .kv{display:flex;justify-content:space-between;font-size:13px;color:var(--ui-mute)}
+.pcard .kv strong{color:var(--ui-ink)}
+.pbtns{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:auto}
+.shot.phone .pscreen{padding-bottom:50px}
+
+/* ============ 8. HUD người trình bày ============ */
+#bar{position:fixed;left:0;bottom:0;height:3px;width:0;background:linear-gradient(90deg,var(--accent),var(--accent-2));z-index:30;transition:width .4s var(--ease)}
+#counter{position:fixed;right:22px;bottom:12px;font:600 12px var(--f-ui);color:var(--ink-3);z-index:30}
+#dots{position:fixed;right:88px;bottom:16px;display:flex;gap:6px;z-index:30}
+#dots i{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.18)}
+#dots i.on{background:var(--accent)}
+#hint{position:fixed;left:22px;bottom:12px;font:500 12px var(--f-ui);color:var(--ink-3);z-index:30;transition:opacity .6s}
+#notes{position:fixed;left:0;right:0;bottom:0;height:34vh;display:none;z-index:40;background:#0B1026;border-top:1px solid var(--line);font-family:var(--f-ui);padding:14px 24px;overflow:auto}
+body.notes-on #notes{display:block}
+#notes .nh{display:flex;gap:18px;align-items:baseline;flex-wrap:wrap;font-size:14px;color:var(--ink-3);margin-bottom:10px}
+#notes .nh b{color:var(--ink);font-size:16px}
+#notes .nb{font-size:19px;line-height:1.55;color:var(--ink);max-width:1100px}
+#notes .nb i{color:var(--warn);font-style:normal}
+#notes .nn{margin-top:10px;font-size:14px;color:var(--ink-3)}
+#clock{font-variant-numeric:tabular-nums;font-weight:700;color:var(--ink)}
+#clock.warn{color:var(--warn)} #clock.over{color:var(--bad)}
+#overview{position:fixed;inset:0;z-index:60;background:rgba(5,8,22,.96);display:none;padding:40px;overflow:auto;font-family:var(--f-ui)}
+body.ov-on #overview{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;align-content:start}
+#overview button{all:unset;cursor:pointer;display:flex;flex-direction:column;gap:6px;padding:16px;border-radius:12px;background:var(--card);border:1px solid var(--line);color:var(--ink);font-size:15px;font-weight:600}
+#overview button em{font-style:normal;color:var(--accent);font-size:13px;font-weight:800}
+#overview button small{color:var(--ink-3);font-weight:500}
+#overview button.cur{border-color:var(--accent)}
+#help{position:fixed;inset:0;z-index:70;background:rgba(5,8,22,.96);display:none;place-items:center;font-family:var(--f-ui)}
+body.help-on #help{display:grid}
+#help dl{display:grid;grid-template-columns:170px 1fr;gap:10px 22px;font-size:17px}
+#help dt{font-weight:800;color:var(--accent)} #help dd{color:var(--ink-2)}
+
+/* ============ 9. CHẾ ĐỘ IN / PDF (phím P rồi Ctrl/Cmd+P) ============ */
+@page{size:1600px 900px;margin:0}
+body.print{overflow:auto;height:auto}
+body.print #viewport{position:static;overflow:visible}
+body.print #stage{position:relative;left:0;top:0;transform:none!important;height:auto;overflow:visible;background:none}
+body.print #stage::after{display:none}
+body.print .slide{position:relative;inset:auto;width:1600px;height:900px;opacity:1;visibility:visible;transform:none;page-break-after:always;break-after:page;
+  background:radial-gradient(1000px 700px at 82% 8%,var(--glow-1),transparent 62%),radial-gradient(900px 640px at 8% 92%,var(--glow-2),transparent 60%),linear-gradient(160deg,var(--bg-2),var(--bg) 58%)}
+body.print #bar,body.print #counter,body.print #dots,body.print #hint,body.print #notes{display:none!important}
+@media print{html,body{overflow:visible!important;height:auto!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+
+/* ============ 10. GIẢM CHUYỂN ĐỘNG ============ */
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{transition-duration:.01ms!important;animation-duration:.01ms!important;animation-iteration-count:1!important}}
+</style>
+</head>
+<body>
+<div id="viewport"><div id="stage">
+
+<!-- ================= 01 · MỞ ================= -->
+<section class="slide" data-title="Mở đầu" data-time="20">
+  <p class="eyebrow rv" style="--i:0">Base 2.0 · Deck mẫu</p>
+  <h1 class="xl rv" style="--i:1">Từ <span class="hl">đồng ý</span> đến <span class="ok">hoàn thành</span></h1>
+  <p class="sub rv" style="--i:2">Ví dụ minh hoạ cho một doanh nghiệp phân phối — thay toàn bộ nội dung theo khách</p>
+  <p class="small rv" style="--i:3">Người trình bày · Chức danh · Ngày</p>
+  <aside class="notes">Chào anh chị. Hôm nay tôi không giới thiệu phần mềm trước. Tôi muốn bắt đầu bằng một câu hỏi. <i>[bấm]</i></aside>
+</section>
+
+<!-- ================= 02 · MÓC: câu hỏi đo lường + trục một con số ================= -->
+<section class="slide" data-title="Câu hỏi mở: đồng ý → xong" data-time="35">
+  <h2 class="rv" style="--i:0">Từ lúc khách <span class="hl">đồng ý</span> đến lúc việc <span class="ok">xong</span>, công ty mình mất bao lâu?</h2>
+  <div class="axis rv" style="--i:1">
+    <div class="w">ĐỒNG Ý</div>
+    <div class="track"><i class="node" style="left:12%"></i><i class="node" style="left:31%"></i><i class="node" style="left:50%"></i><i class="node" style="left:69%"></i><i class="node" style="left:88%"></i></div>
+    <div class="w end">XONG</div>
+  </div>
+  <p class="sub" data-step="1">Đây là con số khách hàng của mình thật sự cảm nhận.</p>
+  <aside class="notes">Anh chị thử ước: từ lúc khách nói "đồng ý" tới lúc hàng đến tay, bao nhiêu ngày? <i>[dừng 3 giây]</i><br>Mỗi chấm đỏ là một chỗ việc nằm chờ. <i>[bấm]</i> Và khách không nhìn thấy quy trình của mình — họ chỉ thấy con số này.</aside>
+</section>
+
+<!-- ================= 03 · SỬA ĐỀ ================= -->
+<section class="slide" data-title="Sửa đề" data-time="30">
+  <h1 class="rv" style="--i:0">Khách không trả tiền cho lúc họ nói <span class="hl">"đồng ý"</span>.</h1>
+  <h2 class="grad" data-step="1">Họ trả tiền cho mọi thứ xảy ra sau đó.</h2>
+  <aside class="notes">Mình hay đo lúc chốt được đơn. <i>[bấm]</i> Nhưng khách trả tiền cho mọi thứ sau đó: đặt hàng, duyệt, giao, xuất hoá đơn.</aside>
+</section>
+
+<!-- ================= 04 · VẾT NỨT: lát cắt thời gian ================= -->
+<section class="slide" data-title="Lát cắt thời gian" data-time="40">
+  <h2 class="rv" style="--i:0">25 ngày êm. <span class="bad">5 ngày cuối tháng</span> thì không.</h2>
+  <div class="cal rv" data-days="30" data-late-from="26" data-cls="1:hot" style="--i:1"></div>
+  <p class="sub" data-step="1">Chốt công nợ, chốt kho, chốt lương — dồn vào cùng một tuần.</p>
+  <aside class="notes">Suốt 25 ngày mọi thứ chạy. <i>[bấm]</i> Rồi 5 ngày cuối tháng, mọi việc cần duyệt dồn về một chỗ. <i>(Thay bằng lát cắt thật của khách từ discovery.)</i></aside>
+</section>
+
+<!-- ================= 05 · GIỌNG NGƯỜI TRONG CUỘC ================= -->
+<section class="slide" data-title="Giọng người trong cuộc" data-time="50">
+  <h2 class="rv" style="--i:0">Và đây là điều mọi người đang nói</h2>
+  <div class="quotes">
+    <div class="quote" data-step="1"><p>"Hồ sơ này đang nằm ở ai vậy?"</p><div class="who"><span class="av">KT</span>Kế toán</div></div>
+    <div class="quote" data-step="2"><p>"Em nhắn Zalo sếp từ thứ Hai rồi ạ."</p><div class="who"><span class="av" style="background:#7DD3FC">MH</span>Nhân viên mua hàng</div></div>
+    <div class="quote" data-step="3"><p>"Anh duyệt sao được khi không thấy báo giá?"</p><div class="who"><span class="av" style="background:#FBBF24">TP</span>Trưởng phòng</div></div>
+  </div>
+  <aside class="notes"><i>[bấm]</i> Kế toán hỏi… <i>[bấm]</i> Mua hàng trả lời… <i>[bấm]</i> Và người duyệt nói câu này. Không ai sai cả — họ chỉ thiếu cùng một thứ: bối cảnh.<br><i>(Câu nói là ví dụ — thay bằng câu khách đã nói trong discovery.)</i></aside>
+</section>
+
+<!-- ================= 06 · LẬT: hai phương án, một cột ẩn ================= -->
+<section class="slide" data-title="Lật kết luận (A/B)" data-time="60">
+  <h2 class="rv" style="--i:0">Hai phòng mua hàng. Phòng nào <span class="hl">nhanh</span> hơn?</h2>
+  <div class="compare rv" style="--i:1">
+    <div class="cmp"><h3>Phòng A</h3>
+      <div class="row">Yêu cầu mỗi tháng<b>40</b></div>
+      <div class="row">Thời gian duyệt trung bình<b class="ok">1,5 ngày</b></div>
+      <div class="row" data-step="1">Yêu cầu phải hỏi lại, bổ sung<b class="bad">45%</b></div>
+      <div class="row total" data-step="2">Từ đề nghị đến có hàng<b class="bad">9 ngày</b></div>
+    </div>
+    <div class="cmp"><h3>Phòng B</h3>
+      <div class="row">Yêu cầu mỗi tháng<b>40</b></div>
+      <div class="row">Thời gian duyệt trung bình<b class="bad">3 ngày</b></div>
+      <div class="row" data-step="1">Yêu cầu phải hỏi lại, bổ sung<b class="ok">5%</b></div>
+      <div class="row total" data-step="2">Từ đề nghị đến có hàng<b class="ok">5 ngày</b></div>
+    </div>
+  </div>
+  <p class="tagline" data-until="1">Số liệu minh hoạ</p>
+  <p class="sub" data-step="2">Duyệt nhanh chưa chắc xong nhanh. Thứ làm chậm là <b>thiếu bối cảnh</b>.</p>
+  <aside class="notes">Anh chị chọn phòng nào? <i>[để khán giả trả lời — đa số chọn A]</i> <i>[bấm]</i> Thêm một dòng: phòng A phải hỏi lại gần một nửa số yêu cầu. <i>[bấm]</i> Tính đến lúc có hàng, B nhanh gần gấp đôi.<br><i>(Chỉ dùng số của khách hoặc ghi rõ "minh hoạ"; hai cột phải cùng mẫu số.)</i></aside>
+</section>
+
+<!-- ================= 07 · HỌ vs BẠN ================= -->
+<section class="slide" data-title="Họ và bạn" data-time="40">
+  <h2 class="rv" style="--i:0">Trong khi nơi khác vẫn đi xin chữ ký…</h2>
+  <div class="versus">
+    <div class="vcol them rv" style="--i:1"><h3>Cách cũ</h3><ul>
+      <li><i>✕</i>Duyệt qua Zalo, không ai biết hồ sơ đang ở đâu</li>
+      <li><i>✕</i>Người duyệt thiếu báo giá, phải hỏi lại</li>
+      <li><i>✕</i>Quá hạn rồi mới phát hiện</li></ul></div>
+    <div class="vcol you" data-step="1"><h3>Cách mới</h3><ul>
+      <li><i>✓</i>Mỗi yêu cầu có người giữ, có hạn</li>
+      <li><i>✓</i>Đến tay người duyệt kèm đủ bối cảnh</li>
+      <li><i>✓</i>Quá hạn là có người biết ngay</li></ul></div>
+  </div>
+  <aside class="notes">Bên trái là cách phần lớn doanh nghiệp đang làm. <i>[bấm]</i> Bên phải là tiêu chuẩn mới — chưa nói tới phần mềm nào.</aside>
+</section>
+
+<!-- ================= 08 · NGUYÊN LÝ: ba bước ================= -->
+<section class="slide" data-title="Nguyên lý ba bước" data-time="45">
+  <h2 class="rv" style="--i:0">Rút <span class="hl">thời gian chờ</span> ra khỏi công việc</h2>
+  <div class="cards">
+    <div class="card" data-step="1"><div class="no">01</div><h3>Một nơi</h3><p>Mọi yêu cầu về một chỗ, có người giữ, có hạn xử lý.</p></div>
+    <div class="card" data-step="2"><div class="no">02</div><h3>Đủ bối cảnh</h3><p>Báo giá, kết quả bước trước, trao đổi cũ đi kèm hồ sơ.</p></div>
+    <div class="card" data-step="3"><div class="no">03</div><h3>Máy nhắc, người quyết</h3><p>Quá hạn là báo. AI gợi ý, người có thẩm quyền chốt.</p></div>
+  </div>
+  <aside class="notes">Ba bước, nói bằng nghiệp vụ trước khi gọi tên phần mềm. <i>[bấm]</i> Một nơi. <i>[bấm]</i> Đủ bối cảnh. <i>[bấm]</i> Máy nhắc, người quyết.</aside>
+</section>
+
+<!-- ================= 09 · CHIA CHƯƠNG ================= -->
+<section class="slide" data-title="Chương: chứng minh" data-time="15">
+  <div class="ghost">01</div>
+  <p class="eyebrow rv" style="--i:0">Chứng minh bằng luồng</p>
+  <h1 class="rv" style="--i:1">Một đề nghị mua hàng, từ đầu đến cuối</h1>
+  <aside class="notes">Giờ mình xem một yêu cầu thật chạy qua các bước.</aside>
+</section>
+
+<!-- ================= 10 · DEMO CHUỖI THAO TÁC (4 bước) ================= -->
+<section class="slide top" data-title="Demo: duyệt kèm bối cảnh" data-time="90">
+  <p class="claim rv" style="--i:0">Yêu cầu đến tay người duyệt kèm đủ bối cảnh — duyệt xong, việc tự chạy sang bước sau</p>
+  <div class="shot wide rv" id="demo1" style="--i:1" data-label="MÔ PHỎNG · giao diện dựng lại">
+    <div class="cam">
+      <!-- STATE 1: danh sách. Khi có ảnh chụp thật: <div class="state is-on" data-name="list"><img src="anh-truoc.png" alt=""></div> -->
+      <div class="state is-on" data-name="list"><div class="app">
+        <div class="app-top"><div class="logo"><i></i>Ứng dụng mẫu</div><div class="search">Tìm kiếm…</div><div class="me"></div></div>
+        <div class="app-side"><a class="on">Chờ tôi duyệt</a><a>Tôi đã gửi</a><a>Đang theo dõi</a><a>Báo cáo</a></div>
+        <div class="app-main">
+          <h4>Chờ tôi duyệt</h4><div class="meta">4 yêu cầu · 1 quá hạn</div>
+          <div class="tabs"><span class="on">Tất cả</span><span>Quá hạn</span><span>Hôm nay</span></div>
+          <div class="req" id="r1"><div><b>Đề nghị mua vật tư — Kho Bình Dương</b><small>Nguyễn Minh · Mua hàng</small></div><span class="money">186.000.000 đ</span><span class="chip bad" id="r1due">Quá hạn 2 ngày</span><span class="chip wait" id="r1st">Chờ duyệt</span></div>
+          <div class="req"><div><b>Tạm ứng công tác — Đà Nẵng</b><small>Trần Lan · Kinh doanh</small></div><span class="money">12.500.000 đ</span><span class="chip info">Còn 1 ngày</span><span class="chip wait">Chờ duyệt</span></div>
+          <div class="req"><div><b>Hợp đồng vận chuyển quý IV</b><small>Lê Quang · Vận hành</small></div><span class="money">420.000.000 đ</span><span class="chip info">Còn 3 ngày</span><span class="chip wait">Chờ duyệt</span></div>
+          <div class="req"><div><b>Ngân sách hội nghị khách hàng</b><small>Phạm Hà · Marketing</small></div><span class="money">95.000.000 đ</span><span class="chip info">Còn 4 ngày</span><span class="chip wait">Chờ duyệt</span></div>
+        </div></div></div>
+      <!-- STATE 2: chi tiết -->
+      <div class="state" data-name="detail"><div class="app">
+        <div class="app-top"><div class="logo"><i></i>Ứng dụng mẫu</div><div class="search">Tìm kiếm…</div><div class="me"></div></div>
+        <div class="app-side"><a class="on">Chờ tôi duyệt</a><a>Tôi đã gửi</a><a>Đang theo dõi</a><a>Báo cáo</a></div>
+        <div class="app-main"><div class="detail">
+          <div class="panel">
+            <h4>Đề nghị mua vật tư — Kho Bình Dương</h4><div class="meta">Nguyễn Minh gửi · bước: Trưởng phòng duyệt</div>
+            <div class="fields"><div>Số tiền<b>186.000.000 đ</b></div><div>Cần hàng trước<b>30/10</b></div><div>Trạng thái<b><span class="chip wait" id="dst">Chờ duyệt</span></b></div></div>
+            <div class="ctx" id="ctx"><div class="h">Bối cảnh đi kèm</div>
+              <div class="it">3 báo giá nhà cung cấp<span>đính kèm · đã so sánh</span></div>
+              <div class="it">Kiểm tra ngân sách (bước trước)<span>còn 240.000.000 đ</span></div>
+              <div class="it">Trao đổi trước đó<span>4 bình luận</span></div></div>
+            <div class="acts"><span class="btn">Yêu cầu bổ sung</span><span class="btn">Từ chối</span><span class="btn primary" id="bApprove">Duyệt</span></div>
+          </div>
+          <div class="panel"><div class="h" style="font-size:12px;font-weight:800;letter-spacing:.1em;color:var(--ui-mute);margin-bottom:12px">CÁC BƯỚC</div>
+            <div class="tl" id="tl"><div><i></i><span>Đề nghị<small>Nguyễn Minh · 20/10</small></span></div><div><i></i><span>Kiểm tra ngân sách<small>Kế toán · 21/10</small></span></div><div><i class="now" id="tlNow"></i><span>Trưởng phòng duyệt<small id="tlNowLbl">đang chờ</small></span></div><div><i class="next" id="tlNext"></i><span>Đặt hàng<small id="tlNextLbl">chưa tới</small></span></div></div>
+            <div id="logSlot" style="height:118px;margin-top:18px"></div>
+          </div></div></div></div></div>
+      <div class="ov"></div>
+    </div>
+  </div>
+  <p class="cap" data-default="Bấm để bắt đầu">Bấm để bắt đầu</p>
+  <script type="application/json" data-for="demo1">
+  {
+    "hotspots": {
+      "row1":    {"sel": "#r1"},
+      "due1":    {"sel": "#r1due"},
+      "ctx":     {"sel": "#ctx"},
+      "approve": {"sel": "#bApprove"},
+      "status":  {"sel": "#dst"},
+      "nowLbl":  {"sel": "#tlNowLbl"},
+      "nextLbl": {"sel": "#tlNextLbl"},
+      "log":     {"sel": "#logSlot"}
+    },
+    "steps": [
+      [ {"do":"caption","text":"Yêu cầu đang nằm chờ — ai giữ, chờ bao lâu, nhìn là thấy."},
+        {"do":"cursor","to":"row1"},
+        {"do":"ring","at":"due1","cls":"warn"} ],
+      [ {"do":"click"},
+        {"do":"cls","sel":"#r1","add":"sel","par":true},
+        {"do":"swap","to":"detail"},
+        {"do":"unring"},
+        {"do":"caption","text":"Mở ra là thấy đủ bối cảnh: báo giá, ngân sách, trao đổi trước đó.","par":true},
+        {"do":"spot","at":"ctx"} ],
+      [ {"do":"zoom","at":"ctx","scale":1.7},
+        {"do":"caption","text":"Không phải hỏi lại ai — mọi thứ dẫn tới quyết định đã đi kèm.","par":true},
+        {"do":"wait","ms":1400},
+        {"do":"unzoom"},
+        {"do":"unspot"} ],
+      [ {"do":"cursor","to":"approve"},
+        {"do":"click"},
+        {"do":"patch","at":"status","html":"<span class=\"chip ok\">Đã duyệt</span>"},
+        {"do":"cls","sel":"#tlNow","remove":"now","par":true},
+        {"do":"patch","at":"nowLbl","html":"<div class=\"tl tlp\"><small>đã duyệt · 10:42</small></div>","par":true},
+        {"do":"cls","sel":"#tlNext","remove":"next","add":"now","par":true},
+        {"do":"patch","at":"nextLbl","html":"<div class=\"tl tlp\"><small>đang xử lý</small></div>","par":true},
+        {"do":"toast","text":"Đã chuyển sang bước Đặt hàng","kind":"ok"},
+        {"do":"log","at":"log","time":"10:42","text":"Trưởng phòng duyệt · chuyển bước Đặt hàng","kind":"ok"},
+        {"do":"caption","text":"Duyệt xong, việc tự sang bước sau — không ai phải nhắn tiếp.","par":true} ]
+    ]
+  }
+  </script>
+  <aside class="notes"><i>[bấm]</i> Đây là màn hình người duyệt. Yêu cầu mua vật tư đã quá hạn 2 ngày — hệ thống đánh dấu, không cần ai nhắn.<br><i>[bấm]</i> Mở ra: báo giá, kết quả kiểm ngân sách ở bước trước, trao đổi cũ — tất cả đi kèm.<br><i>[bấm]</i> <i>[dừng]</i> Người duyệt không phải hỏi lại ai.<br><i>[bấm]</i> Duyệt. Hồ sơ tự sang bước Đặt hàng, lịch sử ghi lại ai duyệt lúc nào.<br><i>(Mock dựng lại. Khi dùng với khách: thay bằng ảnh chụp Base 2.0 thật và chỉ giữ những thao tác đã có trong feature record.)</i></aside>
+</section>
+
+<!-- ================= 11 · DEMO MỘT THAO TÁC (điện thoại) ================= -->
+<section class="slide" data-title="Demo: một thao tác" data-time="30">
+  <h2 class="rv" style="--i:0">Một thao tác đơn lẻ: bấm <span class="hl">Duyệt</span></h2>
+  <div class="shot phone rv" id="demo2" style="--i:1" data-label="MÔ PHỎNG">
+    <div class="cam">
+      <div class="state is-on" data-name="a"><div class="pscreen">
+        <div class="bar">9:41 · Chờ tôi duyệt</div>
+        <div class="pcard"><b>Tạm ứng công tác — Đà Nẵng</b>
+          <div class="kv">Người đề nghị<strong>Trần Lan</strong></div>
+          <div class="kv">Số tiền<strong>12.500.000 đ</strong></div>
+          <div class="kv">Trạng thái<strong><span class="chip wait" id="pst">Chờ duyệt</span></strong></div></div>
+        <div class="pbtns"><span class="btn">Từ chối</span><span class="btn primary" id="pOk">Duyệt</span></div>
+      </div></div>
+      <div class="ov"></div>
+    </div>
+  </div>
+  <script type="application/json" data-for="demo2">
+  { "hotspots": {"ok":{"sel":"#pOk"},"st":{"sel":"#pst"}},
+    "steps": [[ {"do":"cursor","to":"ok"},{"do":"click"},{"do":"patch","at":"st","html":"<span class=\"chip ok\">Đã duyệt</span>"},{"do":"toast","text":"Đã duyệt","kind":"ok"} ]] }
+  </script>
+  <aside class="notes"><i>[bấm]</i> Một chạm, xong. <i>(Chỉ giữ slide này khi đã kiểm tra app di động trên Base 2.0 — chưa kiểm thì bỏ.)</i></aside>
+</section>
+
+<!-- ================= 12 · NỀN & LỢI THẾ ================= -->
+<section class="slide" data-title="Nền và lợi thế" data-time="35">
+  <div class="horizon">
+    <div class="edge" data-step="1">Lợi thế</div>
+    <div class="items" data-step="1"><span>AI gợi ý trước khi người duyệt mở hồ sơ</span><span>Cảnh báo yêu cầu bất thường</span></div>
+    <div class="line rv" style="--i:0"></div>
+    <div class="base rv" style="--i:1">NỀN</div>
+    <div class="items rv" style="--i:2"><span>Mọi yêu cầu có người giữ</span><span>Có hạn xử lý</span><span>Có lịch sử</span></div>
+  </div>
+  <aside class="notes">Nền trước: ai cũng cần có — người giữ, hạn, lịch sử. <i>[bấm]</i> Lợi thế nằm phía trên: chỉ làm được khi nền đã vững. <i>(Tính năng AI chỉ nói khi đã kiểm trên sản phẩm.)</i></aside>
+</section>
+
+<!-- ================= 13 · ĐÓNG: cộng dồn + gọi lại trục ================= -->
+<section class="slide" data-title="Kết cộng dồn" data-time="45">
+  <div class="stack">
+    <p data-step="1">Yêu cầu không còn nằm trong Zalo.</p>
+    <p data-step="2">Người duyệt không phải hỏi lại.</p>
+    <p data-step="3">Quá hạn là có người biết ngay.</p>
+    <p class="final grad" data-step="4">Từ đồng ý đến hoàn thành — ngắn lại.</p>
+  </div>
+  <div class="axis" data-step="4" data-cls="4:short">
+    <div class="w">ĐỒNG Ý</div><div class="track"><i class="node" style="left:50%"></i></div><div class="w end">XONG</div>
+  </div>
+  <aside class="notes"><i>[bấm]</i> … <i>[bấm]</i> … <i>[bấm]</i> … <i>[bấm]</i> Và con số mình hỏi lúc đầu — từ đồng ý đến xong — ngắn lại.</aside>
+</section>
+
+<!-- ================= 14 · BƯỚC TIẾP THEO ================= -->
+<section class="slide" data-title="Bước tiếp theo" data-time="30">
+  <h2 class="rv" style="--i:0">Bước tiếp theo</h2>
+  <ul class="nexts">
+    <li class="rv" style="--i:1"><b>1</b>Chọn một luồng duyệt đang chậm nhất</li>
+    <li class="rv" style="--i:2"><b>2</b>Đo thời gian chờ hiện tại trong một tuần</li>
+    <li class="rv" style="--i:3"><b>3</b>Dựng thử luồng đó trên Base 2.0 với dữ liệu mẫu</li>
+  </ul>
+  <aside class="notes">Đề xuất một bước đo được, có người làm và ngày cụ thể.</aside>
+</section>
+
+<!-- ================= 15 · PHỤ LỤC: BỐ CỤC BỔ SUNG (chép slide cần dùng, xoá phần còn lại) ================= -->
+<section class="slide" data-title="Phụ lục: 5 bố cục bổ sung" data-time="0">
+  <div class="ghost">+</div>
+  <p class="eyebrow rv" style="--i:0">Phụ lục · không trình chiếu</p>
+  <h1 class="rv" style="--i:1">Năm bố cục bổ sung để chép sang deck của bạn</h1>
+  <p class="sub rv" style="--i:2">Mớ hỗn độn · Chấm đếm công sức · Thẻ màu theo loại việc · Mạng lưới luồng · Vòng hệ sinh thái</p>
+  <aside class="notes">Từ đây trở đi là mẫu bố cục, không nằm trong câu chuyện. Chép slide cần dùng vào đúng nhịp của deck (xem bảng bố cục theo nước đi), xoá phần còn lại — kể cả slide này.</aside>
+</section>
+
+<!-- ================= 16 · MỚ HỖN ĐỘN (nước đi B2) ================= -->
+<section class="slide" data-title="Mớ hỗn độn" data-time="45">
+  <h2 class="rv" style="--i:0">Một đề nghị mua hàng. <span class="bad">Bốn nơi</span> cất.</h2>
+  <div class="mess" data-cls="1:loud">
+    <div class="frag rv" style="--x:1%;--y:4%;--r:-4deg;--i:1"><span class="src">Zalo · Nhóm mua hàng kho BD</span><b class="badge">12</b>
+      <div class="msg un">Anh duyệt giúp em đề nghị vật tư nhé<small>3 ngày</small></div>
+      <div class="msg un">Anh ơi?<small>Hôm qua</small></div>
+      <div class="msg">Báo giá em gửi mail rồi ạ<small>Hôm qua</small></div></div>
+    <div class="frag wide rv" style="--x:34%;--y:0%;--r:2.5deg;--i:2"><span class="src">Excel · Theo dõi đề nghị T10</span>
+      <table><tr><th>Đề nghị</th><th>Số tiền</th><th>Duyệt?</th></tr>
+        <tr><td>Vật tư kho BD</td><td>186 tr</td><td class="q">?</td></tr>
+        <tr><td>Tạm ứng Đà Nẵng</td><td>12,5 tr</td><td>Có</td></tr>
+        <tr><td>Vận chuyển quý IV</td><td>420 tr</td><td class="q">?</td></tr></table></div>
+    <div class="frag rv" style="--x:69%;--y:6%;--r:3.5deg;--i:3"><span class="src">Email · Hộp thư mua hàng</span>
+      <div class="msg un">Fw: Báo giá NCC B (bản sửa 2)<small>Chưa đọc</small></div>
+      <div class="msg un">Re: Re: đề nghị mua vật tư<small>Chưa đọc</small></div>
+      <div class="msg">Báo giá NCC A<small>4 ngày</small></div></div>
+    <div class="frag note rv" style="--x:8%;--y:60%;--r:5deg;--i:4">Nhớ trình trưởng phòng ký bản giấy!<small>— Minh, kho Bình Dương</small></div>
+    <div class="frag rv" style="--x:40%;--y:58%;--r:-3deg;--i:5"><span class="src">Giấy · Phiếu đề nghị mua hàng</span>
+      <div class="ln"><span>Người đề nghị</span><b>Nguyễn Minh</b></div>
+      <div class="ln"><span>Số tiền</span><b>186.000.000 đ</b></div>
+      <div class="ln"><span>Trưởng phòng ký</span><b class="miss">……</b></div></div>
+    <span class="flag" style="--x:2%;--y:44%;--r:-2deg">Chưa ai trả lời · 3 ngày</span>
+    <span class="flag warn" style="--x:45%;--y:40%;--r:1.5deg">Ai đang giữ?</span>
+    <span class="flag warn" style="--x:71%;--y:47%;--r:-1.5deg">Bản báo giá nào là bản cuối?</span>
+    <span class="flag" style="--x:67%;--y:80%;--r:2deg">Chưa có chữ ký</span>
+  </div>
+  <aside class="notes">Nghe thì đơn giản: một đề nghị mua hàng. Nhưng hôm nay nó nằm ở bốn nơi. <i>[bấm]</i> Tin Zalo ba ngày chưa ai trả lời. File Excel không biết ai đang giữ. Hai bản báo giá trong email, không rõ bản nào là bản cuối. Và một tờ phiếu giấy vẫn chờ chữ ký.<br><i>(Nước đi B2. Thay các mảnh bằng đúng những nơi khách đang cất việc, lấy từ discovery. Mảnh là giao diện dựng lại, không phải ảnh chụp của khách.)</i></aside>
+</section>
+
+<!-- ================= 17 · CHẤM ĐẾM CÔNG SỨC (nước đi B6) ================= -->
+<section class="slide" data-title="Chấm đếm công sức" data-time="50">
+  <h2 class="rv" style="--i:0">Để có một chữ ký: <span class="warn">11 bước</span>, bằng tay.</h2>
+  <div class="effort" style="--n:11" data-cls="1:run 2:done">
+    <div class="rail"></div>
+    <div class="dots"><i class="dot" style="--i:0"></i><i class="dot" style="--i:1"></i><i class="dot" style="--i:2"></i><i class="dot" style="--i:3"></i><i class="dot" style="--i:4"></i><i class="dot w" style="--i:5"></i><i class="dot" style="--i:6"></i><i class="dot w" style="--i:7"></i><i class="dot" style="--i:8"></i><i class="dot w" style="--i:9"></i><i class="dot" style="--i:10"></i></div>
+    <p class="ecap" style="--i:0"><b>1.</b> Nhắn Zalo hỏi mẫu phiếu đề nghị</p>
+    <p class="ecap" style="--i:1"><b>2.</b> Điền phiếu vào file Excel</p>
+    <p class="ecap" style="--i:2"><b>3.</b> Xin ba báo giá qua email</p>
+    <p class="ecap" style="--i:3"><b>4.</b> Tự so ba báo giá</p>
+    <p class="ecap" style="--i:4"><b>5.</b> Gửi kế toán kiểm ngân sách</p>
+    <p class="ecap" style="--i:5"><b>6.</b> Chờ kế toán trả lời</p>
+    <p class="ecap" style="--i:6"><b>7.</b> In phiếu, trình trưởng phòng ký</p>
+    <p class="ecap" style="--i:7"><b>8.</b> Chờ trưởng phòng đi công tác về</p>
+    <p class="ecap" style="--i:8"><b>9.</b> Chụp chữ ký, gửi lại mua hàng</p>
+    <p class="ecap" style="--i:9"><b>10.</b> Chép tay vào file theo dõi</p>
+    <p class="ecap" style="--i:10"><b>11.</b> Báo kho chuẩn bị nhận hàng</p>
+    <p class="ecap sum"><b>11 bước · 4 người · 6 ngày</b></p>
+    <div class="co" style="--i:5" data-step="2"><b>Bước 6 · chờ 2 ngày</b>Kế toán kiểm ngân sách</div>
+    <div class="co" style="--i:7" data-step="2"><b>Bước 8 · chờ 3 ngày</b>Trưởng phòng đi công tác</div>
+    <div class="co" style="--i:9" data-step="2"><b>Bước 10 · làm lại</b>Chép tay từ Zalo sang Excel</div>
+  </div>
+  <aside class="notes">Để có một chữ ký cho đề nghị này, bạn Minh làm bao nhiêu bước? <i>[bấm]</i> <i>[để hoạt ảnh tự chạy, đừng đọc từng bước]</i> Mười một bước, bốn người, sáu ngày. <i>[bấm]</i> Và ba chỗ việc nằm chờ mà không ai nhìn thấy.<br><i>(Nước đi B6. Đếm bước thật của khách trong discovery; đổi --n trên .effort theo số bước và thêm/bớt chấm, dòng chú thích tương ứng. Số ở đây là ví dụ.)</i></aside>
+</section>
+
+<!-- ================= 18 · THẺ MÀU THEO LOẠI VIỆC (nước đi C6) ================= -->
+<section class="slide" data-title="Thẻ màu theo loại việc" data-time="60">
+  <h2 class="rv" style="--i:0">Mỗi loại việc cần <span class="hl">một cấu trúc riêng</span></h2>
+  <div class="kinds">
+    <div class="kind" data-step="1"><p class="lb"><i></i>Quy trình</p><h3>Đúng thứ tự, lần nào cũng như nhau</h3>
+      <div class="mini"><div class="r"><i></i>Lập đề nghị<small>Mua hàng</small></div><div class="r"><i></i>Kiểm ngân sách<small>Kế toán</small></div><div class="r"><i class="o"></i>Duyệt<small>Trưởng phòng</small></div></div></div>
+    <div class="kind project" data-step="2"><p class="lb"><i></i>Dự án</p><h3>Kế hoạch đổi, hạn chót không đổi</h3>
+      <div class="mini"><div class="g">Khảo sát<span><b style="--a:0%;--w:32%"></b></span></div><div class="g">Thi công<span><b style="--a:26%;--w:52%"></b></span></div><div class="g">Nghiệm thu<span><b style="--a:74%;--w:26%"></b></span></div></div></div>
+    <div class="kind field" data-step="3"><p class="lb"><i></i>Hiện trường</p><h3>Ngoài công trường, không ngày nào giống ngày nào</h3>
+      <div class="mini"><div class="r"><i></i>Bảo trì máy lạnh · Quận 7<small>12 km</small></div><div class="r"><i></i>Kỹ thuật viên đang tới<small>10 phút</small></div></div></div>
+    <div class="kind approval" data-step="4"><p class="lb"><i></i>Phê duyệt</p><h3>Quyết nhanh mà vẫn đúng</h3>
+      <div class="mini"><div class="r"><i></i>Tạm ứng công tác<small>12,5 tr</small></div><div class="r done"><i></i>Đã duyệt<small>10:42</small></div></div></div>
+  </div>
+  <p class="sub" data-step="5">Bốn loại việc, bốn cách chạy. Chung một đích: <b>từ đồng ý đến xong</b>.</p>
+  <aside class="notes">Nhưng trong một công ty, "làm xong một việc" chưa bao giờ chỉ là một loại việc. <i>[bấm]</i> Kế toán cần đúng: cùng các bước, cùng thứ tự, lần nào cũng vậy. <i>[bấm]</i> Dự án cần linh hoạt: kế hoạch đổi, hạn chót thì không. <i>[bấm]</i> Hiện trường thì không ngày nào giống ngày nào. <i>[bấm]</i> Còn người duyệt phải quyết nhanh mà vẫn đúng. <i>[bấm]</i> Ép cả bốn vào một file Excel là cách cũ đã không chạy.<br><i>(Nước đi C6 — đừng làm phẳng. Màu thẻ là màu tuyến nghiệp vụ --t-*: giữ nguyên suốt bài.)</i></aside>
+</section>
+
+<!-- ================= 19 · MẠNG LƯỚI LUỒNG ================= -->
+<section class="slide" data-title="Mạng lưới luồng" data-time="60">
+  <h2 class="rv" style="--i:0">Một hồ sơ, <span class="hl">nhiều quy trình</span> nối nhau</h2>
+  <div class="net rv" style="--i:1" data-cls="1:s1 2:s2 3:s3">
+    <svg viewBox="0 0 1320 440" aria-hidden="true">
+      <path class="e" d="M195 220H275"/><path class="e" d="M465 220H545"/><path class="e" d="M735 220H815"/>
+      <path class="e" d="M1005 220C1065 220 1065 70 1125 70"/><path class="e" d="M1005 220H1125"/><path class="e" d="M1005 220C1065 220 1065 370 1125 370"/>
+      <path class="e lit l1" pathLength="1" d="M195 220H275"/><path class="e lit l2" pathLength="1" d="M465 220H545"/><path class="e lit l3" pathLength="1" d="M735 220H815"/>
+      <path class="e lit l3 d" pathLength="1" d="M1005 220C1065 220 1065 70 1125 70"/><path class="e lit l3 d" pathLength="1" d="M1005 220H1125"/><path class="e lit l3 d" pathLength="1" d="M1005 220C1065 220 1065 370 1125 370"/>
+    </svg>
+    <div class="n l0" style="--x:100px;--y:220px"><em>Người</em><b>Đề nghị mua hàng</b></div>
+    <div class="n l1" style="--x:370px;--y:220px"><em class="ai">AI</em><b>So ba báo giá</b></div>
+    <div class="n l2" style="--x:640px;--y:220px"><em>Người</em><b>Trưởng phòng duyệt</b></div>
+    <div class="n l3" style="--x:910px;--y:220px"><em>Người</em><b>Đặt hàng nhà cung cấp</b></div>
+    <div class="n l3 d" style="--x:1220px;--y:70px"><em>Người</em><b>Nhập kho</b></div>
+    <div class="n l3 d" style="--x:1220px;--y:220px"><em class="ai">AI</em><b>Soát hoá đơn NCC</b></div>
+    <div class="n l3 d" style="--x:1220px;--y:370px"><em>Người</em><b>Báo kinh doanh</b></div>
+  </div>
+  <p class="sub" data-step="3">Duyệt xong, ba việc chạy cùng lúc. Người và AI trong cùng một luồng.</p>
+  <aside class="notes">Tới một lúc, đây không còn là một quy trình. <i>[bấm]</i> Đề nghị vào, AI so ba báo giá. <i>[bấm]</i> Trưởng phòng duyệt, có đủ bối cảnh. <i>[bấm]</i> Đặt hàng — và từ đó nhập kho, soát hoá đơn, báo kinh doanh chạy cùng lúc. <i>[để hoạt ảnh tự chạy]</i><br><i>(Mô hình minh hoạ. Chỉ nói "đã có" khi luồng tương ứng đã dựng thử trên Base 2.0; bước AI phải có người duyệt ở bước sau.)</i></aside>
+</section>
+
+<!-- ================= 20 · VÒNG HỆ SINH THÁI (chỉ dùng sau khi đã kể xong vấn đề) ================= -->
+<section class="slide left" data-title="Vòng hệ sinh thái" data-time="35">
+  <div class="split">
+    <div>
+      <p class="eyebrow rv" style="--i:0">Nhóm Work trên Base 2.0</p>
+      <h2 class="rv" style="--i:1">Mỗi loại việc một app. <span class="hl">Chung một nền.</span></h2>
+      <p class="sub" data-step="1">Hôm nay mình mới đi qua hai app: Request và BPM.</p>
+    </div>
+    <div class="eco" style="--n:8" data-cls="1:hl">
+      <span class="orb o1"></span><span class="orb o2"></span><span class="orb o3"></span>
+      <div class="core">Base 2.0</div>
+      <div class="app hot rv" style="--i:0">Request</div>
+      <div class="app hot rv" style="--i:1">BPM</div>
+      <div class="app rv" style="--i:2">Workflow</div>
+      <div class="app rv" style="--i:3">Project</div>
+      <div class="app rv" style="--i:4">Task</div>
+      <div class="app rv" style="--i:5">E-Office</div>
+      <div class="app rv" style="--i:6">Docs</div>
+      <div class="app rv" style="--i:7">E-Sign</div>
+    </div>
+  </div>
+  <aside class="notes">Chỉ chiếu vòng này sau khi đã kể xong vấn đề và chứng minh bằng luồng. Mỗi loại việc có app của nó, cùng nằm trên một nền. <i>[bấm]</i> Hôm nay mình mới đi qua hai app.<br><i>(Tên app theo app switcher Base 2.0, nhóm WORK OPERATION SERVICES, quan sát ngày 22/09/2026. Chỉ nói tính năng của app đã có feature record.)</i></aside>
+</section>
+
+</div></div>
+
+<div id="bar"></div><div id="dots"></div><div id="counter"></div>
+<div id="hint">→ tiếp · ← lùi · N ghi chú · G tổng quan · ? trợ giúp</div>
+<div id="notes"></div>
+<div id="overview"></div>
+<div id="help"><dl>
+  <dt>→ Space PgDn</dt><dd>Bước tiếp / slide tiếp</dd>
+  <dt>← PgUp</dt><dd>Lùi một bước</dd>
+  <dt>↑ ↓</dt><dd>Nhảy slide (bỏ qua bước)</dd>
+  <dt>N</dt><dd>Ghi chú người nói + đồng hồ</dd>
+  <dt>G</dt><dd>Tổng quan, bấm để nhảy</dd>
+  <dt>T · Shift+T</dt><dd>Chạy/dừng đồng hồ · đặt lại</dd>
+  <dt>R</dt><dd>Phát lại slide hiện tại</dd>
+  <dt>F</dt><dd>Toàn màn hình</dd>
+  <dt>P</dt><dd>Chế độ in/PDF (rồi Ctrl/Cmd+P)</dd>
+  <dt>M</dt><dd>Đo toạ độ điểm nóng trên ảnh</dd>
+  <dt>Home · End</dt><dd>Về đầu · tới cuối</dd>
+</dl></div>
+<div id="mlabel"></div>
+
+<script>
+/* =====================================================================
+   ENGINE — không cần sửa khi làm nội dung. Nguyên tắc:
+   • next() hoàn tất bước trong slide trước rồi mới sang slide; prev() lùi đúng một bước.
+   • Mọi bước dựng lại được TỨC THÌ (lùi, nhảy, in, giảm chuyển động) → không có trạng thái "kẹt".
+   • Rời slide là dừng mọi timer / hoạt ảnh của slide đó.
+   ===================================================================== */
+(function(){
+'use strict';
+var stage=document.getElementById('stage');
+var slides=[].slice.call(stage.querySelectorAll(':scope > .slide'));
+var REDUCE=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+var $=function(s,r){return (r||document).querySelector(s)}, $$=function(s,r){return [].slice.call((r||document).querySelectorAll(s))};
+var cur=0, step=0, timers=[], rafs=[];
+function at(ms,fn){timers.push(setTimeout(fn,ms))}
+function clearTimers(){timers.forEach(clearTimeout);timers=[];rafs.forEach(cancelAnimationFrame);rafs=[]}
+function esc(t){return String(t==null?'':t).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function showErr(s,msg){var e=document.createElement('div');e.className='err';e.textContent=msg;s.appendChild(e);console.error(msg)}
+
+/* ---------- dựng lịch lát cắt thời gian: <div class="cal" data-days="30" data-late-from="26"> ---------- */
+$$('.cal[data-days]').forEach(function(c){var n=+c.dataset.days||30,late=+(c.dataset.lateFrom||0),h='';
+  for(var d=1;d<=n;d++)h+='<div class="day'+(late&&d>=late?' late':'')+'">'+d+'</div>';c.innerHTML=h});
+
+/* ---------- chuẩn bị các khối demo ---------- */
+var CURSOR_SVG='<svg viewBox="0 0 24 24" width="28" height="28"><path d="M4 2.5l15.5 9.2-6.6 1.4 3.9 7.3-2.7 1.4-3.9-7.3-4.9 4.5z" fill="#fff" stroke="#0F1733" stroke-width="1.4" stroke-linejoin="round"/></svg>';
+var shotsBySlide=slides.map(function(s){
+  return $$('.shot',s).map(function(el){
+    var cam=$('.cam',el)||el, ov=$('.ov',cam);
+    if(!ov){ov=document.createElement('div');ov.className='ov';cam.appendChild(ov)}
+    var script={hotspots:{},steps:[]};
+    var src=el.id?$('script[type="application/json"][data-for="'+el.id+'"]',s):null;
+    if(src){try{script=JSON.parse(src.textContent)}catch(e){showErr(s,'Kịch bản demo #'+el.id+' lỗi JSON: '+e.message)}}
+    script.hotspots=script.hotspots||{};script.steps=script.steps||[];
+    var tag=document.createElement('div');tag.className='sim-tag';tag.textContent=el.dataset.label||'MÔ PHỎNG';el.appendChild(tag);
+    if(el.dataset.source){var st=document.createElement('div');st.className='src-tag';st.textContent=el.dataset.source;el.appendChild(st)}
+    var cursor=document.createElement('div');cursor.className='cursor';cursor.innerHTML=CURSOR_SVG;ov.appendChild(cursor);
+    var states=$$('.state',cam), init=(states.filter(function(x){return x.classList.contains('is-on')})[0]||states[0]);
+    return {el:el,cam:cam,ov:ov,cursor:cursor,script:script,states:states,init:init?init.dataset.name:null,undo:[],pos:[64,80],slide:s};
+  });
+});
+
+/* ---------- toạ độ điểm nóng (% theo khung .cam, không bị ảnh hưởng bởi zoom/scale sân khấu) ---------- */
+function rectOf(el,cam){var x=0,y=0,e=el;while(e&&e!==cam){x+=e.offsetLeft;y+=e.offsetTop;e=e.offsetParent}
+  return [x/cam.offsetWidth*100,y/cam.offsetHeight*100,el.offsetWidth/cam.offsetWidth*100,el.offsetHeight/cam.offsetHeight*100]}
+function hs(sh,key){
+  var v=(typeof key==='string')?sh.script.hotspots[key]:key;
+  if(!v){showErr(sh.slide,'Không thấy điểm nóng "'+key+'" trong #'+sh.el.id);return [45,45,10,10]}
+  if(Array.isArray(v))return v;
+  if(v.sel){var t=$(v.sel,sh.cam);if(t)return rectOf(t,sh.cam);showErr(sh.slide,'Selector không khớp: '+v.sel)}
+  return [45,45,10,10];
+}
+function center(r){return [r[0]+r[2]/2,r[1]+r[3]/2]}
+function noTrans(el,fn){var t=el.style.transition;el.style.transition='none';fn();void el.offsetWidth;el.style.transition=t}
+function setPos(sh,p,inst){sh.pos=p;var f=function(){sh.cursor.style.left=p[0]+'%';sh.cursor.style.top=p[1]+'%'};inst?noTrans(sh.cursor,f):f()}
+function boxKey(kind,at){return kind+':'+(typeof at==='string'?at:JSON.stringify(at))}
+function ensureBox(sh,kind,at,extra,inst){
+  var key=boxKey(kind,at), b=null;
+  $$('.box',sh.ov).forEach(function(x){if(x.dataset.key===key)b=x});
+  if(!b){var r=hs(sh,at);b=document.createElement('div');b.className='box '+kind+(extra?' '+extra:'');b.dataset.key=key;
+    b.style.left=r[0]+'%';b.style.top=r[1]+'%';b.style.width=r[2]+'%';b.style.height=r[3]+'%';sh.ov.appendChild(b);
+    if(inst)b.classList.add('on');else{void b.offsetWidth;requestAnimationFrame(function(){b.classList.add('on')})}}
+  return b;
+}
+function removeBoxes(sh,kind,at){var key=at?boxKey(kind,at):null;$$('.box.'+kind,sh.ov).forEach(function(x){if(!key||x.dataset.key===key)x.remove()})}
+function showState(sh,name,inst){sh.states.forEach(function(st){var on=st.dataset.name===name;inst?noTrans(st,function(){st.classList.toggle('is-on',on)}):st.classList.toggle('is-on',on)})}
+function zoomTo(sh,r,scale,inst){var f=function(){if(!r||scale===1){sh.cam.style.transform='none'}else{var c=center(r);sh.cam.style.transformOrigin=c[0]+'% '+c[1]+'%';sh.cam.style.transform='scale('+scale+')'}};inst?noTrans(sh.cam,f):f()}
+function setCaption(s,text,inst){var c=$('.cap',s);if(!c)return;var t=(text==null)?(c.dataset.default||''):text;if(c.textContent===t)return;c.textContent=t;if(!inst){c.classList.remove('swap');void c.offsetWidth;c.classList.add('swap')}}
+function toast(sh,text,kind,inst){$$('.toast',sh.ov).forEach(function(x){x.remove()});var t=document.createElement('div');t.className='toast '+(kind||'');t.textContent=text;sh.ov.appendChild(t);if(inst)t.classList.add('on');else{void t.offsetWidth;requestAnimationFrame(function(){t.classList.add('on')})}}
+function ripple(sh){var r=document.createElement('div');r.className='ripple';r.style.left=sh.pos[0]+'%';r.style.top=sh.pos[1]+'%';sh.ov.appendChild(r);at(650,function(){r.remove()})}
+function countUp(b,a,inst){var from=+a.from||0,to=+a.to||0,ms=a.ms||1200,pre=a.prefix||'',suf=a.suffix||'';
+  var fmt=function(v){return pre+Math.round(v).toLocaleString('vi-VN')+suf};
+  if(inst){b.textContent=fmt(to);return}var t0=performance.now();
+  (function f(now){var k=Math.min(1,(now-t0)/ms),e=1-Math.pow(1-k,3);b.textContent=fmt(from+(to-from)*e);if(k<1)rafs.push(requestAnimationFrame(f))})(t0)}
+
+/* ---------- bảng hành động ---------- */
+var ACT={
+  cursor:{dur:function(a){return a.ms||700},run:function(sh,a,inst){sh.cursor.classList.add('on');setPos(sh,center(hs(sh,a.to)),inst)}},
+  click:{dur:function(){return 380},run:function(sh,a,inst){if(!inst)ripple(sh)}},   /* nhấn tại vị trí con trỏ hiện tại */
+  type:{dur:function(a){return (a.text||'').length*(a.speed||38)+250},run:function(sh,a,inst){
+    var b=ensureBox(sh,'typed',a.at,null,true),txt=a.text||'',sp=a.speed||38;
+    if(inst){b.textContent=txt;return}b.innerHTML='<span class="caret"></span>';
+    for(var i=1;i<=txt.length;i++)(function(n){at(n*sp,function(){b.innerHTML=esc(txt.slice(0,n))+(n<txt.length?'<span class="caret"></span>':'')})})(i)}},
+  ring:{dur:function(){return 320},run:function(sh,a,inst){ensureBox(sh,'ring',a.at,a.cls,inst)}},
+  unring:{dur:function(){return 150},run:function(sh,a){removeBoxes(sh,'ring',a.at)}},
+  spot:{dur:function(){return 420},run:function(sh,a,inst){ensureBox(sh,'spot',a.at,null,inst)}},
+  unspot:{dur:function(){return 300},run:function(sh){removeBoxes(sh,'spot')}},
+  zoom:{dur:function(a){return a.ms||780},run:function(sh,a,inst){zoomTo(sh,hs(sh,a.at),a.scale||1.8,inst)}},
+  unzoom:{dur:function(a){return a.ms||650},run:function(sh,a,inst){zoomTo(sh,null,1,inst)}},
+  swap:{dur:function(){return 480},run:function(sh,a,inst){showState(sh,a.to,inst)}},
+  patch:{dur:function(){return 340},run:function(sh,a,inst){var b=ensureBox(sh,'patch',a.at,a.cls,inst);b.style.background=a.bg||'#fff';b.innerHTML=a.html||''}},
+  unpatch:{dur:function(){return 200},run:function(sh,a){removeBoxes(sh,'patch',a.at)}},
+  toast:{dur:function(){return 420},run:function(sh,a,inst){toast(sh,a.text,a.kind,inst)}},
+  untoast:{dur:function(){return 200},run:function(sh){$$('.toast',sh.ov).forEach(function(x){x.remove()})}},
+  count:{dur:function(a){return a.ms||1200},run:function(sh,a,inst){var b=ensureBox(sh,'patch',a.at,a.cls,inst);countUp(b,a,inst)}},
+  cls:{dur:function(){return 300},run:function(sh,a){var t=$(a.sel,sh.cam);if(!t)return showErr(sh.slide,'cls: không thấy '+a.sel);
+    if(a.add){var ad=a.add.split(' ').filter(function(c){return !t.classList.contains(c)});ad.forEach(function(c){t.classList.add(c)});sh.undo.push(function(){ad.forEach(function(c){t.classList.remove(c)})})}
+    if(a.remove){var rm=a.remove.split(' ').filter(function(c){return t.classList.contains(c)});rm.forEach(function(c){t.classList.remove(c)});sh.undo.push(function(){rm.forEach(function(c){t.classList.add(c)})})}}},
+  log:{dur:function(){return 380},run:function(sh,a,inst){var b=ensureBox(sh,'logbox',a.at,null,true);var r=document.createElement('div');r.className='lg '+(a.kind||'');
+    r.innerHTML='<b>'+esc(a.time||'')+'</b><span>'+esc(a.text||'')+'</span>';b.appendChild(r);if(inst)r.classList.add('in');else requestAnimationFrame(function(){r.classList.add('in')})}},
+  caption:{dur:function(){return 0},run:function(sh,a,inst){setCaption(sh.slide,a.text,inst)}},
+  wait:{dur:function(a){return a.ms||500},run:function(){}}
+};
+function runAct(sh,a,inst){var d=ACT[a.do];if(!d){showErr(sh.slide,'Hành động không hỗ trợ: '+a.do);return}d.run(sh,a,inst)}
+function resetShot(sh){
+  sh.undo.slice().reverse().forEach(function(f){f()});sh.undo=[];
+  $$('.box,.ripple,.toast',sh.ov).forEach(function(x){x.remove()});
+  sh.cursor.classList.remove('on');setPos(sh,[64,80],true);
+  if(sh.init)showState(sh,sh.init,true);zoomTo(sh,null,1,true);setCaption(sh.slide,null,true);
+}
+function playShotStep(sh,k,animate){
+  var acts=sh.script.steps[k-1]||[];
+  if(!animate){acts.forEach(function(a){runAct(sh,a,true)});return}
+  var t=0,prev=0;
+  acts.forEach(function(a){var start=a.par?prev:t,d=ACT[a.do];at(start,function(){runAct(sh,a,false)});prev=start;t=Math.max(t,start+(d?d.dur(a):0))});
+}
+/* data-cls="1:hot 4:short" → bật class khi bước ≥ số đứng trước dấu ":" */
+function clsPairs(e){return e.dataset.cls.split(/\s+/).map(function(p){var m=p.split(':');return m.length===2?[+m[0],m[1]]:null}).filter(Boolean)}
+
+/* ---------- số bước của mỗi slide ---------- */
+var STEPS=slides.map(function(s,i){var n=+(s.dataset.steps||0);
+  $$('[data-step],[data-only],[data-until]',s).forEach(function(e){n=Math.max(n,+(e.dataset.step||e.dataset.only||e.dataset.until||0))});
+  $$('[data-cls]',s).forEach(function(e){clsPairs(e).forEach(function(p){n=Math.max(n,p[0])})});
+  shotsBySlide[i].forEach(function(sh){n=Math.max(n,sh.script.steps.length)});return n});
+
+/* ---------- dựng một slide ở bước k ---------- */
+function renderSlide(i,k,animate){
+  var s=slides[i];
+  var inst=!animate||REDUCE;
+  if(inst){s.classList.add('no-anim')}
+  $$('[data-step],[data-only],[data-until]',s).forEach(function(e){
+    var on;if(e.dataset.only)on=(k===+e.dataset.only);else if(e.dataset.until)on=(k<+e.dataset.until);else on=(k>=+e.dataset.step);
+    e.classList.toggle('on',on);e.classList.toggle('now',!!e.dataset.step&&k===+e.dataset.step);
+  });
+  $$('[data-cls]',s).forEach(function(e){clsPairs(e).forEach(function(p){e.classList.toggle(p[1],k>=p[0])})});
+  shotsBySlide[i].forEach(function(sh){resetShot(sh);for(var j=1;j<k;j++)playShotStep(sh,j,false);if(k>0)playShotStep(sh,k,!inst)});
+  if(inst){void s.offsetWidth;requestAnimationFrame(function(){requestAnimationFrame(function(){s.classList.remove('no-anim')})})}
+}
+function activate(i,fromBack){
+  slides.forEach(function(s,n){if(n!==i){s.classList.remove('is-active','static')}});
+  var s=slides[i];s.classList.remove('is-active');void s.offsetWidth;
+  s.classList.toggle('static',!!fromBack||REDUCE);s.classList.add('is-active');
+}
+function go(i,k,mode){
+  clearTimers();
+  i=Math.max(0,Math.min(slides.length-1,i));k=Math.max(0,Math.min(STEPS[i],k));
+  var changed=(i!==cur)||!slides[i].classList.contains('is-active');
+  if(changed)activate(i,mode==='back'||mode==='jump');
+  cur=i;step=k;
+  renderSlide(i,k,mode==='fwd');
+  hud();
+  if(document.body.classList.contains('measure'))setMeasure(true);
+}
+function next(){if(step<STEPS[cur])go(cur,step+1,'fwd');else if(cur<slides.length-1)go(cur+1,0,'fwd')}
+function prev(){if(step>0)go(cur,step-1,'back');else if(cur>0)go(cur-1,STEPS[cur-1],'back')}
+function replay(){slides[cur].classList.remove('is-active');go(cur,0,'fwd')}
+
+/* ---------- HUD, ghi chú, đồng hồ ---------- */
+var times=slides.map(function(s){return +(s.dataset.time||45)}), total=times.reduce(function(a,b){return a+b},0);
+function planUntil(i){var t=0;for(var n=0;n<=i;n++)t+=times[n];return t}
+function mmss(x){x=Math.max(0,Math.round(x));return String(Math.floor(x/60)).padStart(2,'0')+':'+String(x%60).padStart(2,'0')}
+var elapsed=0,running=false;
+setInterval(function(){if(running){elapsed++;tick()}},1000);
+function tick(){var c=$('#clock');if(!c)return;c.textContent=mmss(elapsed);var p=planUntil(cur);c.classList.toggle('warn',elapsed>p+25&&elapsed<=p+75);c.classList.toggle('over',elapsed>p+75)}
+function hud(){
+  $('#bar').style.width=((cur+(STEPS[cur]?step/STEPS[cur]:1))/slides.length*100)+'%';
+  $('#counter').textContent=String(cur+1).padStart(2,'0')+' / '+String(slides.length).padStart(2,'0');
+  var d=$('#dots');d.innerHTML='';for(var n=1;n<=STEPS[cur];n++){var e=document.createElement('i');if(n<=step)e.className='on';d.appendChild(e)}
+  var s=slides[cur],nt=$('.notes',s),nx=slides[cur+1];
+  $('#notes').innerHTML='<div class="nh"><b>'+(cur+1)+'/'+slides.length+' · '+esc(s.dataset.title||'')+'</b><span>bước '+step+'/'+STEPS[cur]+'</span><span>mục tiêu '+mmss(times[cur])+' · hết slide này nên ở '+mmss(planUntil(cur))+' / '+mmss(total)+'</span><span>đồng hồ <span id="clock">'+mmss(elapsed)+'</span>'+(running?'':' (T để chạy)')+'</span></div>'+
+    '<div class="nb">'+(nt?nt.innerHTML:'<i>(chưa có ghi chú)</i>')+'</div>'+(nx?'<div class="nn">Tiếp theo: '+esc(nx.dataset.title||'')+'</div>':'');
+  tick();
+  $$('#overview button').forEach(function(b,n){b.classList.toggle('cur',n===cur)});
+  try{history.replaceState(null,'','#'+(cur+1)+'.'+step)}catch(e){}
+  if(cur>0||step>0)$('#hint').style.opacity=0;
+}
+var ovw=$('#overview');
+slides.forEach(function(s,n){var b=document.createElement('button');b.innerHTML='<em>'+String(n+1).padStart(2,'0')+'</em>'+esc(s.dataset.title||'')+'<small>'+mmss(times[n])+(STEPS[n]?' · '+STEPS[n]+' bước':'')+'</small>';
+  b.addEventListener('click',function(ev){ev.stopPropagation();document.body.classList.remove('ov-on');go(n,0,'jump')});ovw.appendChild(b)});
+
+/* ---------- co sân khấu ---------- */
+function fit(){var notes=document.body.classList.contains('notes-on'),availH=notes?innerHeight*.66:innerHeight;
+  var sc=Math.min(innerWidth/1600,availH/900);stage.style.top=notes?(availH/2)+'px':'50%';stage.style.transform='translate(-50%,-50%) scale('+sc+')'}
+addEventListener('resize',fit);
+
+/* ---------- chế độ in / PDF ---------- */
+function setPrint(on){
+  slides.forEach(function(s){s.classList.add('no-anim')});           /* vào/ra chế độ in: không hiệu ứng, không bóng mờ chồng slide */
+  document.body.classList.toggle('print',on);
+  if(on){clearTimers();slides.forEach(function(s,i){s.classList.add('is-active','static');renderSlide(i,STEPS[i],false)});stage.style.transform='none'}
+  else{slides.forEach(function(s,i){if(i!==cur)s.classList.remove('is-active','static')});fit();go(cur,step,'jump')}
+  requestAnimationFrame(function(){requestAnimationFrame(function(){slides.forEach(function(s){s.classList.remove('no-anim')})})});
+}
+
+/* ---------- đo toạ độ điểm nóng (M) ---------- */
+function setMeasure(on){
+  document.body.classList.toggle('measure',on);$$('.hs-dbg').forEach(function(x){x.remove()});
+  if(!on){renderSlide(cur,step,false);return}
+  shotsBySlide[cur].forEach(function(sh){zoomTo(sh,null,1,true);Object.keys(sh.script.hotspots).forEach(function(k){var r=hs(sh,k),b=document.createElement('div');b.className='hs-dbg';
+    b.style.left=r[0]+'%';b.style.top=r[1]+'%';b.style.width=r[2]+'%';b.style.height=r[3]+'%';b.innerHTML='<span>'+esc(k)+' ['+r.map(function(v){return v.toFixed(1)}).join(', ')+']</span>';sh.ov.appendChild(b)})});
+}
+document.addEventListener('mousemove',function(e){if(!document.body.classList.contains('measure'))return;var sh=null;
+  shotsBySlide[cur].forEach(function(x){var r=x.cam.getBoundingClientRect();if(e.clientX>=r.left&&e.clientX<=r.right&&e.clientY>=r.top&&e.clientY<=r.bottom)sh=x});
+  var l=$('#mlabel');if(!sh){l.textContent='(ngoài khung demo)';}else{var r=sh.cam.getBoundingClientRect();l.textContent='x '+((e.clientX-r.left)/r.width*100).toFixed(1)+'% · y '+((e.clientY-r.top)/r.height*100).toFixed(1)+'%'}
+  l.style.left=(e.clientX+14)+'px';l.style.top=(e.clientY+14)+'px'});
+
+/* ---------- điều khiển ---------- */
+document.addEventListener('keydown',function(e){
+  var tg=e.target;if(tg&&(tg.isContentEditable||/^(INPUT|TEXTAREA|SELECT)$/.test(tg.tagName)))return;
+  var k=e.key,b=document.body;
+  if(k==='Escape'){b.classList.remove('ov-on','help-on');if(b.classList.contains('print'))setPrint(false);if(b.classList.contains('measure'))setMeasure(false);return}
+  if(b.classList.contains('print')&&k!=='p'&&k!=='P')return;
+  if(k==='ArrowRight'||k===' '||k==='PageDown'||k==='Enter'){e.preventDefault();next()}
+  else if(k==='ArrowLeft'||k==='PageUp'||k==='Backspace'){e.preventDefault();prev()}
+  else if(k==='ArrowDown'){e.preventDefault();go(cur+1,0,'jump')}
+  else if(k==='ArrowUp'){e.preventDefault();go(cur-1,0,'jump')}
+  else if(k==='Home'){go(0,0,'jump')}
+  else if(k==='End'){go(slides.length-1,STEPS[slides.length-1],'jump')}
+  else if(k==='n'||k==='N'){b.classList.toggle('notes-on');fit()}
+  else if(k==='g'||k==='G'||k==='o'||k==='O'){b.classList.toggle('ov-on')}
+  else if(k==='?'||k==='/'){b.classList.toggle('help-on')}
+  else if(k==='t'){running=!running;hud()}
+  else if(k==='T'){elapsed=0;running=false;hud()}
+  else if(k==='r'||k==='R'){replay()}
+  else if(k==='f'||k==='F'){if(document.fullscreenElement)document.exitFullscreen();else if(document.documentElement.requestFullscreen)document.documentElement.requestFullscreen()}
+  else if(k==='p'||k==='P'){setPrint(!b.classList.contains('print'))}
+  else if(k==='m'||k==='M'){setMeasure(!b.classList.contains('measure'))}
+});
+document.addEventListener('click',function(e){var b=document.body;
+  if(b.classList.contains('ov-on')||b.classList.contains('help-on')||b.classList.contains('print')||b.classList.contains('measure'))return;
+  if(e.target.closest('#notes,#overview,#help,a,button,input,[data-noclick]'))return;
+  if(e.clientX<innerWidth*.2)prev();else next()});
+var tx=0;document.addEventListener('touchstart',function(e){tx=e.changedTouches[0].clientX},{passive:true});
+document.addEventListener('touchend',function(e){var dx=e.changedTouches[0].clientX-tx;if(Math.abs(dx)>55){dx<0?next():prev()}},{passive:true});
+
+/* ---------- khởi động: đọc #slide.step ---------- */
+fit();
+var m=/^#(\d+)(?:\.(\d+))?$/.exec(location.hash||'');
+if(m){cur=-1;go(+m[1]-1,+(m[2]||0),'jump')}else{cur=-1;go(0,0,'fwd')}
+window.__deck={go:go,next:next,prev:prev,state:function(){return {slide:cur+1,step:step,steps:STEPS[cur]}}};
+})();
+</script>
+</body>
+</html>

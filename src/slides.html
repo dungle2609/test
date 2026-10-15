@@ -528,13 +528,3 @@
   </ul>
   <aside class="notes">Toàn bộ nguồn, có đường dẫn. Mục 32–33 là tài liệu của Base, không công khai đường dẫn trong file này.</aside>
 </section>
-
-<script>
-/* Dự phòng cho trình duyệt chưa hỗ trợ text-wrap: pretty — nối hai chữ cuối để không có dòng chỉ một chữ */
-(function(){if(window.CSS&&CSS.supports&&CSS.supports('text-wrap','pretty'))return;
-  document.querySelectorAll('#stage h1,#stage h2,#stage h3,#stage p,#stage li,#stage small,#stage blockquote,#stage .who,#stage .nm,#stage .bl,#stage .mt,#stage .e,#stage .t,#stage .p,#stage .tm,#stage .out,#stage .st,#stage .co').forEach(function(el){
-    if(el.closest('.notes'))return;var w=document.createTreeWalker(el,NodeFilter.SHOW_TEXT),n,last=null;
-    while((n=w.nextNode())){if(/\S\s+\S/.test(n.textContent))last=n}
-    if(last)last.textContent=last.textContent.replace(/\s+(\S+\s*)$/,' $1');});
-})();
-</script>

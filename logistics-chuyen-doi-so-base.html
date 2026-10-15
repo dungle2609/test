@@ -5,11 +5,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Bức tranh chuyển đổi số ngành logistics</title>
 <!--
-  Deck "Bức tranh chuyển đổi số ngành logistics" · tổng hợp case study · cập nhật 15/10/2026
-  Dựng từ asset.base-2-0.html-deck-starter v1.1.0 (giữ nguyên engine và CSS gốc; bố cục riêng ở CSS mục 11).
-  Ba phần: (1) vì sao logistics phải quan tâm công nghệ · (2A) nghiệp vụ đặc thù — dòng hàng · (2B) vận hành nội bộ — dòng việc, case khách hàng Base · (3) Base và Base 2.0.
-  Mọi số liệu có dòng nguồn ở chân slide và mục Nguồn tham khảo cuối deck. Giao diện/mảnh dựng lại có nhãn "Minh hoạ".
-  Bản gửi khách: không chứa ghi chú người nói (ghi chú nằm trong src/slides.html). Điện thoại cầm dọc tự đổi sang giao diện đọc dọc nhúng trong cùng file.
+  Deck "Bức tranh chuyển đổi số ngành logistics" · dựng từ asset.base-2-0.html-deck-starter (engine và CSS gốc giữ nguyên; bố cục riêng ở CSS mục 11).
+  Bản gửi khách: không chứa ghi chú người nói. Điện thoại cầm dọc tự đổi sang giao diện đọc dọc nhúng trong cùng file.
   Phím: → tiếp · ← lùi · G mục lục · F toàn màn hình · P xem toàn bộ slide · ? trợ giúp.
 -->
 <script>/* điện thoại cầm dọc: bật giao diện đọc dọc nhúng sẵn trong file */
@@ -1334,17 +1331,15 @@ html.m #bar,html.m #dots,html.m #counter,html.m #hint,html.m #notes,html.m #over
     <li><em>33</em><b>Tài liệu nội bộ Base</b> · Bộ giải pháp Base cho Logistics (quy trình mẫu); giao diện Base 2.0 ghi nhận 22/09/2026</li>
   </ul>
 </section>
-
 <script>
 /* Dự phòng cho trình duyệt chưa hỗ trợ text-wrap: pretty — nối hai chữ cuối để không có dòng chỉ một chữ */
 (function(){if(window.CSS&&CSS.supports&&CSS.supports('text-wrap','pretty'))return;
   document.querySelectorAll('#stage h1,#stage h2,#stage h3,#stage p,#stage li,#stage small,#stage blockquote,#stage .who,#stage .nm,#stage .bl,#stage .mt,#stage .e,#stage .t,#stage .p,#stage .tm,#stage .out,#stage .st,#stage .co').forEach(function(el){
     if(el.closest('.notes'))return;var w=document.createTreeWalker(el,NodeFilter.SHOW_TEXT),n,last=null;
     while((n=w.nextNode())){if(/\S\s+\S/.test(n.textContent))last=n}
-    if(last)last.textContent=last.textContent.replace(/\s+(\S+\s*)$/,' $1');});
+    if(last)last.textContent=last.textContent.replace(/\s+(\S+\s*)$/,'\u00A0$1');});
 })();
 </script>
-
 </div></div>
 <p class="mfoot">Base.vn · Tài liệu tham khảo cho doanh nghiệp logistics · 10/2026</p>
 
