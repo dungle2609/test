@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Logistics và chuyển đổi số — Base</title>
+<title>Bức tranh chuyển đổi số ngành logistics — Base</title>
 <!--
-  Deck "Logistics và chuyển đổi số" · tổng hợp case study ngành logistics · 15/10/2026
+  Deck "Bức tranh chuyển đổi số ngành logistics" · tổng hợp case study · cập nhật 15/10/2026
   Dựng từ asset.base-2-0.html-deck-starter v1.1.0 (giữ nguyên engine và CSS gốc; bố cục riêng ở CSS mục 11).
   Ba phần: (1) vì sao logistics phải quan tâm công nghệ · (2A) nghiệp vụ đặc thù — dòng hàng · (2B) vận hành nội bộ — dòng việc, case khách hàng Base · (3) Base và Base 2.0.
   Mọi số liệu có dòng nguồn ở chân slide và mục Nguồn tham khảo cuối deck. Giao diện/mảnh dựng lại có nhãn "Minh hoạ".
@@ -540,6 +540,69 @@ body.print #bar,body.print #counter,body.print #dots,body.print #hint,body.print
 .versus.dense .vcol li{font-size:21px;line-height:1.42;padding:9px 0}
 .versus.dense .vcol li b{color:var(--ink)}
 
+/* 11.16 Mảnh giao diện kiểu app quen thuộc (Zalo, Excel, email, phiếu giấy) cho slide mớ hỗn độn — dựng lại, không dùng logo */
+.mess.apps{height:500px}
+.mess .win{border-radius:12px;overflow:hidden;background:#fff;color:#1F2937;text-align:left;font:500 13px/1.38 var(--f-ui);box-shadow:0 22px 46px -12px rgba(0,0,0,.7)}
+.zl{width:320px;background:#EEF1F5!important}
+.zl .hd{display:flex;align-items:center;gap:10px;padding:9px 12px;background:#0068FF;color:#fff}
+.zl .hd i{flex:0 0 30px;height:30px;border-radius:50%;background:#7FB2FF;display:grid;place-items:center;font:800 11px var(--f-ui);font-style:normal;color:#fff}
+.zl .hd b{display:block;font-size:14px;line-height:1.25}
+.zl .hd small{display:block;font-size:11.5px;opacity:.85}
+.zl .hd .cnt{margin-left:auto;background:#FF3B30;border-radius:999px;padding:1px 8px;font:800 12px var(--f-ui)}
+.zl .bd{padding:10px 10px 4px;display:flex;flex-direction:column;gap:7px}
+.zl .m{max-width:86%;background:#fff;border-radius:10px;padding:6px 10px;box-shadow:0 1px 1px rgba(0,0,0,.06)}
+.zl .m em{display:block;font-style:normal;font-size:11px;color:#64748B;font-weight:700}
+.zl .m small{display:block;text-align:right;font-size:10.5px;color:#94A3B8}
+.zl .m.me{align-self:flex-end;background:#D7E9FF}
+.zl .in{margin:6px 10px 10px;background:#fff;border-radius:8px;padding:6px 10px;color:#94A3B8;font-size:12px}
+.xl{width:380px}
+.xl .tb{background:#217346;color:#fff;padding:7px 12px;font:600 12.5px var(--f-ui)}
+.xl .rb{display:flex;gap:14px;padding:5px 12px;border-bottom:1px solid #E5E7EB;font-size:11.5px;color:#374151}
+.xl .rb span:first-child{color:#217346;font-weight:700;border-bottom:2px solid #217346}
+.xl .fx{display:flex;border-bottom:1px solid #E5E7EB;font-size:12px;color:#374151}
+.xl .fx span{padding:3px 8px;border-right:1px solid #E5E7EB}
+.xl .fx span:first-child{width:46px}
+.xl .fx span:nth-child(2){font-style:italic;color:#6B7280}
+.xl table{width:100%;border-collapse:collapse;font-size:12.5px}
+.xl th,.xl td{border:1px solid #E2E8F0;padding:4px 7px;text-align:left;white-space:nowrap}
+.xl th{background:#F3F4F6;color:#6B7280;font-weight:600;text-align:center;font-size:11px}
+.xl td.rh{background:#F3F4F6;color:#6B7280;text-align:center;width:26px;font-size:11px}
+.xl td.h{font-weight:700;background:#E8F3EC}
+.xl td.q{color:#DC2626;font-weight:800;text-align:center}
+.xl td.sel{outline:2px solid #217346;outline-offset:-2px}
+.xl .tabs{display:flex;gap:2px;background:#F3F4F6;padding:3px 8px;font-size:11px;color:#6B7280}
+.xl .tabs span{padding:2px 10px}
+.xl .tabs span.on{background:#fff;color:#217346;font-weight:700;border-bottom:2px solid #217346}
+.ml{width:330px}
+.ml .tb{display:flex;align-items:center;gap:8px;background:#0F6CBD;color:#fff;padding:8px 12px;font:600 12.5px var(--f-ui)}
+.ml .tb span{margin-left:auto;background:rgba(255,255,255,.2);border-radius:6px;padding:2px 10px;font-weight:500;font-size:11.5px}
+.ml .fl{display:flex;gap:12px;padding:5px 12px;border-bottom:1px solid #E5E7EB;font-size:11.5px;color:#6B7280}
+.ml .fl b{color:#0F6CBD;border-bottom:2px solid #0F6CBD}
+.ml .it{display:grid;grid-template-columns:1fr auto;gap:1px 8px;padding:7px 12px 7px 14px;border-bottom:1px solid #F1F5F9;position:relative}
+.ml .it.un::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:#0F6CBD}
+.ml .it b{font-size:13px;font-weight:600}
+.ml .it.un b,.ml .it.un .s{font-weight:800}
+.ml .it small{color:#64748B;font-size:11px}
+.ml .it .s{grid-column:1/-1;font-size:12.5px;color:#334155}
+.pp{width:350px;background:#FFFEF7!important;color:#111!important;padding:13px 18px 12px;font:13px/1.4 "Times New Roman",Georgia,serif!important;border-radius:3px!important}
+.pp .co{font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:#374151}
+.pp h5{font:700 15px/1.3 "Times New Roman",Georgia,serif;text-align:center;margin:5px 0 7px;letter-spacing:.02em}
+.pp .ln{display:flex;gap:6px;padding:3px 0;border-bottom:1px dotted #9CA3AF}
+.pp .ln span{color:#4B5563}
+.pp .ln b{margin-left:auto}
+.pp .sg{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:9px;text-align:center;font-size:11.5px;font-weight:700}
+.pp .sg div{min-height:48px;display:flex;flex-direction:column;justify-content:space-between;align-items:center}
+.pp .sg em{font:italic 17px "Segoe Script","Brush Script MT",cursive;color:#1D4ED8;font-weight:400}
+.pp .sg .miss{color:#DC2626;font-weight:400;font-style:italic;font-size:11.5px}
+
+/* 11.17 Không để dòng nào chỉ có một chữ: tiêu đề cân dòng, đoạn văn tránh chữ mồ côi */
+h1,h2,h3,.sub,.lede,.qline,.claim{text-wrap:balance}
+p,li,small,span,b,em,div,blockquote{text-wrap:pretty}
+.zl .m{width:max-content}
+.xl .tabs{margin:0}
+.xl .tabs span{border:0;border-radius:0;background:transparent;font-size:11px;font-weight:500;color:#6B7280;padding:2px 10px}
+.xl .tabs span.on{background:#fff;color:#217346;font-weight:700;border-bottom:2px solid #217346}
+
 </style>
 </head>
 <body>
@@ -548,18 +611,17 @@ body.print #bar,body.print #counter,body.print #dots,body.print #hint,body.print
 <!-- ================= 01 · MỞ ================= -->
 <section class="slide" data-title="Mở: container và hồ sơ" data-time="30">
   <p class="eyebrow rv" style="--i:0">Logistics · Tổng hợp case study chuyển đổi số</p>
-  <h1 class="rv" style="--i:1">Biết <span class="hl">container</span> đang ở đâu.<br>Còn <span class="warn">hồ sơ</span> đang nằm ở ai?</h1>
-  <p class="sub rv" style="--i:2">Bức tranh chuyển đổi số ngành logistics: vì sao phải làm, công nghệ đã giúp được gì, và phần việc Base đảm nhận.</p>
+  <h1 class="rv" style="--i:1">Bức tranh chuyển đổi số<br>ngành <span class="hl">logistics</span></h1>
+  <p class="sub rv" style="--i:2">Vì sao phải làm, công nghệ giúp được gì, và phạm vi đáp ứng của Base</p>
   <p class="small rv" style="--i:3">Base.vn · Tài liệu tham khảo cho doanh nghiệp logistics · 10/2026</p>
-  <aside class="notes">Chào anh chị. Container của mình giờ đang ở đâu — mở phần mềm là biết.<br><i>[dừng 2 giây]</i><br>Nhưng bộ chứng từ của lô hàng đó đang nằm ở ai, tạm ứng phí nâng hạ cho tài xế đã ai duyệt chưa — câu này thường phải gọi vài cuộc mới trả lời được.<br>Tài liệu hôm nay đi quanh đúng khoảng cách đó. <i>[bấm]</i></aside>
+  <aside class="notes">Chào anh chị. Container của mình giờ đang ở đâu — mở phần mềm là biết.<br><i>[dừng 2 giây]</i><br>Nhưng bộ chứng từ của lô hàng đó đang nằm ở ai, tạm ứng phí nâng hạ cho tài xế đã ai duyệt chưa — câu này thường phải gọi vài cuộc mới trả lời được.<br>Tài liệu hôm nay đi quanh đúng khoảng cách đó: vì sao phải làm, công nghệ giúp được gì, và Base đáp ứng tới đâu. <i>[bấm]</i></aside>
 </section>
 
 <!-- ================= 02 · BẢN ĐỒ BA CÂU HỎI ================= -->
 <section class="slide" data-title="Ba câu hỏi" data-time="30">
-  <p class="eyebrow rv" style="--i:0">Cấu trúc tài liệu</p>
-  <h2 class="rv" style="--i:1">Ba câu hỏi, đi theo đúng thứ tự</h2>
+  <h2 class="rv" style="--i:0">Tài liệu giúp trả lời <span class="hl">3 câu hỏi</span></h2>
   <div class="cards">
-    <div class="card" data-step="1"><div class="no">01 · BỐI CẢNH</div><h3>Vì sao phải quan tâm?</h3><p>Chi phí, áp lực từ cảng, hãng tàu, chủ hàng — và những gì doanh nghiệp đi trước đã đo được.</p></div>
+    <div class="card" data-step="1"><div class="no">01 · BỐI CẢNH</div><h3>Vì sao chủ doanh nghiệp logistics phải quan tâm?</h3><p>Chi phí, áp lực từ cảng, hãng tàu, chủ hàng — và những gì doanh nghiệp đi trước đã đo được.</p></div>
     <div class="card" data-step="2"><div class="no">02 · BÀI TOÁN</div><h3>Công nghệ giúp được gì?</h3><p>Tách hai nhóm: nghiệp vụ đặc thù của ngành và vận hành nội bộ. Mỗi nhóm một loại công cụ, một nhóm case thật.</p></div>
     <div class="card" data-step="3"><div class="no">03 · BASE</div><h3>Base khác ở đâu?</h3><p>Base 2.0 trong kỷ nguyên AI: kiến trúc Service → Output → Knowledge → Agent, và phạm vi Base nhận làm.</p></div>
   </div>
@@ -583,9 +645,9 @@ body.print #bar,body.print #counter,body.print #dots,body.print #hint,body.print
     <div class="kpi rv" style="--i:3"><b>10,6%</b><span>Mức bình quân thế giới cùng thời điểm</span><small>Theo cùng nguồn</small></div>
     <div class="kpi" data-step="1"><b class="ok">12–15%</b><span>Mục tiêu giai đoạn 2025–2035</span><small>Chiến lược phát triển dịch vụ logistics, QĐ 2229/QĐ-TTg ngày 09/10/2025</small></div>
   </div>
-  <p class="lede" data-step="2">Khoảng cách hơn <b>6 điểm phần trăm</b> không tự thu hẹp. Nó nằm ở xe chạy rỗng, giờ chờ ở cổng cảng, chứng từ phải làm lại — những chỗ dữ liệu đang đứt giữa các khâu.</p>
+  <p class="lede" data-step="2">Phần chênh lệch nằm ở những chỗ quen thuộc: <b>xe chạy rỗng, xe chờ ở cảng, chứng từ làm lại</b>.</p>
   <p class="srcline"><b>Nguồn:</b> VLA, dẫn qua Trung tâm WTO – VCCI; Quyết định 2229/QĐ-TTg (Báo Chính phủ, Tạp chí Công Thương, 10/2025).</p>
-  <aside class="notes">Con số đầu tiên: chi phí logistics của Việt Nam khoảng 16,8% GDP, theo VLA tính cho năm 2021. Thế giới khoảng 10,6%.<br><i>[bấm]</i> Chiến lược quốc gia vừa ban hành tháng 10/2025 đặt mục tiêu kéo về 12–15% trong giai đoạn 2025–2035.<br><i>[bấm]</i> Khoảng cách này không tự thu hẹp. Nó nằm ở những chỗ rất cụ thể: xe chạy rỗng, xe chờ ở cổng cảng, chứng từ làm lại.<br><i>(Số 16,8% là ước tính của VLA; một số nguồn diễn đạt theo "giá trị hàng hoá" thay vì GDP — nếu khách hỏi, nói đúng là ước tính của hiệp hội.)</i></aside>
+  <aside class="notes">Con số đầu tiên: chi phí logistics của Việt Nam khoảng 16,8% GDP, theo VLA tính cho năm 2021. Thế giới khoảng 10,6%.<br><i>[bấm]</i> Chiến lược quốc gia vừa ban hành tháng 10/2025 đặt mục tiêu kéo về 12–15% trong giai đoạn 2025–2035.<br><i>[bấm]</i> Phần chênh lệch nằm ở những chỗ rất quen: xe chạy rỗng, xe chờ ở cảng, chứng từ làm lại.<br><i>(Số 16,8% là ước tính của VLA; một số nguồn diễn đạt theo "giá trị hàng hoá" thay vì GDP — nếu khách hỏi, nói đúng là ước tính của hiệp hội.)</i></aside>
 </section>
 
 <!-- ================= 05 · MỨC ĐỘ SỐ HOÁ ================= -->
@@ -601,7 +663,7 @@ body.print #bar,body.print #counter,body.print #dots,body.print #hint,body.print
       <div class="nt"><b>0,4%</b>tới cấp cao nhất — hệ thống tự thích ứng</div>
     </div>
   </div>
-  <p class="lede" data-step="2">Phần lớn mới đưa giấy tờ lên máy và nối vài phần mềm với nhau. Rất ít nơi dùng dữ liệu để dự báo. <b>Vạch xuất phát còn đông — ai đi trước một bước là có lợi thế.</b></p>
+  <p class="lede" data-step="2">Phần lớn mới đưa giấy tờ lên máy, rất ít nơi dùng dữ liệu để dự báo.<br><b>Vạch xuất phát còn đông — ai đi trước một bước là có lợi thế.</b></p>
   <p class="srcline"><b>Nguồn:</b> Báo cáo Logistics Việt Nam 2023 (Bộ Công Thương), dẫn qua Tạp chí Công Thương và Tạp chí Quản lý Nhà nước 05/2024; Thủ tướng Chính phủ, dẫn qua Tiền Phong; Doanh nghiệp Hội nhập 2025.</p>
   <aside class="notes">Ngành có hơn 34.000 doanh nghiệp, trên 90% là nhỏ và vừa. Trong khảo sát của Báo cáo Logistics Việt Nam 2023, 90,5% doanh nghiệp vẫn đang ở giai đoạn số hoá.<br><i>[bấm]</i> Phần lớn — 73,5% — dừng ở cấp 2: đã kết nối. Chỉ 1,9% dự báo được bằng dữ liệu, 0,4% đạt cấp cao nhất.<br><i>[bấm]</i> Em nhìn đây là cơ hội: vạch xuất phát còn rất đông người.</aside>
 </section>
@@ -609,13 +671,13 @@ body.print #bar,body.print #counter,body.print #dots,body.print #hint,body.print
 <!-- ================= 06 · LỢI ÍCH ================= -->
 <section class="slide" data-title="Lợi ích đã đo được" data-time="40">
   <p class="eyebrow rv" style="--i:0">Lợi ích</p>
-  <h2 class="rv" style="--i:1">Đi trước bằng dữ liệu, <span class="ok">chênh lệch rất rõ</span></h2>
+  <h2 class="rv" style="--i:1">Kết quả của những quyết định<br><span class="ok">dựa trên dữ liệu</span></h2>
   <div class="kpis">
     <div class="kpi rv" style="--i:2"><b class="ok">−15%</b><span>Chi phí logistics</span><small>Doanh nghiệp đi đầu ứng dụng AI vào quản lý chuỗi cung ứng, so với đối thủ chậm chân</small></div>
     <div class="kpi rv" style="--i:3"><b class="ok">−35%</b><span>Mức tồn kho</span><small>Cùng nhóm doanh nghiệp, cùng phép so sánh</small></div>
     <div class="kpi rv" style="--i:4"><b class="ok">+65%</b><span>Mức độ phục vụ khách hàng</span><small>Cùng nhóm doanh nghiệp, cùng phép so sánh</small></div>
   </div>
-  <p class="lede" data-step="1">Không chỉ là chuyện của tập đoàn đa quốc gia. <b>Phần 2</b> là các con số tương tự từ cảng, kho, bưu cục ngay tại Việt Nam.</p>
+  <p class="lede" data-step="1">Ở Việt Nam, cảng, kho và bưu cục cũng đã có con số tương tự — xem <b>phần 2</b>.</p>
   <p class="srcline"><b>Nguồn:</b> McKinsey &amp; Company, "Succeeding in the AI supply-chain revolution" (2021), dẫn qua Supply Chain Management Review.</p>
   <aside class="notes">Lợi ích không còn là lý thuyết. McKinsey so sánh nhóm đi đầu ứng dụng AI vào chuỗi cung ứng với nhóm chậm chân: chi phí logistics thấp hơn 15%, tồn kho thấp hơn 35%, mức độ phục vụ cao hơn 65%.<br><i>[bấm]</i> Phần sau em đưa con số của chính doanh nghiệp Việt Nam.<br><i>(Số McKinsey là so sánh tương đối giữa hai nhóm doanh nghiệp, không phải cam kết cho một doanh nghiệp cụ thể.)</i></aside>
 </section>
@@ -629,27 +691,27 @@ body.print #bar,body.print #counter,body.print #dots,body.print #hint,body.print
     <div class="card" data-step="2"><div class="no">THUÊ NGOÀI</div><h3>70–80% chủ hàng</h3><p>Mục tiêu tỷ lệ doanh nghiệp thuê ngoài dịch vụ logistics. Chủ hàng sẽ chọn đơn vị minh bạch, báo được lô hàng đang ở đâu.</p></div>
     <div class="card" data-step="3"><div class="no">CHUẨN MỚI</div><h3>Chứng từ điện tử</h3><p>Chiến lược đẩy mạnh chứng từ điện tử, thủ tục số. Cảng, hãng tàu đã chạy eDO, ePort — ai chậm sẽ thành khâu chậm nhất trong chuỗi.</p></div>
   </div>
-  <p class="lede" data-step="4">Đi kèm: đưa Việt Nam vào nhóm <b>40 nước dẫn đầu</b> chỉ số hiệu quả logistics LPI của Ngân hàng Thế giới (2023: hạng 43).</p>
+  <p class="lede" data-step="4">Chính sách cũng đẩy cùng chiều: mục tiêu đưa logistics Việt Nam từ <b>hạng 43</b> lên <b>nhóm 40 nước dẫn đầu</b> thế giới (xếp hạng LPI của Ngân hàng Thế giới).</p>
   <p class="srcline"><b>Nguồn:</b> Quyết định 2229/QĐ-TTg ngày 09/10/2025 (Bộ Công Thương, Báo Chính phủ); World Bank LPI 2023, dẫn qua VnEconomy.</p>
-  <aside class="notes">Ba cơ hội. <i>[bấm]</i> Ngành được đặt mục tiêu tăng 12–15% mỗi năm. <i>[bấm]</i> 70–80% doanh nghiệp sẽ thuê ngoài logistics — họ chọn đơn vị nào trả lời được "hàng của tôi đang ở đâu". <i>[bấm]</i> Chứng từ điện tử thành chuẩn: cảng và hãng tàu đã đi trước. <i>[bấm]</i> Mục tiêu quốc gia là vào top 40 chỉ số LPI.</aside>
+  <aside class="notes">Ba cơ hội. <i>[bấm]</i> Ngành được đặt mục tiêu tăng 12–15% mỗi năm. <i>[bấm]</i> 70–80% doanh nghiệp sẽ thuê ngoài logistics — họ chọn đơn vị nào trả lời được "hàng của tôi đang ở đâu". <i>[bấm]</i> Chứng từ điện tử thành chuẩn: cảng và hãng tàu đã đi trước. <i>[bấm]</i> Và chính sách cũng đẩy cùng chiều: Nhà nước muốn logistics Việt Nam từ hạng 43 lên top 40 thế giới.</aside>
 </section>
 
 <!-- ================= 08 · RỦI RO ================= -->
 <section class="slide" data-title="Rủi ro hai phía" data-time="60">
-  <p class="eyebrow rv" style="--i:0">Rủi ro</p>
-  <h2 class="rv" style="--i:1">Rủi ro có ở <span class="bad">cả hai phía</span></h2>
+  <p class="eyebrow rv" style="--i:0">Vậy thì</p>
+  <h2 class="rv" style="--i:1">Doanh nghiệp logistics nên<br>ứng dụng công nghệ <span class="hl">như thế nào?</span></h2>
   <div class="versus dense">
     <div class="vcol them rv" style="--i:2"><h3>Nếu đứng ngoài</h3><ul>
       <li><i>✕</i><span><b>35–70% chuyến xe</b> chạy rỗng chiều về, tuỳ tuyến và nguồn khảo sát — tiền dầu, tiền tài xế trả cho chiều không hàng.</span></li>
       <li><i>✕</i><span>Chủ hàng thuê ngoài sẽ chọn đơn vị minh bạch. Không báo được tình trạng lô hàng là khó giữ khách.</span></li>
-      <li><i>✕</i><span>Cảng, hãng tàu đã số hoá. Quy trình nội bộ chậm trở thành khâu nghẽn của cả chuỗi.</span></li></ul></div>
+      <li><i>✕</i><span>Cảng, hãng tàu đã số hoá. Quy trình nội bộ chậm trở&nbsp;thành khâu nghẽn của cả chuỗi.</span></li></ul></div>
     <div class="vcol" data-step="1" style="border-color:rgba(251,191,36,.45)"><h3 style="color:var(--warn)">Nếu làm vội</h3><ul>
       <li><i style="color:var(--warn)">!</i><span>Mua phần mềm rời rạc, mỗi bộ phận một hệ — dữ liệu vẫn không nối, người vẫn nhập hai lần.</span></li>
       <li><i style="color:var(--warn)">!</i><span>Đổi quy trình kéo theo <b>thời gian và chi phí đào tạo</b> — lãnh đạo DPL đã nói thẳng điều này.</span></li>
       <li><i style="color:var(--warn)">!</i><span>Số hoá mà quên an toàn: sau NotPetya (2017), Maersk thiệt hại <b>250–300 triệu USD</b>, cài lại 45.000 máy tính và 4.000 máy chủ trong 10 ngày.</span></li></ul></div>
   </div>
   <p class="srcline"><b>Nguồn:</b> Viện Chiến lược GTVT, Hiệp hội Vận tải hàng hoá TP.HCM, VLA (qua VietnamPlus, VILAS); VOV 24/09/2024; ZDNet, SC Magazine, Hackread (Maersk, 01/2018).</p>
-  <aside class="notes">Rủi ro có ở cả hai phía. Bên trái: đứng ngoài. Tuỳ nguồn, 35% đến 70% chuyến xe chạy rỗng chiều về. Chủ hàng chọn đơn vị minh bạch. Cảng đã số hoá thì mình thành khâu chậm.<br><i>[bấm]</i> Bên phải: làm vội. Mua phần mềm rời rạc thì dữ liệu vẫn không nối. Đổi quy trình tốn thời gian và tiền đào tạo. Và an toàn dữ liệu: Maersk — hãng tàu lớn bậc nhất thế giới — mất 250–300 triệu USD sau một cuộc tấn công năm 2017.<br>Bài học: làm có thứ tự, không làm ồ ạt.</aside>
+  <aside class="notes">Vậy doanh nghiệp logistics nên ứng dụng công nghệ thế nào? Trước hết là tránh hai cách sai. Bên trái: đứng ngoài. Tuỳ nguồn, 35% đến 70% chuyến xe chạy rỗng chiều về. Chủ hàng chọn đơn vị minh bạch. Cảng đã số hoá thì mình thành khâu chậm.<br><i>[bấm]</i> Bên phải: làm vội. Mua phần mềm rời rạc thì dữ liệu vẫn không nối. Đổi quy trình tốn thời gian và tiền đào tạo. Và an toàn dữ liệu: Maersk — hãng tàu lớn bậc nhất thế giới — mất 250–300 triệu USD sau một cuộc tấn công năm 2017.<br>Bài học: làm có thứ tự, không làm ồ ạt.</aside>
 </section>
 
 <!-- ================= 09 · GIỌNG LÃNH ĐẠO ================= -->
@@ -659,8 +721,8 @@ body.print #bar,body.print #counter,body.print #dots,body.print #hint,body.print
   <div class="quotes q4">
     <div class="quote" data-step="1"><p>“Chuyển đổi số phải bắt đầu từ chuyển đổi tư duy và thói quen của lãnh đạo.”</p><div class="who"><span class="av">TH</span>Ông Trần Thế Hùng · Tổng Giám đốc Ratraco · VJST, 2026</div></div>
     <div class="quote" data-step="2"><p>“…nhận diện dứt điểm các điểm nghẽn và triệt tiêu các chi phí ẩn trong vận hành.”</p><div class="who"><span class="av" style="background:#7DD3FC">BH</span>Ông Bùi Minh Hưng · Tổng Giám đốc Vinafco · khởi động chương trình số hoá, 05/03/2026</div></div>
-    <div class="quote" data-step="3"><p>Chuyển đổi số cần “3 yếu tố: ý chí lãnh đạo, quy trình và người dùng”.</p><div class="who"><span class="av" style="background:#FBBF24">LH</span>Bà Phạm Thị Lan Hương · Tổng Giám đốc Vinafco tại thời điểm phát biểu · 10/2022</div></div>
-    <div class="quote" data-step="4"><p>Thay đổi quy trình “…sẽ ảnh hưởng rất nhiều đến câu chuyện vận hành về thời gian, chi phí về đào tạo nhân sự.”</p><div class="who"><span class="av" style="background:#22C58B">MT</span>Ông Mai Trần Thuật · Tổng Giám đốc DPL tại thời điểm phát biểu · VOV, 24/09/2024</div></div>
+    <div class="quote" data-step="3"><p>Chuyển đổi số cần “3 yếu tố: ý chí lãnh đạo, quy&nbsp;trình và người&nbsp;dùng”.</p><div class="who"><span class="av" style="background:#FBBF24">LH</span>Bà Phạm Thị Lan Hương · Tổng Giám đốc Vinafco thời điểm 10/2022</div></div>
+    <div class="quote" data-step="4"><p>Thay đổi quy trình “…sẽ ảnh hưởng rất nhiều đến câu chuyện vận hành về thời gian, chi phí về đào&nbsp;tạo nhân&nbsp;sự.”</p><div class="who"><span class="av" style="background:#22C58B">MT</span>Ông Mai Trần Thuật · Tổng Giám đốc DPL tại thời điểm phát biểu · VOV, 24/09/2024</div></div>
   </div>
   <p class="srcline"><b>Nguồn:</b> VJST; tin chính thức Vinafco 11/03/2026; Tạp chí Doanh nghiệp Việt Nam 10/10/2022; VOV 24/09/2024. Trích nguyên văn, dấu “…” là phần lược.</p>
   <aside class="notes">Lãnh đạo trong ngành nói gì. <i>[bấm]</i> Tổng Giám đốc Ratraco: bắt đầu từ tư duy và thói quen của lãnh đạo. <i>[bấm]</i> Tổng Giám đốc Vinafco năm 2026: mục tiêu là điểm nghẽn và chi phí ẩn — không phải phần mềm. <i>[bấm]</i> Người tiền nhiệm của ông năm 2022: ba yếu tố — ý chí lãnh đạo, quy trình, người dùng. <i>[bấm]</i> Và Tổng Giám đốc DPL nhắc cái giá: thời gian và chi phí đào tạo.<br>Bốn câu, một ý: công nghệ là phương tiện, cách làm mới là thứ quyết định.</aside>
@@ -668,7 +730,7 @@ body.print #bar,body.print #counter,body.print #dots,body.print #hint,body.print
 
 <!-- ================= 10 · CHỐT PHẦN 1 ================= -->
 <section class="slide" data-title="Chốt phần 1" data-time="25">
-  <h1 class="rv" style="--i:0">Câu hỏi không còn là <span class="hl">có làm không</span>.</h1>
+  <h1 class="rv" style="--i:0">Câu hỏi không còn là <span class="hl">có làm không</span>?</h1>
   <h2 class="grad" data-step="1">Mà là làm phần nào trước, bằng công cụ nào.</h2>
   <aside class="notes">Vậy câu hỏi không còn là có chuyển đổi số hay không. <i>[bấm]</i> <i>[dừng 2 giây]</i> Mà là làm phần nào trước, bằng công cụ nào. Phần 2 trả lời đúng câu này.</aside>
 </section>
@@ -697,7 +759,7 @@ body.print #bar,body.print #counter,body.print #dots,body.print #hint,body.print
       <p class="tool">Công cụ: <b>nền tảng quản trị vận hành</b> — phần Base đảm nhận</p>
     </div>
   </div>
-  <p class="lede" data-step="2">Hai dòng cần hai loại công cụ. Phần tiếp theo đi lần lượt từng dòng: <b>bài toán → công nghệ → doanh nghiệp đã làm</b>.</p>
+  <p class="lede" data-step="2">Mỗi dòng cần một loại công cụ khác nhau. Phần tiếp theo xem <b>dòng hàng trước, dòng việc sau</b>.</p>
   <aside class="notes">Mỗi lô hàng chạy trên hai dòng. Dòng hàng: nhận hàng, kho, vận tải, cảng, giao. Đây là nghiệp vụ riêng của ngành, có phần mềm chuyên ngành lo.<br><i>[bấm]</i> Dòng việc: báo giá, booking, chứng từ, tạm ứng, công nợ. Doanh nghiệp nào cũng có, và thường vẫn chạy bằng Zalo, Excel, giấy.<br><i>[bấm]</i> Hai dòng cần hai loại công cụ. Em đi dòng hàng trước — phần này chưa có Base.</aside>
 </section>
 
@@ -720,49 +782,69 @@ body.print #bar,body.print #counter,body.print #dots,body.print #hint,body.print
 <!-- ================= 14 · HỆ CHUYÊN NGÀNH ĐỨNG CẠNH BASE ================= -->
 <section class="slide top" data-title="Phần mềm chuyên ngành đi cùng Base" data-time="70">
   <p class="eyebrow rv" style="--i:0">Từ các case khách hàng của Base</p>
-  <h2 class="rv" style="--i:1">Hệ chuyên ngành ở lại. <span class="hl">Base đứng cạnh.</span></h2>
+  <h2 class="rv" style="--i:1">Base <span class="hl">chạy song song</span>,<br>không thay phần mềm chuyên ngành</h2>
   <div class="stk">
     <div class="hd rv" style="--i:2"><span>Doanh nghiệp</span><span>Phần mềm chuyên ngành đang dùng</span><span>Base đảm nhận</span></div>
     <div class="r rv" style="--i:3"><div class="co">ICD Tân Cảng Sóng Thần<small>Cảng cạn, kho, vận tải</small></div><div class="chips"><span class="chp">Quản lý kho</span><span class="chp">Quản lý vận tải</span><span class="chp">Kho ngoại quan</span><span class="chp">Hợp đồng điện tử</span><span class="chp">Quản lý an ninh</span></div><div class="chips"><span class="chp base">Quản trị · phê duyệt</span></div></div>
     <div class="r rv" style="--i:4"><div class="co">Tân Cảng Logistics (TCL)<small>Cảng, ICD, depot container</small></div><div class="chips"><span class="chp">TTOS – điều hành container</span><span class="chp">CMS depot</span><span class="chp">EDI với hãng tàu</span><span class="chp">ePort · eDO</span></div><div class="chips"><span class="chp base">Quản lý doanh nghiệp · từ 2021</span></div></div>
     <div class="r rv" style="--i:5"><div class="co">VOSCO<small>Vận tải biển</small></div><div class="chips"><span class="chp">FAST – kế toán lõi</span><span class="chp">SMMS – kỹ thuật, vật tư tàu</span><span class="chp">E-learning thuyền viên</span></div><div class="chips"><span class="chp base">Văn phòng điện tử · giao việc</span></div></div>
     <div class="r rv" style="--i:6"><div class="co">ADDED-VALUE<small>Logistics · ContainerGo</small></div><div class="chips"><span class="chp">ContainerGo – sàn vận tải số</span></div><div class="chips"><span class="chp base">CRM · dữ liệu xe, đối tác</span></div></div>
-    <div class="r rv" style="--i:7"><div class="co">Logistics Dược phẩm Đông Á<small>Kho, giao vận dược phẩm</small></div><div class="chips"><span class="chp">ERP (Odoo)</span><span class="chp">WMS</span><span class="chp">TMS</span><span class="chp">CRM</span></div><div class="chips"><span class="chp base">Có dùng Base</span></div></div>
+    <div class="r rv" style="--i:7"><div class="co">Logistics Dược phẩm Đông Á<small>Kho, giao vận dược phẩm</small></div><div class="chips"><span class="chp">ERP (Odoo)</span><span class="chp">WMS</span><span class="chp">TMS</span><span class="chp">CRM</span></div><div class="chips"><span class="chp base">Văn phòng điện tử · giao việc</span></div></div>
   </div>
   <p class="lede" data-step="1">Hệ chuyên ngành lo <span style="color:var(--goods);font-weight:700">dòng hàng</span>. Base lo <span class="hl" style="font-weight:700">dòng việc</span> quanh lô hàng — và là nơi lãnh đạo nhìn toàn bộ.</p>
   <p class="srcline"><b>Nguồn:</b> Base Customers (ICD Sóng Thần, ADDED-VALUE); TCL — ĐHĐCĐ 2022, BCTN 2024; VOSCO — BCTN 2021–2023; BES, VALOMA 08/2024 (DPL); danh mục khách hàng Base.</p>
-  <aside class="notes">Đây là điểm em muốn anh chị nhớ. Nhìn vào chính khách hàng logistics của Base: ICD Sóng Thần có phần mềm kho, vận tải, kho ngoại quan, an ninh — và dùng Base để quản trị, phê duyệt. Tân Cảng Logistics có hệ điều hành container, EDI, ePort — và dùng Base từ 2021. VOSCO có FAST, SMMS, e-learning — và dùng Base làm văn phòng điện tử.<br><i>[bấm]</i> Hệ chuyên ngành lo dòng hàng. Base lo dòng việc quanh lô hàng.<br><i>(DPL: chỉ xác nhận có dùng Base, chưa có mô tả phạm vi — không nói thêm.)</i></aside>
+  <aside class="notes">Đây là điểm em muốn anh chị nhớ. Nhìn vào chính khách hàng logistics của Base: ICD Sóng Thần có phần mềm kho, vận tải, kho ngoại quan, an ninh — và dùng Base để quản trị, phê duyệt. Tân Cảng Logistics có hệ điều hành container, EDI, ePort — và dùng Base từ 2021. VOSCO có FAST, SMMS, e-learning — và dùng Base làm văn phòng điện tử.<br><i>[bấm]</i> Hệ chuyên ngành lo dòng hàng. Base lo dòng việc quanh lô hàng.<br><i>(DPL: phạm vi văn phòng điện tử, giao việc theo thông tin nội bộ Base, chưa có nguồn công khai — không nói thêm chi tiết.)</i></aside>
 </section>
 
 <!-- ================= 15 · 2B MỚ HỖN ĐỘN ================= -->
 <section class="slide" data-title="2B · Việc chạy trên Zalo, Excel, giấy" data-time="50">
   <p class="eyebrow rv" style="--i:0">2B · Vận hành nội bộ — dòng việc</p>
-  <h2 class="rv" style="--i:1">Hàng chạy trên phần mềm. <span class="bad">Việc chạy trên Zalo, Excel và giấy.</span></h2>
-  <div class="mess" data-cls="1:loud">
-    <div class="frag rv" style="--x:0%;--y:4%;--r:-4deg;--i:2"><span class="src">Zalo · Nhóm hiện trường Hải Phòng</span><b class="badge">27</b>
-      <div class="msg un">Chứng từ lô HPH-2410 ai cầm?<small>3 giờ</small></div>
-      <div class="msg un">Tài xế xin tạm ứng nâng hạ<small>Hôm qua</small></div>
-      <div class="msg">Em gửi mail chị Lan rồi<small>Hôm qua</small></div></div>
-    <div class="frag wide rv" style="--x:33%;--y:0%;--r:2.5deg;--i:3"><span class="src">Excel · Theo dõi booking T10</span>
-      <table><tr><th>Booking</th><th>Cut-off SI</th><th>Chứng từ</th></tr>
-        <tr><td>BK-1182</td><td>16:00 hôm nay</td><td class="q">?</td></tr>
-        <tr><td>BK-5531</td><td>Thứ Năm</td><td>Đủ</td></tr>
-        <tr><td>BK-0927</td><td class="q">?</td><td class="q">?</td></tr></table></div>
-    <div class="frag rv" style="--x:69%;--y:6%;--r:3.5deg;--i:4"><span class="src">Email · Hộp thư pricing</span>
-      <div class="msg un">Re: Re: Fwd: Rate card Q4 (bản sửa 3)<small>Chưa đọc</small></div>
-      <div class="msg un">Báo giá tuyến HPH – Busan<small>Chưa đọc</small></div>
-      <div class="msg">Booking request – hàng FCL<small>2 ngày</small></div></div>
-    <div class="frag note rv" style="--x:7%;--y:60%;--r:5deg;--i:5">Nhắc pháp lý gửi SI trước cut-off 16h!<small>— Team CS</small></div>
-    <div class="frag rv" style="--x:40%;--y:58%;--r:-3deg;--i:6"><span class="src">Giấy · Phiếu đề nghị tạm ứng</span>
-      <div class="ln"><span>Người đề nghị</span><b>Tài xế tuyến HP</b></div>
-      <div class="ln"><span>Số tiền</span><b>3.500.000 đ</b></div>
-      <div class="ln"><span>Kế toán trưởng ký</span><b class="miss">……</b></div></div>
-    <span class="flag" style="--x:1%;--y:47%;--r:-2deg">Chưa ai trả lời · 3 giờ</span>
-    <span class="flag warn" style="--x:44%;--y:40%;--r:1.5deg">Ai đang giữ chứng từ?</span>
-    <span class="flag warn" style="--x:70%;--y:47%;--r:-1.5deg">Bản rate card nào là bản cuối?</span>
-    <span class="flag" style="--x:67%;--y:80%;--r:2deg">Chưa có chữ ký</span>
+  <h2 class="rv" style="--i:1">Hàng chạy trên phần mềm.<br><span class="bad">Việc chạy trên Zalo, Excel và giấy.</span></h2>
+  <div class="mess apps" data-cls="1:loud">
+    <div class="win zl rv" style="--x:0%;--y:0%;--r:-3deg;--i:2">
+      <div class="hd"><i>HP</i><div><b>Hiện trường Hải Phòng</b><small>27 thành viên</small></div><span class="cnt">27</span></div>
+      <div class="bd">
+        <div class="m"><em>Minh · CS</em>Chứng từ lô HPH-2410 ai đang cầm ạ?<small>14:02</small></div>
+        <div class="m"><em>Tài xế Hùng</em>Em xin tạm ứng phí nâng hạ 3,5 triệu ạ<small>Hôm qua</small></div>
+        <div class="m me">Chị gửi mail cho chị Lan rồi nhé<small>Hôm qua</small></div>
+      </div>
+      <div class="in">Nhập tin nhắn tới Hiện trường Hải Phòng</div>
+    </div>
+    <div class="win xl rv" style="--x:29%;--y:-2%;--r:2deg;--i:3">
+      <div class="tb">Theo dõi booking T10.xlsx — Excel</div>
+      <div class="rb"><span>Home</span><span>Insert</span><span>Formulas</span><span>Data</span><span>Review</span></div>
+      <div class="fx"><span>D3</span><span>fx</span><span>?</span></div>
+      <table>
+        <tr><th></th><th>A</th><th>B</th><th>C</th></tr>
+        <tr><td class="rh">1</td><td class="h">Booking</td><td class="h">Cut-off SI</td><td class="h">Chứng từ</td></tr>
+        <tr><td class="rh">2</td><td>BK-1182</td><td>16:00 hôm nay</td><td class="q sel">?</td></tr>
+        <tr><td class="rh">3</td><td>BK-5531</td><td>Thứ Năm</td><td>Đủ</td></tr>
+        <tr><td class="rh">4</td><td>BK-0927</td><td class="q">?</td><td class="q">?</td></tr>
+      </table>
+      <div class="tabs"><span class="on">T10</span><span>T9</span><span>Tổng hợp</span></div>
+    </div>
+    <div class="win ml rv" style="--x:68%;--y:1%;--r:3deg;--i:4">
+      <div class="tb">Hộp thư đến · pricing<span>Tìm kiếm</span></div>
+      <div class="fl"><b>Ưu tiên</b><span>Khác</span><span>Chưa đọc (14)</span></div>
+      <div class="it un"><b>Hãng tàu</b><small>09:12</small><span class="s">Re: Re: Fwd: Rate card Q4 (bản sửa 3)</span></div>
+      <div class="it un"><b>Đại lý Busan</b><small>Hôm qua</small><span class="s">Báo giá tuyến HPH – Busan</span></div>
+      <div class="it"><b>Khách hàng ABC</b><small>2 ngày</small><span class="s">Booking request – hàng FCL</span></div>
+    </div>
+    <div class="frag note rv" style="--x:4%;--y:70%;--r:5deg;--i:5">Nhắc pháp lý gửi SI trước cut-off 16h!<small>— Team CS</small></div>
+    <div class="win pp rv" style="--x:39%;--y:56%;--r:-2.5deg;--i:6">
+      <div class="co">Công ty logistics · Phòng Kế toán</div>
+      <h5>PHIẾU ĐỀ NGHỊ TẠM ỨNG</h5>
+      <div class="ln"><span>Người đề nghị:</span><b>Tài xế tuyến Hải Phòng</b></div>
+      <div class="ln"><span>Số tiền:</span><b>3.500.000 đ</b></div>
+      <div class="ln"><span>Lý do:</span><b>Phí nâng hạ lô HPH-2410</b></div>
+      <div class="sg"><div>Người đề nghị<em>Hùng</em></div><div>Kế toán trưởng<span class="miss">chưa ký</span></div><div>Giám đốc<span class="miss">chưa ký</span></div></div>
+    </div>
+    <span class="flag" style="--x:2%;--y:58%;--r:-2deg">Chưa ai trả lời · 3 giờ</span>
+    <span class="flag warn" style="--x:31%;--y:50%;--r:1.5deg">Ai đang giữ chứng từ?</span>
+    <span class="flag warn" style="--x:69%;--y:52%;--r:-1.5deg">Bản rate card nào là bản cuối?</span>
+    <span class="flag" style="--x:69%;--y:84%;--r:2deg">Chưa có chữ ký · 2 ngày</span>
   </div>
-  <p class="srcline"><b>Minh hoạ:</b> các mảnh trên là giao diện dựng lại để mô tả tình huống phổ biến, không phải dữ liệu của doanh nghiệp nào.</p>
+  <p class="srcline"><b>Minh hoạ:</b> giao diện dựng lại theo kiểu Zalo, Excel, email và phiếu giấy để mô tả tình huống phổ biến — không phải ảnh chụp hay dữ liệu của doanh nghiệp nào.</p>
   <aside class="notes">Sang dòng việc. Hàng thì chạy trên phần mềm. Còn việc quanh lô hàng? <i>[bấm]</i> Một tin Zalo hỏi bộ chứng từ, ba giờ chưa ai trả lời. File Excel booking có cut-off 16h hôm nay mà cột chứng từ còn dấu hỏi. Rate card bản sửa 3 trong email. Phiếu tạm ứng của tài xế chờ chữ ký.<br>Anh chị thấy cảnh này quen không ạ? <i>[chờ phản hồi]</i><br><i>(Các mảnh là dựng lại minh hoạ. Khi gặp khách cụ thể, thay bằng đúng những nơi khách đang cất việc.)</i></aside>
 </section>
 
@@ -859,14 +941,14 @@ body.print #bar,body.print #counter,body.print #dots,body.print #hint,body.print
 <section class="slide" data-title="Case 4 · VOSCO và Tân Cảng Logistics" data-time="60">
   <p class="eyebrow rv" style="--i:0">Case 4 · Bằng chứng từ báo cáo chính thức · vận tải biển, cảng – depot</p>
   <h2 class="rv" style="--i:1">Không phải Base tự nói.<br><span class="hl">Báo cáo của chính doanh nghiệp</span> ghi lại.</h2>
-  <p class="lede rv" style="--i:2">VOSCO và Tân Cảng Logistics là công ty niêm yết. Việc dùng Base được ghi trong <b>báo cáo thường niên</b> và <b>tài liệu đại hội cổ đông</b> — tài liệu công bố cho cổ đông, không phải bài quảng cáo của Base.</p>
+  <p class="lede rv" style="--i:2">VOSCO và Tân Cảng Logistics là công ty niêm yết. Việc dùng Base được ghi trong <b>báo cáo thường&nbsp;niên</b> và <b>tài liệu đại hội cổ đông</b> — tài liệu công bố cho cổ đông, không phải bài quảng cáo của Base.</p>
   <div class="duo">
     <div class="dcol rv" style="--i:3"><div class="nm">VOSCO</div><div class="mt">Vận tải biển · 636 lao động, trong đó 501 sĩ quan, thuyền viên (31/12/2025)</div>
       <p>Từ 2021, dùng Base làm <b>văn phòng điện tử</b>: phân công, giao việc, lãnh đạo xem xét và phê duyệt bằng chữ ký điện tử. Song song: FAST làm kế toán lõi, SMMS quản lý kỹ thuật tàu, e-learning cho thuyền viên.</p>
       <blockquote data-step="1">“hầu hết các nội dung đã được phân công và giao việc trên Base”<small>Báo cáo của Ban Giám đốc · Báo cáo thường niên 2022, tr.27</small></blockquote></div>
     <div class="dcol rv" style="--i:4"><div class="nm">Tân Cảng Logistics (TCL)</div><div class="mt">Cảng, ICD, depot container · Tổng Công ty Tân Cảng Sài Gòn</div>
       <p>Năm 2021 đưa Base vào trong chương trình số hoá quản lý, điều hành, cùng chuyển khoản, hoá đơn điện tử, phần mềm thương vụ, chữ ký số.</p>
-      <blockquote data-step="2">“giảm thiểu chi phí hành chánh và nâng cao hiệu quả làm việc trực tuyến cho CB-CNV”<small>Tờ trình kết quả năm 2021 · Tài liệu ĐHĐCĐ 2022 — nhận định cho cả nhóm biện pháp số hoá</small></blockquote></div>
+      <blockquote data-step="2">“giảm thiểu chi phí hành chánh và nâng cao hiệu&nbsp;quả làm việc trực tuyến cho CB-CNV”<small>Tờ trình kết quả năm 2021 · Tài liệu ĐHĐCĐ 2022 — nhận định cho cả nhóm biện&nbsp;pháp số&nbsp;hoá</small></blockquote></div>
   </div>
   <p class="srcline"><b>Nguồn:</b> VOSCO — BCTN 2021 (tr.14), 2022 (tr.27), 2025 (tr.24); tin VOSCO 16/07/2022. TCL — tài liệu ĐHĐCĐ thường niên 2022 (tr.7, tr.11). Chưa có KPI trước/sau riêng cho Base.</p>
   <aside class="notes">Hai case này khác các case trước: không phải Base kể, mà chính doanh nghiệp ghi trong báo cáo gửi cổ đông.<br><i>[bấm]</i> VOSCO, báo cáo thường niên 2022: hầu hết nội dung đã được phân công và giao việc trên Base — với 501 người làm việc trên tàu.<br><i>[bấm]</i> Tân Cảng Logistics, tài liệu đại hội cổ đông 2022: giảm chi phí hành chính, nâng hiệu quả làm việc trực tuyến.<br><i>(Nói rõ: chưa có KPI trước/sau riêng của Base trong hai nguồn này.)</i></aside>
@@ -877,7 +959,7 @@ body.print #bar,body.print #counter,body.print #dots,body.print #hint,body.print
   <p class="eyebrow rv" style="--i:0">Các hành trình đang chạy</p>
   <h2 class="rv" style="--i:1">Chưa có con số cuối, nhưng <span class="hl">hướng đi đã rõ</span></h2>
   <div class="jr">
-    <div class="jc rv" style="--i:2"><span class="tg">Logistics tech</span><span class="nm">ADDED-VALUE · ContainerGo</span><p>Gần 20 năm làm logistics, chuyển sang mô hình logistics tech. <b>Base CRM</b> làm trung tâm dữ liệu khách hàng, đối tác; số hoá dữ liệu xe, tài xế, giấy phép, đăng kiểm, <b>cảnh báo khi đến hạn</b>; vận hành không giấy, KPI tự động.</p></div>
+    <div class="jc rv" style="--i:2"><span class="tg">Logistics tech · ContainerGo</span><span class="nm">ADDED-VALUE</span><p>Gần 20 năm làm logistics, chuyển sang mô hình logistics tech. <b>Base CRM</b> làm trung tâm dữ liệu khách hàng, đối tác; số hoá dữ liệu xe, tài xế, giấy phép, đăng kiểm, <b>cảnh báo khi đến hạn</b>; vận hành không giấy, KPI tự động.</p></div>
     <div class="jc rv" style="--i:3"><span class="tg">Giao nhận · FDI</span><span class="nm">THT Cargo Logistics</span><p>Thành lập 2020, chi nhánh Đồng Nai, Bình Dương; hơn 60% khách hàng là doanh nghiệp Nhật. Số hoá <b>theo dõi tiến độ lô hàng</b> và kiểm soát tuân thủ để giữ chất lượng khi lớn lên.</p></div>
     <div class="jc rv" style="--i:4"><span class="tg">Đường sắt</span><span class="nm">Ratraco</span><p>15 ga, hơn 400 toa, 1.000 container, 50 đầu kéo. Bắt đầu từ không gian làm việc tập trung, số hoá <b>tờ trình, đề xuất, thanh toán</b>; hướng tới AI Agent tóm tắt tờ trình, rà lỗi chứng từ, so báo giá.</p></div>
     <div class="jc rv" style="--i:5"><span class="tg">Vận tải biển</span><span class="nm">Nhật Việt</span><p>Số hoá khoảng <b>700 đầu việc</b> với mục tiêu gắn kết tàu với bờ, giúp lãnh đạo nhìn rõ, minh bạch khối lượng công việc chung.</p></div>
@@ -924,12 +1006,12 @@ body.print #bar,body.print #counter,body.print #dots,body.print #hint,body.print
   <h2 class="rv" style="--i:1">Nền tảng quản trị doanh nghiệp của người Việt</h2>
   <div class="kpis">
     <div class="kpi rv" style="--i:2"><b>2016</b><span>Thành lập tại Hà Nội</span><small>Công ty Cổ phần Base Enterprise, 08/2016</small></div>
-    <div class="kpi rv" style="--i:3"><b class="hl">10.000+</b><span>Doanh nghiệp chuyển đổi số cùng Base</span><small>Theo trang khách hàng của Base</small></div>
+    <div class="kpi rv" style="--i:3"><b class="hl">12.000+</b><span>Doanh nghiệp chuyển đổi số cùng Base</span><small>Số liệu Base, 10/2026</small></div>
     <div class="kpi rv" style="--i:4"><b>2021</b><span>FPT đầu tư chiến lược</span><small>Công bố 05/2021</small></div>
   </div>
   <p class="lede" data-step="1"><b>17/09/2026:</b> ra mắt <b>Base 2.0</b> tại Enterprise AI Summit 2026 — nền tảng thiết kế để con người và AI cùng vận hành doanh nghiệp.</p>
-  <p class="srcline"><b>Nguồn:</b> Wikipedia tiếng Việt “Base.vn”; CafeF 27/05/2021; customers.base.vn; Báo Đầu tư, Nhân Dân, CafeBiz 09/2026.</p>
-  <aside class="notes">Base thành lập năm 2016 ở Hà Nội. Theo Base, hơn 10.000 doanh nghiệp đã chuyển đổi số cùng Base. FPT đầu tư chiến lược năm 2021.<br><i>[bấm]</i> Tháng 9 vừa rồi, Base ra mắt Base 2.0 — đây là phần em muốn anh chị chú ý.</aside>
+  <p class="srcline"><b>Nguồn:</b> Wikipedia tiếng Việt “Base.vn”; CafeF 27/05/2021; số khách hàng do Base cung cấp 10/2026; Báo Đầu tư, Nhân Dân, CafeBiz 09/2026.</p>
+  <aside class="notes">Base thành lập năm 2016 ở Hà Nội. Hơn 12.000 doanh nghiệp đã chuyển đổi số cùng Base. FPT đầu tư chiến lược năm 2021.<br><i>[bấm]</i> Tháng 9 vừa rồi, Base ra mắt Base 2.0 — đây là phần em muốn anh chị chú ý.</aside>
 </section>
 
 <!-- ================= 26 · VẤN ĐỀ BASE 2.0 NHÌN THẤY ================= -->
@@ -963,13 +1045,13 @@ body.print #bar,body.print #counter,body.print #dots,body.print #hint,body.print
 
 <!-- ================= 28 · KHÁC BIỆT ================= -->
 <section class="slide" data-title="Khác phần mềm theo từng app" data-time="55">
-  <p class="eyebrow rv" style="--i:0">Khác biệt</p>
-  <h2 class="rv" style="--i:1">Khác phần mềm theo từng app ở đâu</h2>
+  <p class="eyebrow rv" style="--i:0">Base 2.0</p>
+  <h2 class="rv" style="--i:1">Khác biệt so với<br><span class="hl">phần mềm theo app</span> trên thị trường</h2>
   <div class="versus">
     <div class="vcol them rv" style="--i:2"><h3>Phần mềm theo từng app</h3><ul>
       <li><i>✕</i>Bắt đầu từ menu tính năng</li>
       <li><i>✕</i>AI gắn vào từng app, mỗi AI thấy một phần</li>
-      <li><i>✕</i>Làm xong là hết, kinh nghiệm ở trong đầu người</li>
+      <li><i>✕</i>Làm xong là hết, kinh nghiệm nằm trong đầu từng người</li>
       <li><i>✕</i>Muốn dùng phải dời nhà, bỏ hệ đang chạy</li></ul></div>
     <div class="vcol you" data-step="1"><h3>Base 2.0</h3><ul>
       <li><i>✓</i>Bắt đầu từ việc cần xong và đầu ra của nó</li>
@@ -1011,18 +1093,7 @@ body.print #bar,body.print #counter,body.print #dots,body.print #hint,body.print
   <aside class="notes">Quay lại câu hỏi lúc đầu. <i>[bấm]</i> Lô hàng đã có phần mềm chuyên ngành theo dõi. <i>[bấm]</i> Việc quanh lô hàng cũng phải có người giữ, có hạn, có đầu ra. <i>[bấm]</i> Và mỗi lô hàng để lại bài học cho lô sau. <i>[bấm]</i> <i>[dừng 2 giây]</i> Biết container ở đâu. Và biết hồ sơ đang ở ai.</aside>
 </section>
 
-<!-- ================= 31 · BƯỚC TIẾP THEO ================= -->
-<section class="slide" data-title="Bước tiếp theo" data-time="40">
-  <h2 class="rv" style="--i:0">Bắt đầu từ <span class="hl">một quy trình</span>, đo <span class="ok">một con số</span></h2>
-  <ul class="nexts">
-    <li class="rv" style="--i:1"><b>1</b>Chọn một dòng việc đang chậm nhất: báo giá → booking, tạm ứng tài xế, hoặc chứng từ trước cut-off.</li>
-    <li class="rv" style="--i:2"><b>2</b>Đo hiện trạng trong 2 tuần: mất bao lâu, chờ ở bước nào, ai đang giữ.</li>
-    <li class="rv" style="--i:3"><b>3</b>Cùng Base vẽ lại bước, người giữ, hạn, đầu ra; chạy thử 30 ngày rồi so cùng thước đo.</li>
-  </ul>
-  <aside class="notes">Đề xuất của em không phải mua cả bộ. Chọn một dòng việc chậm nhất — anh chị vừa chọn ô nào ở slide sáu vấn đề thì bắt đầu ở đó. Đo hai tuần. Rồi cùng Base vẽ lại và chạy thử 30 ngày, so cùng thước đo.<br>Bên mình muốn bắt đầu từ dòng việc nào ạ? <i>[chốt người phụ trách phía khách và ngày gửi số liệu hiện trạng]</i></aside>
-</section>
-
-<!-- ================= 32 · NGUỒN ================= -->
+<!-- ================= 31 · NGUỒN ================= -->
 <section class="slide top" data-title="Nguồn tham khảo" data-time="10">
   <p class="eyebrow rv" style="--i:0">Nguồn tham khảo · truy cập 10/2026</p>
   <ul class="refs rv" style="--i:1">
@@ -1066,6 +1137,16 @@ body.print #bar,body.print #counter,body.print #dots,body.print #hint,body.print
   </ul>
   <aside class="notes">Toàn bộ nguồn, có đường dẫn. Mục 32–33 là tài liệu của Base, không công khai đường dẫn trong file này.</aside>
 </section>
+
+<script>
+/* Dự phòng cho trình duyệt chưa hỗ trợ text-wrap: pretty — nối hai chữ cuối để không có dòng chỉ một chữ */
+(function(){if(window.CSS&&CSS.supports&&CSS.supports('text-wrap','pretty'))return;
+  document.querySelectorAll('#stage h1,#stage h2,#stage h3,#stage p,#stage li,#stage small,#stage blockquote,#stage .who,#stage .nm,#stage .bl,#stage .mt,#stage .e,#stage .t,#stage .p,#stage .tm,#stage .out,#stage .st,#stage .co').forEach(function(el){
+    if(el.closest('.notes'))return;var w=document.createTreeWalker(el,NodeFilter.SHOW_TEXT),n,last=null;
+    while((n=w.nextNode())){if(/\S\s+\S/.test(n.textContent))last=n}
+    if(last)last.textContent=last.textContent.replace(/\s+(\S+\s*)$/,' $1');});
+})();
+</script>
 
 </div></div>
 
